@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - FundMF</title>
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/portfolio.css">
+    <style>
+        .export-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .export-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+        
+        .export-button:hover {
+            background-color: #f1f1f1;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .export-button i {
+            margin-right: 6px;
+        }
+        
+        .excel-button {
+            border-color: #1D6F42;
+            color: #1D6F42;
+        }
+        
+        .pdf-button {
+            border-color: #F40F02;
+            color: #F40F02;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Portfolio Summary -->
+        <div class="summary-card">
+            <div class="row">
+                <div class="col-6 mb-3">
+                    <div class="summary-stat">₹23,456</div>
+                    <div class="summary-label">Current Value</div>
+                </div>
+                <div class="col-6 mb-3 text-end">
+                    <div class="summary-stat">₹20,000</div>
+                    <div class="summary-label">Invested Amount</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="summary-stat"><em>₹3,456</em></div>
+                    <div class="summary-label"><em>Total Gains</em></div>
+                </div>
+                <div class="col-6 text-end">
+                    <div class="summary-stat"><em>17.28%</em></div>
+                    <div class="summary-label"><em>Returns</em></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Excel and PDF Buttons -->
+        <div class="export-buttons">
+            <a href="#" class="export-button excel-button">
+                <i class="fas fa-file-excel"></i> Excel File
+            </a>
+            <a href="#" class="export-button pdf-button">
+                <i class="fas fa-file-pdf"></i> PDF File
+            </a>
+        </div>
+        
+        <!-- Portfolio Chart -->
+        <!-- <div class="chart-container">
+            <div class="text-center text-muted">
+                <i class="fas fa-chart-line fa-3x mb-2"></i>
+                <div>Portfolio Growth Chart</div>
+            </div>
+        </div> -->
+        
+        <!-- Filters -->
+        <!-- <div class="filter-section">
+            <div class="d-flex overflow-auto">
+                <button class="filter-btn active">All Funds</button>
+                <button class="filter-btn">Equity</button>
+                <button class="filter-btn">Debt</button>
+                <button class="filter-btn">Hybrid</button>
+                <button class="filter-btn">Index</button>
+            </div>
+        </div> -->
+        
+        <!-- Fund List -->
+        <h3 class="section-title">Your Investments</h3>
+        
+        <div class="fund-card">
+            <div class="d-flex justify-content-between">
+                <div class="d-flex">
+                    <div class="fund-logo">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <div>
+                        <div class="fund-name">Axis Bluechip Fund</div>
+                        <div class="fund-category">Large Cap</div>
+                    </div>
+                </div>
+                <div class="fund-return">
+                    <div class="fund-return-value positive">+21.5%</div>
+                    <div class="fund-category">₹5,375</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="fund-card">
+            <div class="d-flex justify-content-between">
+                <div class="d-flex">
+                    <div class="fund-logo">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <div>
+                        <div class="fund-name">HDFC Mid-Cap Opportunities</div>
+                        <div class="fund-category">Mid Cap</div>
+                    </div>
+                </div>
+                <div class="fund-return">
+                    <div class="fund-return-value positive">+18.7%</div>
+                    <div class="fund-category">₹4,675</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="fund-card">
+            <div class="d-flex justify-content-between">
+                <div class="d-flex">
+                    <div class="fund-logo">
+                        <i class="fas fa-landmark"></i>
+                    </div>
+                    <div>
+                        <div class="fund-name">SBI Small Cap Fund</div>
+                        <div class="fund-category">Small Cap</div>
+                    </div>
+                </div>
+                <div class="fund-return">
+                    <div class="fund-return-value positive">+24.3%</div>
+                    <div class="fund-category">₹6,075</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="fund-card">
+            <div class="d-flex justify-content-between">
+                <div class="d-flex">
+                    <div class="fund-logo">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <div>
+                        <div class="fund-name">ICICI Pru Balanced Advantage</div>
+                        <div class="fund-category">Hybrid</div>
+                    </div>
+                </div>
+                <div class="fund-return">
+                    <div class="fund-return-value positive">+12.8%</div>
+                    <div class="fund-category">₹5,640</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="fund-card">
+            <div class="d-flex justify-content-between">
+                <div class="d-flex">
+                    <div class="fund-logo">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                    </div>
+                    <div>
+                        <div class="fund-name">Franklin India Liquid Fund</div>
+                        <div class="fund-category">Debt</div>
+                    </div>
+                </div>
+                <div class="fund-return">
+                    <div class="fund-return-value negative">-2.1%</div>
+                    <div class="fund-category">₹1,691</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

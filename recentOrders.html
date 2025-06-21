@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recent Orders - FundMF</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+    }
+    
+    body {
+        background-color: #FFFFFF;
+        color: #333;
+        max-width: 800px;
+        margin: 0 auto;
+        position: relative;
+        padding: 0px 5px;
+        padding-bottom: 70px; /* Add space for fixed time-filters */
+    }
+    
+    .header {
+        background-color: #FFFFFF;
+        color: #333;
+        padding: 15px;
+        text-align: center;
+        font-weight: bold;
+        font-size: 28px;
+        margin-bottom: 10px;
+        position: relative;
+    }
+    
+    .header a {
+        position: absolute;
+        left: 15px;
+        top: 15px;
+        color: #d4d4d4;
+        text-decoration: none;
+        font-size: 20px;
+    }
+    
+    .date-filter {
+        background-color: #F0F0F0;
+        padding: 20px 12px 12px 12px;
+        border-radius: 5px;
+        margin: 0 10px 15px 10px;
+        position: relative;
+        margin-top: 20px;
+        border: 1px solid #DFE1E7;
+    }
+    
+    .date-label {
+        font-size: 12px;
+        background-color: #719000;
+        color: #FFFFFF;
+        border-radius: 50px;
+        padding: 4px 12px;
+        position: absolute;
+        top: -14px;
+        left: 20px;
+        z-index: 2;
+        margin: 0;
+        font-weight: normal;
+        box-shadow: none;
+    }
+    .date-range {
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        width: 100%;
+        font-weight: normal;
+        position: relative;
+    }
+    .date-from {
+        display: flex;
+        align-items: center;
+        flex: none;
+        min-width: 0;
+        gap: 4px;
+    }
+    .date-to {
+        display: flex;
+        align-items: center;
+        position: absolute;
+        right: 0;
+        top: 0;
+        gap: 4px;
+    }
+    .date-label-text {
+    color: #818898;
+    font-size: 12px;
+    font-weight: 400;
+}
+    .date-value {
+        color: #34373a;
+        font-weight: 600;
+        font-size: 12px;
+        cursor: pointer;
+    }
+    .date-input-hidden {
+        display: none;
+    }
+    
+    .status-filter {
+        display: flex;
+        justify-content: space-between;
+        padding: 5px 15px 15px 15px;
+        font-size: 16px;
+        font-weight: 600;
+    }
+    
+    .payment-filter {
+        color: #597200;
+        display: flex;
+        align-items: center;
+    }
+    
+    .payment-icon {
+        margin-right: 5px;
+        font-size: 16px;
+    }
+    
+    .order-item {
+        background-color: #FFFFFF;
+        border-radius: 6px;
+        margin: 0 10px 16px 10px;
+        padding: 12px;
+        border: 1px solid #DFE1E7;
+    }
+    
+    .order-fund {
+        font-weight: 600;
+        font-size: 15px;
+        margin-bottom: 5px;
+    }
+    
+    .order-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 5px;
+    }
+    
+    .order-amount {
+        color: #818898;
+        font-size: 13px;
+        font-weight: 600;
+    }
+    
+    .order-status {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+    }
+    
+    .status-buy {
+        background-color: #719000;
+        color: #FFFFFF;
+        border-radius: 50px;
+        padding: 3px 12px;
+        font-size: 8px;
+        font-weight: 600;
+    }
+    
+    .status-sell {
+        background-color: #FC0000;
+        color: #FFFFFF;
+        border-radius: 50px;
+        padding: 3px 12px;
+        font-size: 8px;
+        font-weight: 600;
+    }
+    
+    .status-processing {
+        background-color: #e9ecef;
+        color: #333;
+        border-radius: 15px;
+        padding: 3px 12px;
+        font-size: 8px;
+        font-weight: 600;
+    }
+    
+    .status-completed {
+        background-color: #E8F1C8;
+        color: #597200;
+        border-radius: 15px;
+        padding: 3px 12px;
+        font-size: 8px;
+        font-weight: 600;
+    }
+    
+    .time-filters {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 0;
+        background: #FAFAFA;
+        border-radius: 6px;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0px;
+        max-width: 400px;
+        width: calc(100% - 32px);
+        margin: 0 auto;
+        z-index: 1050;
+        border: 1px solid #DFE1E7;
+        height: 48px;
+    }
+    
+    .time-filter-btn {
+        background: none;
+        border: none;
+        font-size: 16px;
+        font-weight: 500;
+        color: #34373a;
+        padding: 0 18px;
+        height: 48px;
+        border-radius: 12px;
+        transition: color 0.2s, background 0.2s;
+        outline: none;
+        box-shadow: none;
+        margin: 0;
+        display: flex;
+        align-items: center;
+    }
+    
+    .time-filter-btn.active {
+        color: #719000;
+        font-weight: bold;
+        background: none;
+        border-bottom: none;
+    }
+    
+    /* Sidebar styles (copied from mandate.html) */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 70%;
+        height: 100%;
+        background-color: #FFFFFF;
+        z-index: 1100;
+    
+        display: none;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    }
+            .sidebar-header {
+    display: flex;
+    align-items: center;
+    padding-right: 30px;
+    padding-left: 30px;
+    padding-top: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #eee;
+    background-color: #F2F2F2;
+    margin-bottom: 30px;
+}
+    .sidebar-logo {
+        height: 40px;
+        margin-right: 10px;
+    }
+    .sidebar-menu {
+        display: flex;
+        justify-content: flex-end;
+        font-size: 24px;
+        cursor: pointer;
+    }
+    .sidebar-item {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        border-radius: 30px;
+        margin: 5px 15px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    .sidebar-item.active {
+        background-color: #f0f0f0;
+    }
+    .sidebar-icon {
+        margin-right: 15px;
+        color: #666;
+        width: 20px;
+        text-align: center;
+    }
+    .sidebar-text {
+        color: #666;
+    }
+    .show-sidebar {
+        display: block;
+    }
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        display: none;
+    }
+    .sidebar-child-menu {
+        margin-left: 35px;
+        margin-top: 0;
+        margin-bottom: 0;
+        padding-left: 0;
+        display: none;
+    }
+    .sidebar-child-menu.open {
+        display: block !important;
+    }
+    .sidebar-child-item {
+        display: flex;
+        align-items: center;
+        padding: 10px 15px 10px 0;
+        border-radius: 30px;
+        margin: 0 15px 0 0;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        font-size: 15px;
+        color: #666;
+    }
+    .sidebar-child-item.active {
+        background-color: #f0f0f0;
+        color: #000000;
+    }
+    .sidebar-item.active .sidebar-text {
+        color: #000000;
+    }
+    .sidebar-child-icon {
+        margin-right: 12px;
+        color: #9e9e9e;
+        width: 18px;
+        text-align: center;
+        font-size: 15px;
+    }
+    #date-from {
+        font-weight: bold;
+    }
+    #date-to {
+        font-weight: bold;
+    }
+</style>
+</head>
+<body>
+<!-- Overlay for sidebar background -->
+<div class="overlay"></div>
+<!-- Sidebar/Navigation Menu -->
+<div class="sidebar" style="z-index: 1100;">
+    <div class="sidebar-header">
+        <img src="./assets/images/logo.png" alt="FundMF Logo" class="sidebar-logo">
+        <div style="flex-grow: 1;"></div>
+        <div class="sidebar-menu">
+            <img src="./assets/images/close.png" alt="Close" style="width:24px;height:24px;cursor:pointer;">
+        </div>
+    </div>
+    <div class="sidebar-item" data-page="homePage">
+        <img src="./assets/images/home.svg" alt="Dashboard Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+        <div class="sidebar-text">Dashboard</div>
+    </div>
+    <div class="sidebar-item" data-page="portfolioPage">
+        <img src="./assets/images/sideBarPortfolio.png" alt="Portfolio Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+        <div class="sidebar-text">Portfolio</div>
+    </div>
+    <div class="sidebar-item active" data-page="recentOrders" id="sidebarRecentOrders">
+        <img src="./assets/images/recentOrder.png" alt="Recent Orders Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+        <div class="sidebar-text">Recent Orders</div>
+    </div>
+    <!-- Mandate parent with child menu -->
+    <div class="sidebar-item" id="mandateParent">
+        <img src="./assets/images/mandate.png" alt="Mandate Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+        <div class="sidebar-text">Mandate</div>
+        <i class="fas fa-chevron-down" id="mandateChevron" style="margin-left:auto;color:#888;font-size:14px;"></i>
+    </div>
+    <div class="sidebar-child-menu" id="mandateChildMenu" style="display:none;">
+        <div class="sidebar-child-item" data-page="mandatePage" id="mandateStatusChild">
+            <i class="fas fa-list sidebar-child-icon"></i>
+            <div>Mandate Status</div>
+        </div>
+        <div class="sidebar-child-item" data-page="createMandate" id="mandateRegistrationChild">
+            <i class="fas fa-plus-circle sidebar-child-icon"></i>
+            <div>Mandate Registration</div>
+        </div>
+    </div>
+    <!-- Transact parent with child menu -->
+    <div class="sidebar-item" id="transactParent">
+        <img src="./assets/images/transact.png" alt="Transact Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+        <div class="sidebar-text">Transact</div>
+        <i class="fas fa-chevron-down" id="transactChevron" style="margin-left:auto;color:#888;font-size:14px;"></i>
+    </div>
+    <div class="sidebar-child-menu" id="transactChildMenu" style="display:none;">
+        <div class="sidebar-child-item" data-page="createLumpsum" id="transactLumpsum">
+            <i class="fas fa-handshake sidebar-child-icon"></i>
+            <div>Purchase</div>
+        </div>
+        <div class="sidebar-child-item" data-page="createSip" id="transactSip">
+            <i class="fas fa-chart-bar sidebar-child-icon"></i>
+            <div>SIP</div>
+        </div>
+        <div class="sidebar-child-item" data-page="createStp" id="transactStp">
+            <i class="fas fa-file-alt sidebar-child-icon"></i>
+            <div>STP</div>
+        </div>
+        <div class="sidebar-child-item" data-page="createSwp" id="transactSwp">
+            <i class="fas fa-coins sidebar-child-icon"></i>
+            <div>SWP</div>
+        </div>
+        <div class="sidebar-child-item" data-page="nfo" id="transactNfo">
+            <i class="fas fa-rocket sidebar-child-icon"></i>
+            <div>NFO</div>
+        </div>
+        <div class="sidebar-child-item" data-page="portfolioPage" id="transactRedeem">
+            <i class="fas fa-wallet sidebar-child-icon"></i>
+            <div>Redeem</div>
+        </div>
+    </div>
+    <div class="sidebar-item" data-page="accountPage">
+        <img src="./assets/images/Settings.png" alt="Settings Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+        <div class="sidebar-text">Settings</div>
+    </div>
+    <div class="sidebar-item" data-page="contactPage">
+        <img src="./assets/images/contactUs.png" alt="Contact Us Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+        <div class="sidebar-text">Contact Us</div>
+    </div>
+    <div class="sidebar-item" id="logoutItem">
+        <img src="./assets/images/logout.png" alt="Logout Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+        <div class="sidebar-text">Logout</div>
+    </div>
+</div>
+
+<!-- Header -->
+<div class="header">
+    <a class="back-button" id="backButton" style="position: absolute; left: 15px; top: 15px; color: #d4d4d4; text-decoration: none; font-size: 20px; cursor:pointer;">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+    Recent Orders
+</div>
+
+<!-- Date Filter -->
+<div class="date-filter">
+    <div class="date-label">Date Range</div>
+    <div class="date-range">
+        <div class="date-from">
+            <span class="date-label-text">From:</span>
+            <span class="date-value" id="display-date-from"></span>
+            <input type="date" id="date-from" class="date-input-hidden">
+        </div>
+        <div class="date-to">
+            <span class="date-label-text">To:</span>
+            <span class="date-value" id="display-date-to"></span>
+            <input type="date" id="date-to" class="date-input-hidden">
+        </div>
+    </div>
+</div>
+
+<!-- Status Filter -->
+<div class="status-filter">
+    <div id="pending-orders-count">Pending orders (0)</div>
+    <div class="payment-filter">
+        <!-- Replace FontAwesome icon with your own image -->
+        <img src="./assets/images/payment.png" alt="Payment Icon" class="payment-icon" style="width: 18px; height: 18px; margin-right: 5px;">
+        Payment
+    </div>
+</div>
+
+<!-- Order Items -->
+<div id="orders-list"></div>
+
+<!-- Time Filters -->
+<div class="time-filters">
+    <button class="time-filter-btn">7 days</button>
+    <button class="time-filter-btn">30 days</button>
+    <button class="time-filter-btn">This Month</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script>
+    const API_BASE_URL = 'http://122.176.151.191/MutualFund';
+    let orders = [];
+    let allOrders = [];
+
+    // Helper to get status class
+    function getStatusClass(type, status) {
+        if (type === "Buy") {
+            if (status === "Processing") return "status-processing";
+            if (status === "Order Completed") return "status-completed";
+            return "status-buy";
+        }
+        if (type === "Sell") {
+            if (status === "Processing") return "status-processing";
+            if (status === "Order Completed") return "status-completed";
+            return "status-sell";
+        }
+        return "";
+    }
+
+    // Helper to convert DD-MM-YYYY to YYYY-MM-DD
+    function toISODate(ddmmyyyy) {
+        if (!ddmmyyyy) return '';
+        const [dd, mm, yyyy] = ddmmyyyy.split('-');
+        return `${yyyy}-${mm.padStart(2, '0')}-${dd.padStart(2, '0')}`;
+    }
+
+    // Helper to convert YYYY-MM-DD to DD-MM-YYYY
+    function toDisplayDate(iso) {
+        if (!iso) return '';
+        const [yyyy, mm, dd] = iso.split('-');
+        return `${dd}-${mm}-${yyyy}`;
+    }
+
+    // Render orders with optional date filtering
+    function renderOrders(filteredOrders = null) {
+        const ordersList = document.getElementById('orders-list');
+        ordersList.innerHTML = '';
+        let pendingCount = 0;
+        const list = filteredOrders || orders;
+        list.forEach(order => {
+            if (order.status === "Processing") pendingCount++;
+            const orderDiv = document.createElement('div');
+            orderDiv.className = 'order-item';
+            orderDiv.innerHTML = `
+                <div class="order-fund">${order.fund}</div>
+                <div class="order-bottom">
+                    <div class="order-amount">₹${Number(order.amount).toLocaleString()}</div>
+                    <div class="order-status">
+                        <span class="${order.type === 'Buy' ? 'status-buy' : 'status-sell'}">${order.type}</span>
+                        <span class="${order.status === 'Processing' ? 'status-processing' : 'status-completed'}">${order.status}</span>
+                    </div>
+                </div>
+            `;
+            ordersList.appendChild(orderDiv);
+        });
+        document.getElementById('pending-orders-count').textContent = `Pending orders (${pendingCount})`;
+    }
+
+    // Date filter logic
+    function filterByDate() {
+        const from = document.getElementById('date-from').value;
+        const to = document.getElementById('date-to').value;
+        let filtered = orders;
+        if (from) {
+            filtered = filtered.filter(o => o.isoDate >= from);
+        }
+        if (to) {
+            filtered = filtered.filter(o => o.isoDate <= to);
+        }
+        renderOrders(filtered);
+    }
+
+    // Fetch orders from backend
+    async function fetchOrders() {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            window.location.href = 'index.html';
+            return;
+        }
+        try {
+            const resp = await fetch(`${API_BASE_URL}/recentOrder?page=0&size=100`, {
+                method: 'GET',
+                headers: {
+                    'accept': '*/*',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const contentType = resp.headers.get('content-type');
+            if (!resp.ok) {
+                throw new Error(`HTTP error! status: ${resp.status}`);
+            }
+            if (!contentType || !contentType.includes('application/json')) {
+                // Not JSON, likely an error page
+                const text = await resp.text();
+                document.getElementById('orders-list').innerHTML = '<div class="alert alert-danger">Server returned an unexpected response. Please check if the backend is running and ngrok tunnel is active.<br><pre style="white-space:pre-wrap;word-break:break-all;">' + text.substring(0, 300) + '...</pre></div>';
+                return;
+            }
+            const data = await resp.json();
+            // Flatten and map backend data to UI format
+            const backendOrders = (data.data && data.data.flat()) || [];
+            allOrders = backendOrders.map(o => ({
+                fund: o.schemeName,
+                amount: o.amount,
+                type: o.purchaseType,
+                status: o.status || "Order Completed",
+                date: o.orderDate,
+                isoDate: toISODate(o.orderDate)
+            }));
+            orders = allOrders;
+            setupDateFilters();
+            renderOrders();
+        } catch (err) {
+            document.getElementById('orders-list').innerHTML = '<div class="alert alert-danger">Failed to load orders.<br>' + (err.message || '') + '</div>';
+        }
+    }
+
+    // Helper to format date as '21st Apr 2025'
+    function formatDisplayDate(iso) {
+        if (!iso) return '';
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        const [yyyy, mm, dd] = iso.split('-');
+        const day = parseInt(dd, 10);
+        let suffix = 'th';
+        if (day % 10 === 1 && day !== 11) suffix = 'st';
+        else if (day % 10 === 2 && day !== 12) suffix = 'nd';
+        else if (day % 10 === 3 && day !== 13) suffix = 'rd';
+        return `${day}${suffix} ${months[parseInt(mm,10)-1]} ${yyyy}`;
+    }
+
+    // Update display dates
+    function updateDisplayDates() {
+        document.getElementById('display-date-from').textContent = formatDisplayDate(document.getElementById('date-from').value);
+        document.getElementById('display-date-to').textContent = formatDisplayDate(document.getElementById('date-to').value);
+    }
+
+    // Set up date pickers based on orders
+    function setupDateFilters() {
+        if (!orders.length) return;
+        const isoDates = orders.map(o => o.isoDate).sort();
+        const minDate = isoDates[0];
+        const maxDate = isoDates[isoDates.length - 1];
+        const dateFrom = document.getElementById('date-from');
+        const dateTo = document.getElementById('date-to');
+        dateFrom.value = minDate;
+        dateTo.value = maxDate;
+        dateFrom.min = minDate;
+        dateFrom.max = maxDate;
+        dateTo.min = minDate;
+        dateTo.max = maxDate;
+        updateDisplayDates();
+        // Remove active class from all time filter buttons on load
+        document.querySelectorAll('.time-filter-btn').forEach(btn => btn.classList.remove('active'));
+    }
+
+    // Time filter functionality (optional: implement if needed)
+    const timeFilterBtns = document.querySelectorAll('.time-filter-btn');
+    const dateFrom = document.getElementById('date-from');
+    const dateTo = document.getElementById('date-to');
+    timeFilterBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            timeFilterBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            // Set date pickers based on button
+            const today = new Date();
+            let fromDate, toDate;
+            if (this.textContent.includes('7')) {
+                // 7 days: from 6 days ago to today
+                fromDate = new Date(today);
+                fromDate.setDate(today.getDate() - 6);
+                toDate = today;
+            } else if (this.textContent.includes('30')) {
+                // 30 days: from 29 days ago to today
+                fromDate = new Date(today);
+                fromDate.setDate(today.getDate() - 29);
+                toDate = today;
+            } else if (this.textContent.includes('Month')) {
+                // This Month: from 1st of this month to today
+                fromDate = new Date(today.getFullYear(), today.getMonth(), 1);
+                toDate = today;
+            }
+            // Format to YYYY-MM-DD
+            function fmt(d) {
+                return d.toISOString().slice(0, 10);
+            }
+            if (fromDate && toDate) {
+                dateFrom.value = fmt(fromDate);
+                dateTo.value = fmt(toDate);
+                updateDisplayDates(); // <-- update display after changing values
+                filterByDate();
+            }
+        });
+    });
+
+    // Sidebar logic (copied/adapted from mandate.html)
+    document.addEventListener('DOMContentLoaded', function() {
+    const sidebar = document.querySelector('.sidebar');
+    const sidebarClose = document.querySelector('.sidebar-menu');
+    const overlay = document.querySelector('.overlay');
+    // Dropdown logic
+    const mandateParent = document.getElementById('mandateParent');
+    const mandateChildMenu = document.getElementById('mandateChildMenu');
+    const mandateChevron = document.getElementById('mandateChevron');
+    let mandateMenuOpen = false; // Closed by default
+
+    // Set Mandate Registration as active if on that page
+    document.querySelectorAll('.sidebar-item').forEach(sideItem => {
+        sideItem.classList.remove('active');
+    });
+    document.querySelectorAll('.sidebar-child-item').forEach(child => {
+        child.classList.remove('active');
+    });
+    // If on recentOrders, set that as active, else set child as active if on Mandate
+    if (window.location.href.includes('recentOrders')) {
+        document.getElementById('sidebarRecentOrders').classList.add('active');
+    } else if (window.location.href.includes('mandatePage')) {
+        document.getElementById('mandateStatusChild').classList.add('active');
+    } else if (window.location.href.includes('createMandate')) {
+        document.getElementById('mandateRegistrationChild').classList.add('active');
+    }
+    // Mandate dropdown closed by default
+    mandateChildMenu.classList.remove('open');
+    mandateChildMenu.style.display = 'none';
+    mandateChevron.classList.remove('fa-chevron-up');
+    mandateChevron.classList.add('fa-chevron-down');
+
+    mandateParent.addEventListener('click', function(e) {
+        mandateMenuOpen = !mandateMenuOpen;
+        if (mandateMenuOpen) {
+            mandateChildMenu.classList.add('open');
+            mandateChildMenu.style.display = 'block';
+            mandateChevron.classList.remove('fa-chevron-down');
+            mandateChevron.classList.add('fa-chevron-up');
+        } else {
+            mandateChildMenu.classList.remove('open');
+            mandateChildMenu.style.display = 'none';
+            mandateChevron.classList.remove('fa-chevron-up');
+            mandateChevron.classList.add('fa-chevron-down');
+        }
+        e.stopPropagation();
+    });
+    const transactParent = document.getElementById('transactParent');
+    const transactChildMenu = document.getElementById('transactChildMenu');
+    const transactChevron = document.getElementById('transactChevron');
+    let transactMenuOpen = false;
+    transactParent.addEventListener('click', function(e) {
+        transactMenuOpen = !transactMenuOpen;
+        if (transactMenuOpen) {
+            transactChildMenu.classList.add('open');
+            transactChildMenu.style.display = 'block';
+            transactChevron.classList.remove('fa-chevron-down');
+            transactChevron.classList.add('fa-chevron-up');
+        } else {
+            transactChildMenu.classList.remove('open');
+            transactChildMenu.style.display = 'none';
+            transactChevron.classList.remove('fa-chevron-up');
+            transactChevron.classList.add('fa-chevron-down');
+        }
+        e.stopPropagation();
+    });
+    // Sidebar navigation for main items (skip dropdown parents and logout)
+    document.querySelectorAll('.sidebar-item').forEach(item => {
+        if (
+            item.id !== 'logoutItem' &&
+            item.id !== 'mandateParent' &&
+            item.id !== 'transactParent'
+        ) {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.sidebar-item').forEach(sideItem => {
+                    sideItem.classList.remove('active');
+                });
+                document.querySelectorAll('.sidebar-child-item').forEach(child => {
+                    child.classList.remove('active');
+                });
+                this.classList.add('active');
+                const pageId = this.getAttribute('data-page');
+                sidebar.classList.remove('show-sidebar');
+                overlay.style.display = 'none';
+                if (pageId === 'recentOrders') {
+                    // do nothing (already here)
+                } else if (pageId) {
+                    if (window.parent && window.parent.postMessage) {
+                        window.parent.postMessage({
+                            action: 'changePage',
+                            pageId: pageId
+                        }, '*');
+                    }
+                }
+            });
+        }
+    });
+    // Sidebar navigation for child items
+    document.querySelectorAll('.sidebar-child-item').forEach(child => {
+        child.addEventListener('click', function(e) {
+            document.querySelectorAll('.sidebar-item').forEach(sideItem => {
+                sideItem.classList.remove('active');
+            });
+            document.querySelectorAll('.sidebar-child-item').forEach(childItem => {
+                childItem.classList.remove('active');
+            });
+            this.classList.add('active');
+            const pageId = this.getAttribute('data-page');
+            sidebar.classList.remove('show-sidebar');
+            overlay.style.display = 'none';
+            if (window.parent && window.parent.postMessage) {
+                window.parent.postMessage({
+                    action: 'changePage',
+                    pageId: pageId
+                }, '*');
+            }
+            e.stopPropagation();
+        });
+    });
+    // Close sidebar on overlay click
+    overlay.addEventListener('click', function() {
+        sidebar.classList.remove('show-sidebar');
+        this.style.display = 'none';
+    });
+    // Close sidebar on close button click
+    sidebarClose.addEventListener('click', function() {
+        sidebar.classList.remove('show-sidebar');
+        overlay.style.display = 'none';
+    });
+    // Open sidebar on back button click
+    document.getElementById('backButton').addEventListener('click', function(e) {
+        e.preventDefault();
+        sidebar.classList.add('show-sidebar');
+        overlay.style.display = 'block';
+    });
+    // Date range display logic
+    function safeUpdateDisplayDates() {
+        if (document.getElementById('display-date-from') && document.getElementById('date-from')) {
+            updateDisplayDates();
+        }
+    }
+    safeUpdateDisplayDates();
+    document.getElementById('display-date-from').addEventListener('click', function() {
+        document.getElementById('date-from').showPicker ? document.getElementById('date-from').showPicker() : document.getElementById('date-from').focus();
+    });
+    document.getElementById('display-date-to').addEventListener('click', function() {
+        document.getElementById('date-to').showPicker ? document.getElementById('date-to').showPicker() : document.getElementById('date-to').focus();
+    });
+    document.getElementById('date-from').addEventListener('change', function() {
+        updateDisplayDates();
+        filterByDate();
+    });
+    document.getElementById('date-to').addEventListener('change', function() {
+        updateDisplayDates();
+        filterByDate();
+    });
+});
+
+    // Initial fetch
+    fetchOrders();
+</script>
+</body>
+</html>

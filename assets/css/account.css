@@ -1,0 +1,90 @@
+body {
+    background-color: #f8f9fa;
+    font-family: Arial, sans-serif;
+    color: #333;
+}
+.container {
+    max-width: 800px;
+    padding: 20px;
+}
+.profile-card {
+    background-color: #4d6a11;
+    color: white;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+    position: relative;
+}
+.profile-image {
+    width: 80px;
+    height: 80px;
+    background-color: #dce6c0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+    font-size: 36px;
+    color: #4d6a11;
+}
+.action-card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.action-card:hover {
+    transform: translateY(-2px);
+}
+.action-icon {
+    width: 40px;
+    height: 40px;
+    background-color: #dce6c0;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    color: #4d6a11;
+}
+.action-title {
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+.action-subtitle {
+    font-size: 12px;
+    color: #666;
+}
+.section-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #4d6a11;
+}
+.edit-profile-btn {
+    background-color: transparent;
+    border: 1px solid white;
+    color: white;
+    border-radius: 20px;
+    padding: 5px 15px;
+    font-size: 12px;
+    margin-top: 10px;
+}
+
+@media (max-width: 360px) {
+    .kyc-badge {
+        position: static;
+        margin-top: 10px;
+        display: inline-block;
+    }
+    .profile-card .d-flex {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

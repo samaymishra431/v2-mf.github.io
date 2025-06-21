@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mandate Status - FundMF</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #FFFFFF;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background-color: #FFFFFF;
+            color: #FFFFFF;
+            padding: 12px 15px 0px 15px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        .back-button {
+            color: #d4d4d4;
+            font-size: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .back-button:hover {
+            color: #62880a;
+        }
+        /* Remove the green-transaction bar if not needed */
+        .back-button .green-transaction {
+            display: none;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+        .heading {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .page-title {
+            display: block;
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        
+        .content-container {
+            padding: 20px;
+            box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+            background-color: #FFFFFF;
+            /* Remove margin here, as in createSip.html */
+        }
+
+        @media (max-width: 767px) {
+            .content-container {
+                padding: 18px;
+            }
+        }
+        
+        .export-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        
+        .export-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 8px 20px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            background-color: #FFFFFF;
+            font-size: 14px;
+            cursor: pointer;
+            color: #333;
+            text-decoration: none;
+        }
+        
+        .export-button i {
+            font-size: 18px;
+        }
+        
+        .excel-icon {
+            color: #1D6F42;
+        }
+        
+        .pdf-icon {
+            color: #FF0000;
+        }
+        
+        .info-section {
+            margin-bottom: 20px;
+        }
+        
+        .info-label {
+            font-size: 12px;
+            color: #6C7278;
+            margin-bottom: 5px;
+        }
+        
+        .info-value {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #FFFFFF;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        
+        .status-pill {
+            display: inline-block;
+            padding: 8px 20px;
+            background-color: #e3f9e5;
+            color: #0d6832;
+            border-radius: 20px;
+            font-weight: bold;
+            text-align: center;
+            min-width: 100px;
+        }
+        /* Sidebar styles (copied from createMandate.html) */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 70%;
+            height: 100%;
+            background-color: #FFFFFF;
+            z-index: 1100;
+            
+            display: none;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        .sidebar-header {
+    display: flex;
+    align-items: center;
+    padding-right: 30px;
+    padding-left: 30px;
+    padding-top: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #eee;
+    background-color: #F2F2F2;
+    margin-bottom: 30px;
+}
+        .sidebar-logo {
+            height: 40px;
+            margin-right: 10px;
+        }
+        .sidebar-menu {
+            display: flex;
+            justify-content: flex-end;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-radius: 30px;
+            margin: 5px 15px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .sidebar-item.active {
+            background-color: #f0f0f0;
+        }
+        .sidebar-icon {
+            margin-right: 15px;
+            color: #666;
+            width: 20px;
+            text-align: center;
+        }
+        .sidebar-text {
+            color: #666;
+        }
+        .show-sidebar {
+            display: block;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
+        .sidebar-child-menu {
+            margin-left: 35px;
+            margin-top: 0;
+            margin-bottom: 0;
+            padding-left: 0;
+            display: none;
+        }
+        .sidebar-child-menu.open {
+            display: block !important;
+        }
+        .sidebar-child-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px 10px 10px;
+            border-radius: 30px;
+            margin: 0 15px 0 0;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-size: 15px;
+            color: #666;
+        }
+        .sidebar-child-item.active {
+            background-color: #f0f0f0;
+            color: #000000;
+        }
+        .sidebar-child-icon {
+            margin-right: 12px;
+            color: #9e9e9e;
+            width: 18px;
+            text-align: center;
+            font-size: 15px;
+        }
+        .sidebar-item.active .sidebar-text {
+        color: #000000;
+    }
+    </style>
+</head>
+<body>
+    <!-- Overlay for sidebar background -->
+    <div class="overlay"></div>
+    <!-- Sidebar/Navigation Menu -->
+    <div class="sidebar" style="z-index: 1100;">
+        <div class="sidebar-header">
+            <img src="./assets/images/logo.png" alt="FundMF Logo" class="sidebar-logo">
+            <div style="flex-grow: 1;"></div>
+            <div class="sidebar-menu">
+                <img src="./assets/images/close.png" alt="Close" style="width:24px;height:24px;cursor:pointer;">
+            </div>
+        </div>
+        <div class="sidebar-item" data-page="homePage">
+            <img src="./assets/images/home_active.svg " alt="Dashboard Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+            <div class="sidebar-text">Dashboard</div>
+        </div>
+        <div class="sidebar-item" data-page="portfolioPage">
+            <img src="./assets/images/sideBarPortfolio.png" alt="Portfolio Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+            <div class="sidebar-text">Portfolio</div>
+        </div>
+        <div class="sidebar-item" data-page="recentOrders">
+            <img src="./assets/images/recentOrder.png" alt="Recent Orders Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+            <div class="sidebar-text">Recent Orders</div>
+        </div>
+        <!-- Mandate parent with child menu -->
+        <div class="sidebar-item" id="mandateParent">
+            <img src="./assets/images/mandate.png" alt="Mandate Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+            <div class="sidebar-text">Mandate</div>
+            <i class="fas fa-chevron-down" id="mandateChevron" style="margin-left:auto;color:#888;font-size:14px;"></i>
+        </div>
+        <div class="sidebar-child-menu open" id="mandateChildMenu" style="display:block;">
+            <div class="sidebar-child-item active" data-page="mandatePage" id="mandateStatusChild">
+                <i class="fas fa-list sidebar-child-icon"></i>
+                <div>Mandate Status</div>
+            </div>
+            <div class="sidebar-child-item" data-page="createMandate" id="mandateRegistrationChild">
+                <i class="fas fa-plus-circle sidebar-child-icon"></i>
+                <div>Mandate Registration</div>
+            </div>
+        </div>
+        <!-- Transact parent with child menu -->
+        <div class="sidebar-item" id="transactParent">
+            <img src="./assets/images/transact.png" alt="Transact Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+            <div class="sidebar-text">Transact</div>
+            <i class="fas fa-chevron-down" id="transactChevron" style="margin-left:auto;color:#888;font-size:14px;"></i>
+        </div>
+        <div class="sidebar-child-menu" id="transactChildMenu" style="display:none;">
+            <div class="sidebar-child-item" data-page="createLumpsum" id="transactLumpsum">
+                <i class="fas fa-handshake sidebar-child-icon"></i>
+                <div>Purchase</div>
+            </div>
+            <div class="sidebar-child-item" data-page="createSip" id="transactSip">
+                <i class="fas fa-chart-bar sidebar-child-icon"></i>
+                <div>SIP</div>
+            </div>
+            <div class="sidebar-child-item" data-page="createStp" id="transactStp">
+                <i class="fas fa-file-alt sidebar-child-icon"></i>
+                <div>STP</div>
+            </div>
+            <div class="sidebar-child-item" data-page="createSwp" id="transactSwp">
+                <i class="fas fa-coins sidebar-child-icon"></i>
+                <div>SWP</div>
+            </div>
+            <div class="sidebar-child-item" data-page="nfo" id="transactNfo">
+                <i class="fas fa-rocket sidebar-child-icon"></i>
+                <div>NFO</div>
+            </div>
+            <div class="sidebar-child-item" data-page="portfolioPage" id="transactRedeem">
+                <i class="fas fa-wallet sidebar-child-icon"></i>
+                <div>Redeem</div>
+            </div>
+        </div>
+        <div class="sidebar-item" data-page="accountPage">
+            <img src="./assets/images/Settings.png" alt="Settings Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+            <div class="sidebar-text">Settings</div>
+        </div>
+        <!-- <div class="sidebar-item" data-page="contactPage">
+            <img src="./assets/images/contactUs.png" alt="Contact Us Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+            <div class="sidebar-text">Contact Us</div>
+        </div> -->
+        <div class="sidebar-item" id="logoutItem">
+            <img src="./assets/images/logout.png" alt="Logout Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+            <div class="sidebar-text">Logout</div>
+        </div>
+    </div>
+    <!-- Header -->
+    <div class="header" style="justify-content: flex-start; z-index: 1000;">
+        <a class="back-button" id="backButton">
+            <i class="fas fa-arrow-left"></i>
+            <!-- <span class="green-transaction"></span> -->
+        </a>
+        <!-- Removed the header text -->
+    </div>
+
+    <!-- Content Container -->
+    <div class="content-container">
+        <div class="logo">
+            <img src="./assets/images/logo.png" alt="FundMF Logo">
+        </div>
+         <h1 class="heading">Mandate Status</h1>
+        <!-- Export Buttons -->
+        <div class="export-buttons">
+            <a href="#" class="export-button">
+                <i class="fas fa-file-excel excel-icon"></i>
+                Excel File
+            </a>
+            <a href="#" class="export-button">
+                <i class="fas fa-file-pdf pdf-icon"></i>
+                PDF File
+            </a>
+        </div>
+        
+        <!-- Status Information -->
+        <div class="info-section">
+            <p class="info-label">Status</p>
+            <div class="info-value" style="text-align: center;">
+                <span class="status-pill">ACTIVE</span>
+            </div>
+        </div>
+        
+        <!-- Mandate ID -->
+        <div class="info-section">
+            <p class="info-label">MANDATE ID</p>
+            <div class="info-value">MANDATE123456</div>
+        </div>
+        
+        <!-- Client Code -->
+        <div class="info-section">
+            <p class="info-label">Client Code</p>
+            <div class="info-value">Client Code</div>
+        </div>
+        
+        <!-- Client Name -->
+        <div class="info-section">
+            <p class="info-label">Client Name</p>
+            <div class="info-value">Client Name</div>
+        </div>
+        
+        <!-- Bank Name -->
+        <div class="info-section">
+            <p class="info-label">Bank Name</p>
+            <div class="info-value">Bank Name</div>
+        </div>
+        
+        <!-- Bank Branch -->
+        <div class="info-section">
+            <p class="info-label">Bank Branch</p>
+            <div class="info-value">A-101, Connaught Place, New Delhi, Delhi 110001, India</div>
+        </div>
+        
+        <!-- Amount -->
+        <div class="info-section">
+            <p class="info-label">Amount</p>
+            <div class="info-value">Amount</div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Sidebar logic (copied/adapted from createMandate.html)
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.querySelector('.sidebar');
+            const sidebarClose = document.querySelector('.sidebar-menu');
+            const overlay = document.querySelector('.overlay');
+            // Dropdown logic
+            const mandateParent = document.getElementById('mandateParent');
+            const mandateChildMenu = document.getElementById('mandateChildMenu');
+            const mandateChevron = document.getElementById('mandateChevron');
+            let mandateMenuOpen = true; // Set to true so it's open by default
+
+            // Set Mandate Status as active on load
+            document.querySelectorAll('.sidebar-item').forEach(sideItem => {
+                sideItem.classList.remove('active');
+            });
+            document.querySelectorAll('.sidebar-child-item').forEach(child => {
+                child.classList.remove('active');
+            });
+            document.getElementById('mandateStatusChild').classList.add('active');
+            // Open Mandate dropdown and set chevron up
+            mandateChildMenu.classList.add('open');
+            mandateChildMenu.style.display = 'block';
+            mandateChevron.classList.remove('fa-chevron-down');
+            mandateChevron.classList.add('fa-chevron-up');
+
+            mandateParent.addEventListener('click', function(e) {
+                mandateMenuOpen = !mandateMenuOpen;
+                if (mandateMenuOpen) {
+                    mandateChildMenu.classList.add('open');
+                    mandateChildMenu.style.display = 'block';
+                    mandateChevron.classList.remove('fa-chevron-down');
+                    mandateChevron.classList.add('fa-chevron-up');
+                } else {
+                    mandateChildMenu.classList.remove('open');
+                    mandateChildMenu.style.display = 'none';
+                    mandateChevron.classList.remove('fa-chevron-up');
+                    mandateChevron.classList.add('fa-chevron-down');
+                }
+                e.stopPropagation();
+            });
+            const transactParent = document.getElementById('transactParent');
+            const transactChildMenu = document.getElementById('transactChildMenu');
+            const transactChevron = document.getElementById('transactChevron');
+            let transactMenuOpen = false;
+            transactParent.addEventListener('click', function(e) {
+                transactMenuOpen = !transactMenuOpen;
+                if (transactMenuOpen) {
+                    transactChildMenu.classList.add('open');
+                    transactChildMenu.style.display = 'block';
+                    transactChevron.classList.remove('fa-chevron-down');
+                    transactChevron.classList.add('fa-chevron-up');
+                } else {
+                    transactChildMenu.classList.remove('open');
+                    transactChildMenu.style.display = 'none';
+                    transactChevron.classList.remove('fa-chevron-up');
+                    transactChevron.classList.add('fa-chevron-down');
+                }
+                e.stopPropagation();
+            });
+            // Sidebar navigation for main items (skip dropdown parents and logout)
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                if (
+                    item.id !== 'logoutItem' &&
+                    item.id !== 'mandateParent' &&
+                    item.id !== 'transactParent'
+                ) {
+                    item.addEventListener('click', function() {
+                        document.querySelectorAll('.sidebar-item').forEach(sideItem => {
+                            sideItem.classList.remove('active');
+                        });
+                        document.querySelectorAll('.sidebar-child-item').forEach(child => {
+                            child.classList.remove('active');
+                        });
+                        this.classList.add('active');
+                        const pageId = this.getAttribute('data-page');
+                        if (pageId) {
+                            sidebar.classList.remove('show-sidebar');
+                            overlay.style.display = 'none';
+                            if (window.parent && window.parent.postMessage) {
+                                window.parent.postMessage({
+                                    action: 'changePage',
+                                    pageId: pageId
+                                }, '*');
+                            }
+                        } else {
+                            sidebar.classList.remove('show-sidebar');
+                            overlay.style.display = 'none';
+                        }
+                    });
+                }
+            });
+            // Sidebar navigation for child items
+            document.querySelectorAll('.sidebar-child-item').forEach(child => {
+                child.addEventListener('click', function(e) {
+                    document.querySelectorAll('.sidebar-item').forEach(sideItem => {
+                        sideItem.classList.remove('active');
+                    });
+                    document.querySelectorAll('.sidebar-child-item').forEach(childItem => {
+                        childItem.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    const pageId = this.getAttribute('data-page');
+                    sidebar.classList.remove('show-sidebar');
+                    overlay.style.display = 'none';
+                    if (window.parent && window.parent.postMessage) {
+                        window.parent.postMessage({
+                            action: 'changePage',
+                            pageId: pageId
+                        }, '*');
+                    }
+                    e.stopPropagation();
+                });
+            });
+            // Open sidebar on back button
+            document.getElementById('backButton').addEventListener('click', function(e) {
+                e.preventDefault();
+                sidebar.classList.add('show-sidebar');
+                overlay.style.display = 'block';
+            });
+            // Close sidebar
+            sidebarClose.addEventListener('click', function() {
+                sidebar.classList.remove('show-sidebar');
+                overlay.style.display = 'none';
+            });
+            // Close sidebar when clicking outside
+            overlay.addEventListener('click', function() {
+                sidebar.classList.remove('show-sidebar');
+                overlay.style.display = 'none';
+            });
+        });
+
+        // Export button functionality
+        document.querySelectorAll('.export-button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const fileType = this.textContent.trim();
+                alert(`Exporting ${fileType}...`);
+                // In a real app, this would trigger the file download
+            });
+        });
+    </script>
+</body>
+</html>

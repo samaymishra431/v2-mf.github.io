@@ -1,0 +1,99 @@
+body {
+    background-color: #f8f9fa;
+    font-family: Arial, sans-serif;
+    color: #333;
+}
+.container {
+    max-width: 800px;
+    padding: 20px;
+}
+.summary-card {
+    background-color: #4d6a11;
+    color: white;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+}
+.fund-card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
+}
+.fund-logo {
+    width: 40px;
+    height: 40px;
+    background-color: #dce6c0;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+}
+.fund-name {
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+.fund-category {
+    font-size: 12px;
+    color: #666;
+}
+.fund-return {
+    text-align: right;
+}
+.fund-return-value {
+    font-weight: bold;
+    color: #4d6a11;
+}
+.positive {
+    color: green;
+}
+.negative {
+    color: red;
+}
+.filter-section {
+    background-color: white;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
+}
+.filter-btn {
+    background-color: #f1f1f1;
+    border: none;
+    border-radius: 20px;
+    padding: 5px 15px;
+    margin-right: 10px;
+    font-size: 14px;
+}
+.filter-btn.active {
+    background-color: #4d6a11;
+    color: white;
+}
+.section-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #4d6a11;
+}
+.chart-container {
+    background-color: white;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.summary-stat {
+    font-size: 22px;
+    font-weight: bold;
+}
+.summary-label {
+    font-size: 14px;
+    opacity: 0.8;
+}

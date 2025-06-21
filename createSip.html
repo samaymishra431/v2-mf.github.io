@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FundMF - Create SIP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #FFFFFF;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background-color: #FFFFFF;
+            color: #FFFFFF;
+            padding: 12px 15px 0px 15px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        
+        .back-button {
+            color: #d4d4d4;
+            font-size: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .back-button:hover {
+            color: #62880a;
+        }
+        
+        .back-button .green-transaction {
+            display: none;
+        }
+        
+        .content-container {
+            padding: 20px;
+            box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+            background-color: #FFFFFF;
+        }
+        
+        @media (max-width: 767px) {
+            .content-container {
+                padding: 18px;
+            }
+            .button-container {
+                gap: 10px;
+            }
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+        
+        .heading {
+            text-align: center;
+            margin-bottom: 5px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .subheading {
+            text-align: center;
+            color: #6C7278;
+            font-size: 12px;
+            margin-bottom: 30px;
+        }
+        
+        /* .divider {
+            height: 1px;
+            background-color: #e0e0e0;
+            margin: 30px 0;
+        } */
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 12px;
+            color: #6C7278;
+            margin-bottom: 5px;
+        }
+        
+        .form-control, .form-select {
+            width: 100%;
+            padding: 12px 10px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            outline: none;
+            border-color: #62880a;
+        }
+        
+        .submit-btn, .reset-btn {
+            border: none;
+            border-radius: 4px;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .submit-btn {
+            background-color: #62880a;
+            color: #FFFFFF;
+        }
+        
+        .reset-btn {
+            background-color: #6c757d;
+            color: #FFFFFF;
+        }
+        
+        .info-icon {
+            color: #888;
+            margin-left: 5px;
+            font-size: 14px;
+        }
+        
+        .date-input {
+            position: relative;
+        }
+        
+        .date-input .form-control {
+            padding-right: 40px;
+        }
+        
+        .date-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            cursor: pointer;
+        }
+        
+        .button-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .button-container button {
+            flex: 1;
+        }
+        
+        /* Success alert */
+        .alert {
+            display: none;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header" style="justify-content: flex-start;">
+        <a class="back-button" id="backButton">
+            <i class="fas fa-arrow-left"></i>
+            <!-- <span class="green-transaction"></span> -->
+        </a>
+        <!-- Removed the header text -->
+    </div>
+    
+    <div class="content-container">
+        <!-- Logo -->
+        <div class="logo">
+            <img src="./assets/images/logo.png" alt="FundMF Logo">
+        </div>
+        
+        <!-- Heading -->
+        <h1 class="heading">Create SIP</h1>
+        <p class="subheading">Set up a Systematic Investment Plan for mutual funds</p>
+        
+        <!-- <div class="divider"></div> -->
+        
+        <!-- Success Alert -->
+        <div class="alert alert-success" id="successAlert">
+            <i class="fas fa-check-circle"></i> SIP created successfully!
+        </div>
+        
+        <!-- SIP Form -->
+        <form id="sipForm">
+            <div class="row">
+                <div class="col-12 col-md-6 form-group">
+                    <label class="form-label">AMC Name</label>
+                    <select class="form-select" id="amcName" required>
+                        <option value="" selected disabled>SELECT AMC NAME</option>
+                        <option value="hdfc">HDFC Mutual Fund</option>
+                        <option value="sbi">SBI Mutual Fund</option>
+                        <option value="kotak">Kotak Mutual Fund</option>
+                        <option value="axis">Axis Mutual Fund</option>
+                        <option value="icici">ICICI Prudential Mutual Fund</option>
+                    </select>
+                </div>
+                <div class="col-12 col-md-6 form-group">
+                    <label class="form-label">Scheme Name</label>
+                    <select class="form-select" id="schemeName" required>
+                        <option value="" selected disabled>SELECT SCHEME NAME</option>
+                        <!-- Options will be populated by JavaScript -->
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-6 form-group">
+                    <label class="form-label">Frequency Type</label>
+                    <select class="form-select" id="frequencyType" required>
+                        <option value="daily" selected>Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="quarterly">Quarterly</option>
+                    </select>
+                </div>
+                <div class="col-12 col-md-6 form-group">
+                    <label class="form-label">Holding Type <i class="fas fa-info-circle info-icon"></i></label>
+                    <select class="form-select" id="holdingType" required>
+                        <option value="physical" selected>Physical</option>
+                        <option value="demat">Demat</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-6 form-group">
+                    <label class="form-label">SIP Amount</label>
+                    <input type="number" class="form-control" id="sipAmount" value="500" min="100" required>
+                </div>
+                <div class="col-12 col-md-6 form-group">
+                    <label class="form-label">Total SIP Installments</label>
+                    <input type="number" class="form-control" id="totalInstallments" value="12" min="1" required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-6 form-group">
+                    <label class="form-label">Date of Registration</label>
+                    <div class="date-input">
+                        <input type="text" class="form-control" id="registrationDate" placeholder="dd/mm/yyyy" required>
+                        <i class="far fa-calendar date-icon"></i>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 form-group">
+                    <label class="form-label">End Date</label>
+                    <div class="date-input">
+                        <input type="text" class="form-control" id="endDate" placeholder="dd/mm/yyyy" required>
+                        <i class="far fa-calendar date-icon"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 form-group">
+                    <label class="form-label">Select Mandate</label>
+                    <select class="form-select" id="selectMandate" required>
+                        <option value="" selected disabled>Select Mandate</option>
+                        <option value="mandate1">HDFC Bank - XXXXXXXX2458</option>
+                        <option value="mandate2">ICICI Bank - XXXXXXXX8794</option>
+                        <option value="mandate3">SBI Bank - XXXXXXXX9301</option>
+                    </select>
+                </div>
+            </div>
+            <div class="button-container">
+                <button type="reset" class="reset-btn">Reset</button>
+                <button type="submit" class="submit-btn">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Scheme data based on AMC selection
+            const schemeData = {
+                hdfc: [
+                    "HDFC Balanced Advantage Fund",
+                    "HDFC Mid-Cap Opportunities Fund",
+                    "HDFC Small Cap Fund",
+                    "HDFC Flexi Cap Fund"
+                ],
+                sbi: [
+                    "SBI Blue Chip Fund",
+                    "SBI Small Cap Fund",
+                    "SBI Focused Equity Fund",
+                    "SBI Magnum Equity ESG Fund"
+                ],
+                kotak: [
+                    "Kotak Standard Multicap Fund",
+                    "Kotak Emerging Equity Fund",
+                    "Kotak Equity Opportunities Fund",
+                    "Kotak Energy Opportunities Fund"
+                ],
+                axis: [
+                    "Axis Bluechip Fund",
+                    "Axis Midcap Fund",
+                    "Axis Small Cap Fund",
+                    "Axis Focused 25 Fund"
+                ],
+                icici: [
+                    "ICICI Prudential Bluechip Fund",
+                    "ICICI Prudential Value Discovery Fund",
+                    "ICICI Prudential Technology Fund",
+                    "ICICI Prudential Banking & Financial Services Fund"
+                ]
+            };
+
+            const form = document.getElementById('sipForm');
+            const successAlert = document.getElementById('successAlert');
+
+            // Update scheme dropdown when AMC changes
+            document.getElementById('amcName').addEventListener('change', function() {
+                const selectedAMC = this.value;
+                const schemeDropdown = document.getElementById('schemeName');
+                
+                // Clear existing options
+                schemeDropdown.innerHTML = '<option value="" disabled>SELECT SCHEME NAME</option>';
+                
+                // Add new options based on selected AMC
+                if (selectedAMC && schemeData[selectedAMC]) {
+                    schemeData[selectedAMC].forEach(scheme => {
+                        const option = document.createElement('option');
+                        option.value = scheme.toLowerCase().replace(/\s+/g, '-');
+                        option.textContent = scheme;
+                        schemeDropdown.appendChild(option);
+                    });
+                }
+                
+                // Select first option
+                if (schemeDropdown.options.length > 1) {
+                    schemeDropdown.options[1].selected = true;
+                }
+            });
+
+            // Date picker functionality (simplified for this example)
+            const dateInputs = document.querySelectorAll('.date-input');
+            dateInputs.forEach(dateInput => {
+                const input = dateInput.querySelector('input');
+                const icon = dateInput.querySelector('.date-icon');
+                
+                icon.addEventListener('click', function() {
+                    // In a real implementation, this would open a date picker
+                    alert('Date picker would open here');
+                });
+                
+                input.addEventListener('focus', function() {
+                    // In a real implementation, this would also open a date picker
+                });
+            });
+
+            // Form submission
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form values
+                const formData = {
+                    amcName: document.getElementById('amcName').options[document.getElementById('amcName').selectedIndex].text,
+                    schemeName: document.getElementById('schemeName').options[document.getElementById('schemeName').selectedIndex].text,
+                    frequencyType: document.getElementById('frequencyType').value,
+                    holdingType: document.getElementById('holdingType').value,
+                    sipAmount: document.getElementById('sipAmount').value,
+                    totalInstallments: document.getElementById('totalInstallments').value,
+                    registrationDate: document.getElementById('registrationDate').value,
+                    endDate: document.getElementById('endDate').value,
+                    mandate: document.getElementById('selectMandate').options[document.getElementById('selectMandate').selectedIndex].text
+                };
+                
+                console.log('SIP Form Data:', formData);
+                
+                // Show success message
+                successAlert.style.display = 'block';
+                
+                // Reset form
+                form.reset();
+                
+                // Scroll to top
+                window.scrollTo(0, 0);
+                
+                // Hide success message after 5 seconds
+                setTimeout(() => {
+                    successAlert.style.display = 'none';
+                }, 5000);
+            });
+
+            // Fix for back button functionality
+            document.getElementById('backButton').addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Send message to parent window to navigate back to home page
+                if (window.parent && window.parent.postMessage) {
+                    window.parent.postMessage({
+                        action: 'changePage',
+                        pageId: 'homePage'
+                    }, '*');
+                }
+            });
+            
+            // Initialize current date for registration date field
+            const today = new Date();
+            const dd = String(today.getDate()).padStart(2, '0');
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const yyyy = today.getFullYear();
+            document.getElementById('registrationDate').value = dd + '/' + mm + '/' + yyyy;
+            
+            // Set end date one year from now
+            const nextYear = new Date(today);
+            nextYear.setFullYear(today.getFullYear() + 1);
+            const enddd = String(nextYear.getDate()).padStart(2, '0');
+            const endmm = String(nextYear.getMonth() + 1).padStart(2, '0');
+            const endyyyy = nextYear.getFullYear();
+            document.getElementById('endDate').value = enddd + '/' + endmm + '/' + endyyyy;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transaction History - FundMF</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+    }
+    
+    body {
+        background-color: white;
+        color: #222;
+        max-width: 400px;
+        margin: 0 auto;
+        position: relative;
+        min-height: 100vh;
+    }
+    
+    /* Header Styles */
+    .header {
+        background-color: #4d6a11;
+        color: white;
+        padding: 15px 20px 25px 20px;
+        font-family: Arial, sans-serif;
+        font-weight: bold;
+    }
+    
+    .header-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        font-family: Arial, sans-serif;
+        font-weight: normal;
+    }
+    
+    .back-icon {
+        font-size: 24px;
+        color: white;
+        cursor: pointer;
+        font-family: Arial, sans-serif;
+        font-weight: normal;
+    }
+    
+    .notification {
+        position: relative;
+    }
+    
+    .notification i {
+        font-size: 24px;
+        color: white;
+        font-family: Arial, sans-serif;
+        font-weight: normal;
+    }
+    
+    .notification-badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background-color: red;
+        color: white;
+        border-radius: 50%;
+        width: 16px;
+        height: 16px;
+        font-size: 12px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .page-title {
+        font-size: 20px;
+        font-weight: bold;
+        color: white;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin-top: 5px;
+    }
+
+    /* Main Content */
+    .main-content {
+        background: #fff;
+        border-radius: 20px 20px 0 0;
+        margin-top: -15px;
+        padding: 28px 18px 20px 18px;
+        box-shadow: none;
+        min-height: calc(100vh - 120px);
+    }
+
+    /* Fund Header */
+    .fund-header {
+        background-color: #6B8E23;
+        color: white;
+        border-radius: 6px;
+        padding: 14px 10px 10px 10px;
+        margin-bottom: 25px;
+        text-align: center;
+    }
+    
+    .fund-title {
+        font-size: 17px;
+        font-weight: bold;
+        margin-bottom: 4px;
+        font-family: Arial, sans-serif;
+    }
+    
+    .fund-category {
+        font-size: 13px;
+        font-weight: 500;
+        color: #e5ffe5;
+        font-family: Arial, sans-serif;
+    }
+
+    /* Transaction History Heading */
+    .transaction-heading {
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #222;
+        letter-spacing: 0.1px;
+        font-family: Arial, sans-serif;
+    }
+
+    /* Transaction Items */
+    .transaction-container {
+        max-height: calc(100vh - 300px);
+        overflow-y: auto;
+        padding-right: 5px;
+        /* Custom scrollbar */
+        scrollbar-width: thin;
+        scrollbar-color: #b7c99c #f3f6fa;
+    }
+    
+    .transaction-container::-webkit-scrollbar {
+        width: 6px;
+        background: #f3f6fa;
+    }
+    
+    .transaction-container::-webkit-scrollbar-thumb {
+        background: #b7c99c;
+        border-radius: 4px;
+    }
+    
+    .transaction-container::-webkit-scrollbar-track {
+        background: #f3f6fa;
+        border-radius: 4px;
+    }
+
+    .transaction-item {
+        border: 1.5px solid #e3e8ee;
+        border-radius: 10px;
+        margin: 16px 0;
+        box-shadow: none;
+        padding: 15px;
+        background: #fff;
+    }
+    
+    .transaction-item:last-child {
+        margin-bottom: 0;
+    }
+    
+    .transaction-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+    
+    .transaction-row > div:first-child {
+        text-align: left;
+    }
+    
+    .transaction-row > div:last-child {
+        text-align: right;
+    }
+    
+    .transaction-label {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 4px;
+        font-family: Arial, sans-serif;
+    }
+    
+    .transaction-value {
+        font-weight: bold;
+        font-size: 14px;
+        color: #222;
+        font-family: Arial, sans-serif;
+    }
+    
+    .profit {
+        color: white;
+        background-color: #2e8b57;
+        border-radius: 15px;
+        padding: 2px 8px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+    
+    .loss {
+        color: white;
+        background-color: #ff6b6b;
+        border-radius: 15px;
+        padding: 2px 8px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    /* No transactions message */
+    .no-transactions {
+        text-align: center;
+        color: #888;
+        font-size: 16px;
+        margin-top: 50px;
+        font-family: Arial, sans-serif;
+    }
+
+    /* Loading spinner */
+    .loading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 200px;
+    }
+    
+    .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #e2ebc7;
+        border-radius: 50%;
+        border-top-color: #4d6a11;
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+</head>
+<body>
+
+<!-- Main Header -->
+<div class="header">
+    <div class="header-top">
+        <div class="back-icon" onclick="goBack()">
+            <i class="fas fa-arrow-left"></i>
+        </div>
+        <div class="notification">
+            <i class="fas fa-bell"></i>
+            <div class="notification-badge">2</div>
+        </div>
+    </div>
+    <div class="page-title">Transaction History</div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <!-- Fund Header (will be populated by JavaScript) -->
+    <div id="fund-header-container"></div>
+    
+    <!-- Transaction History Heading -->
+    <div class="transaction-heading">Transaction Details</div>
+    
+    <!-- Loading State -->
+    <div id="loading" class="loading">
+        <div class="spinner"></div>
+    </div>
+    
+    <!-- Transaction Container -->
+    <div id="transaction-container" class="transaction-container" style="display: none;">
+        <!-- Transactions will be populated here -->
+    </div>
+    
+    <!-- No Transactions Message -->
+    <div id="no-transactions" class="no-transactions" style="display: none;">
+        No transactions found for this fund.
+    </div>
+</div>
+
+<script>
+// Function to go back to portfolio page
+function goBack() {
+    if (window.parent && window.parent.postMessage) {
+        window.parent.postMessage({
+            action: 'changePage',
+            pageId: 'portfolioPage'
+        }, '*');
+    } else {
+        // Fallback if not in iframe
+        window.history.back();
+    }
+}
+
+// Function to get URL parameters
+function getUrlParameter(name) {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    var results = regex.exec(location.search);
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+}
+
+// Helper functions
+function isNegative(val) {
+    if (!val) return false;
+    if (typeof val === 'number') return val < 0;
+    return /^-/.test(val.toString().replace(/,/g, '').trim());
+}
+
+function formatDate(dateStr) {
+    if (!dateStr) return '';
+    const d = new Date(dateStr);
+    if (!isNaN(d)) {
+        const day = d.getDate();
+        const month = d.toLocaleString('default', { month: 'short' });
+        const year = d.getFullYear();
+        return `${day}${getDaySuffix(day)} ${month} ${year}`;
+    }
+    return dateStr;
+}
+
+function getDaySuffix(day) {
+    if (day > 3 && day < 21) return 'th';
+    switch (day % 10) {
+        case 1:  return "st";
+        case 2:  return "nd";
+        case 3:  return "rd";
+        default: return "th";
+    }
+}
+
+// Function to fetch and display transaction data
+async function loadTransactionHistory() {
+    const fundIndex = getUrlParameter('fundIndex');
+    
+    if (!fundIndex) {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('no-transactions').style.display = 'block';
+        return;
+    }
+
+    const API_BASE_URL = 'http://122.176.151.191/MutualFund';
+    const token = localStorage.getItem('authToken');
+    
+    if (!token) {
+        window.location.href = 'index.html';
+        return;
+    }
+
+    try {
+        // Fetch portfolio data to get the specific fund
+        const res = await fetch(`${API_BASE_URL}/myPortFolio`, {
+            method: 'POST',
+            headers: {
+                'accept': '*/*',
+                'Authorization': 'Bearer ' + token
+            }
+        });
+        
+        const data = await res.json();
+        
+        if (data && data.valid && data.details && data.details.length > 0) {
+            const portfolioDetails = data.details[0];
+            const funds = portfolioDetails.portFolioList || [];
+            const fund = funds[parseInt(fundIndex)];
+            
+            if (fund) {
+                // Display fund header
+                displayFundHeader(fund);
+                
+                // Display transactions
+                displayTransactions(fund.transactions || []);
+            } else {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('no-transactions').style.display = 'block';
+            }
+        } else {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('no-transactions').style.display = 'block';
+        }
+    } catch (error) {
+        console.error('Error fetching transaction history:', error);
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('no-transactions').innerHTML = 'Error loading transaction history. Please try again.';
+        document.getElementById('no-transactions').style.display = 'block';
+    }
+}
+
+// Function to display fund header
+function displayFundHeader(fund) {
+    let fundCategory = '';
+    if (fund.category) {
+        fundCategory = fund.category;
+    } else if (fund.schemeType || fund.schemeCategory) {
+        fundCategory = [fund.schemeType, fund.schemeCategory].filter(Boolean).join(' | ');
+    } else if (fund.type) {
+        fundCategory = fund.type;
+    } else {
+        fundCategory = fund.isin || '';
+    }
+
+    document.getElementById('fund-header-container').innerHTML = `
+        <div class="fund-header">
+            <div class="fund-title">${fund.amcName || 'Fund Name'}</div>
+            <div class="fund-category">${fundCategory}</div>
+        </div>
+    `;
+}
+
+// Function to display transactions
+function displayTransactions(transactions) {
+    document.getElementById('loading').style.display = 'none';
+    
+    if (transactions.length === 0) {
+        document.getElementById('no-transactions').style.display = 'block';
+        return;
+    }
+
+    const transactionHtml = transactions.map((tx, i) => `
+        <div class="transaction-item">
+            <div class="transaction-row">
+                <div>
+                    <div class="transaction-label">Date</div>
+                    <div class="transaction-value">${formatDate(tx.transactionDate || '')}</div>
+                </div>
+                <div>
+                    <div class="transaction-label">Days</div>
+                    <div class="transaction-value">${tx.days || ''}</div>
+                </div>
+                <div>
+                    <div class="transaction-label">Amount</div>
+                    <div class="transaction-value">${tx.amount || ''}</div>
+                </div>
+            </div>
+            <div class="transaction-row">
+                <div>
+                    <div class="transaction-label">NAV</div>
+                    <div class="transaction-value">${tx.nav || ''}</div>
+                </div>
+                <div>
+                    <div class="transaction-label">Units</div>
+                    <div class="transaction-value">${tx.units || tx.quantity || ''}</div>
+                </div>
+                <div>
+                    <div class="transaction-label">P&L</div>
+                    <div class="transaction-value">
+                        <span class="${isNegative(tx.pnl) ? 'loss' : 'profit'}">${tx.pnl || ''}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+
+    document.getElementById('transaction-container').innerHTML = transactionHtml;
+    document.getElementById('transaction-container').style.display = 'block';
+}
+
+// Load transaction history when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    loadTransactionHistory();
+});
+</script>
+
+<!-- Add Font Awesome JS for icons to work -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+</body>
+</html>
