@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - FundMF</title>
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+    background-color: #FFFFFF;
+    font-family: Arial, sans-serif;
+    color: #333;
+}
+.container {
+    max-width: 800px;
+    padding: 20px;
+}
+.contact-card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 15px;
+    /* box-shadow: 0px 4px 8px rgba(0,0,0,0.1); */
+
+    border: 1px solid #C5CAD1;
+    margin-bottom: 20px;
+}
+.callback-card {
+    background-color: #597200;
+    color: #FFFFFF;
+    border-radius: 10px;
+    /* padding: 25px; */
+    margin-bottom: 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    padding-bottom: 60px;
+    padding-top: 65px;
+    padding-right: 35px;
+    padding-left: 35px;
+}
+.dealer-card {
+    background-color: #597200;
+    color: #FFFFFF;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+}
+.upload-btn {
+    border: 2px dashed #ccc;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 17px;
+    color: #597200;
+    font-weight: bold;
+}
+.upload-btn:hover {
+    background-color: #f0f0f0;
+    border-color: #b4e600;
+}
+.upload-icon {
+    background-color: #dce6c0;
+    border-radius: 6px;
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+}
+.send-btn {
+    background-color: #597200;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 25px;
+    padding: 10px;
+    width: 100%;
+    font-weight: 400;
+    transition: all 0.2s ease;
+    font-size: 18px;
+}
+.send-btn:hover {
+    background-color: #5d7a21;
+    transform: translateY(-2px);
+}
+.submit-btn {
+    background-color: #BCFF02;
+    color: #597200;
+    border: none;
+    border-radius: 24px;
+    padding: 10px 30px;
+    font-weight: bold;
+    transition: all 0.2s ease;
+    font-size: 14px;
+}
+.submit-btn:hover {
+    background-color: #c4f610;
+    transform: translateY(-2px);
+}
+.dealer-info {
+    margin-top: 15px;
+    font-size: 13px;
+}
+.dealer-info i {
+    margin-right: 10px;
+    margin-bottom: 8px;
+}
+.section-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #4d6a11;
+}
+.contact-heading {
+    font-weight: 800;
+    font-size: 24px;
+}
+.dealer-heading {
+    font-weight: bold;
+    font-size: 22px;
+}
+.callback-heading {
+    font-weight: 800;
+    font-size: 25px;
+}
+@media (max-width: 576px) {
+    .container {
+        padding: 18px;
+    }
+    .dealer-info div {
+        margin-bottom: 15px;
+    }
+}
+
+.text-muted {
+    color: #717171 !important;
+    font-size: 14px;
+}
+.form-control{
+    border-radius: 4px;
+}
+    </style>
+
+</head>
+<body>
+    <div class="container">
+        <!-- Alerts for Contact Form -->
+        <div class="alert alert-success" id="successAlertContact" style="display:none;">
+            <i class="fas fa-check-circle"></i>
+            <span id="successAlertMsgContact"></span>
+        </div>
+        <div class="alert alert-danger" id="errorAlertContact" style="display:none;">
+            <i class="fas fa-times-circle"></i>
+            <span id="errorAlertMsgContact"></span>
+        </div>
+
+        
+        <!-- Contact Form Section -->
+        <div class="contact-card">
+            <h2 class="text-center mb-2 contact-heading">Contact Us</h2>
+            <p class="text-center text-muted mb-4">Any question or remarks? Just write us a message!</p>
+            
+            <form id="contactForm">
+                <!-- Add hidden input for clientCode (contactId) -->
+                <input type="hidden" id="contactId" value="">
+                <div class="mb-3">
+                    <input type="text" class="form-control" id="subject" placeholder="Subject">
+                </div>
+                <div class="mb-3">
+                    <textarea class="form-control" id="message" rows="5" placeholder="Your Message"></textarea>
+                </div>  
+                <div class="upload-btn" onclick="document.getElementById('fileUpload').click()">
+                    <span class="upload-icon">
+                        <!-- Replace FontAwesome icon with your own image -->
+                        <img src="./assets/images/file-upload.png" alt="Upload" style="width:20px;height:20px;">
+                    </span>
+                    Click to upload
+                    <input type="file" id="fileUpload" style="display: none;">
+                </div>
+                <!-- File name and remove option -->
+                <div id="selectedFileInfo" style="display:none; margin-top:8px; position:relative; min-height:24px;">
+                    <span id="selectedFileName" class="text-primary"></span>
+                    <button type="button" id="removeFileBtn" 
+                        style="position:absolute; top:0; right:0; border:none; background:transparent; color:#dc3545; font-size:1.2em; line-height:1;"
+                        aria-label="Remove file">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <button type="submit" class="send-btn">Send Request</button>
+            </form>
+        </div>
+            <!-- Alerts for Callback Form -->
+        <div class="alert alert-success" id="successAlertCallback" style="display:none;">
+            <i class="fas fa-check-circle"></i>
+            <span id="successAlertMsgCallback"></span>
+        </div>
+        <div class="alert alert-danger" id="errorAlertCallback" style="display:none;">
+            <i class="fas fa-times-circle"></i>
+            <span id="errorAlertMsgCallback"></span>
+        </div>
+        <!-- Callback Request Section -->
+         <div class="callback-card">
+            <h2 class="mb-4 callback-heading">Request a Callback</h2>
+            <p class="mb-3" style="font-size: 16px;">Fill in the form below to request a callback to discuss your move</p>
+            
+            <form id="callbackForm">
+                <div class="mb-3">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="callbackOption" id="registeredNumberOption" value="registered" checked>
+                        <label class="form-check-label" for="registeredNumberOption">Registered Number</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="callbackOption" id="otherNumberOption" value="other">
+                        <label class="form-check-label" for="otherNumberOption">Other Number</label>
+                    </div>
+                </div>
+                <div class="mb-3" id="telephoneInputDiv" style="display:none;">
+                    <input type="tel" class="form-control rounded-pill" id="telephone" placeholder="Telephone Number*">
+                </div>
+                <div class="text-start">
+                    <button type="submit" class="submit-btn">SUBMIT</button>
+                </div>
+            </form>
+        </div>
+        <!-- Dealer Information Section -->
+        <div class="dealer-card">
+            <h2 class="text-center mb-4 dealer-heading">Dealer Information</h2>
+            
+            <div class="text-center dealer-info" id="dealerInfo">
+                <!-- Dealer info will be injected by JS -->
+            </div>
+        </div>
+    
+       
+    </div>
+
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // --- CONFIG SECTION ---
+        const API_BASE_URL = 'http://122.176.151.191/MutualFund';
+        const AUTH_TOKEN = localStorage.getItem('authToken');
+
+        // Store registered mobile globally for callback section
+        let registeredNumber = '';
+
+        // Fetch user details for registered number (and optionally for other use)
+        async function fetchUserDetailsAndSetRegisteredNumber() {
+            try {
+                const res = await fetch(`${API_BASE_URL}/getClientInfo`, {
+                    headers: {
+                        'Authorization': `Bearer ${AUTH_TOKEN}`,
+                        'accept': '*/*'
+                    }
+                });
+                const data = await res.json();
+                const client = data.details[0][0];
+                registeredNumber = client.mobileNo || '';
+                // Update the Registered Number label in callback-card
+                document.getElementById('registeredNumberOption').nextElementSibling.innerHTML =
+                    `Registered Number (${registeredNumber || 'N/A'})`;
+            } catch (e) {
+                registeredNumber = '';
+                document.getElementById('registeredNumberOption').nextElementSibling.innerHTML =
+                    `Registered Number (N/A)`;
+            }
+        }
+
+        // Call on page load
+        fetchUserDetailsAndSetRegisteredNumber();
+
+        // Dealer information fetch and rendering
+        const dealerInfoDiv = document.getElementById('dealerInfo');
+        dealerInfoDiv.innerHTML = '<span>Loading dealer information...</span>';
+
+        fetch(`${API_BASE_URL}/getDealerDetails`, {
+            method: 'GET',
+            headers: {
+                'accept': '*/*',
+                'Authorization': `Bearer ${AUTH_TOKEN}`
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data && data.details && data.details[0] && data.details[0][0]) {
+                const dealer = data.details[0][0];
+                dealerInfoDiv.innerHTML = `
+                    <div class="mb-3">
+                        <img src="./assets/images/delear-imfo-icon-1.png" alt="icon" style="width:24px;height:24px;display:block;margin:0 auto 8px;">
+                        <span><strong>AMFI Reg. No:</strong> ${dealer.DealerCode}</span>
+                    </div>
+                    <div class="mb-3">
+                        <img src="./assets/images/delear-imfo-icon-2.png" alt="icon" style="width:24px;height:24px;display:block;margin:0 auto 8px;">
+                        <span><strong>Name:</strong> ${dealer.name}</span>
+                    </div>
+                    <!--
+                    <div class="mb-3">
+                        <img src="./assets/images/delear-imfo-icon-3.png" alt="icon" style="width:24px;height:24px;display:block;margin:0 auto 8px;">
+                        <span><strong>Mobile:</strong> ${dealer.mobileNo}</span>
+                    </div>
+                    <div class="mb-3">
+                        <img src="./assets/images/delear-imfo-icon-4.png" alt="icon" style="width:21px;height:16px;display:block;margin:0 auto 8px;">
+                        <span><strong>Email:</strong> ${dealer.email}</span>
+                    </div>
+                    -->
+                    <div>
+                        <img src="./assets/images/delear-imfo-icon-4.png" alt="icon" style="width:21px;height:16px;display:block;margin:0 auto 8px;">
+                        <span><strong>FundMF Email:</strong> support@fundmf.com</span>
+                    </div>
+                `;
+                // Set clientCode (contactId) for the contact form
+                document.getElementById('contactId').value = dealer.DealerCode || '';
+            } else {
+                dealerInfoDiv.innerHTML = '<span>Dealer information not available.</span>';
+            }
+        })
+        .catch(() => {
+            dealerInfoDiv.innerHTML = '<span>Error loading dealer information.</span>';
+        });
+
+        // File upload base64 storage
+        let uploadedFileName = '';
+        let uploadedFileBase64 = '';
+
+        // Helper functions for alerts
+        function showSuccessContact(msg) {
+            document.getElementById('successAlertMsgContact').textContent = msg;
+            document.getElementById('successAlertContact').style.display = 'block';
+            document.getElementById('errorAlertContact').style.display = 'none';
+            setTimeout(() => {
+                document.getElementById('successAlertContact').style.display = 'none';
+            }, 4000);
+        }
+        function showErrorContact(msg) {
+            document.getElementById('errorAlertMsgContact').textContent = msg;
+            document.getElementById('errorAlertContact').style.display = 'block';
+            document.getElementById('successAlertContact').style.display = 'none';
+            setTimeout(() => {
+                document.getElementById('errorAlertContact').style.display = 'none';
+            }, 4000);
+        }
+        function showSuccessCallback(msg) {
+            document.getElementById('successAlertMsgCallback').textContent = msg;
+            document.getElementById('successAlertCallback').style.display = 'block';
+            document.getElementById('errorAlertCallback').style.display = 'none';
+            setTimeout(() => {
+                document.getElementById('successAlertCallback').style.display = 'none';
+            }, 4000);
+        }
+        function showErrorCallback(msg) {
+            document.getElementById('errorAlertMsgCallback').textContent = msg;
+            document.getElementById('errorAlertCallback').style.display = 'block';
+            document.getElementById('successAlertCallback').style.display = 'none';
+            setTimeout(() => {
+                document.getElementById('errorAlertCallback').style.display = 'none';
+            }, 4000);
+        }
+
+        document.getElementById('fileUpload').addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+                uploadedFileName = file.name;
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    uploadedFileBase64 = evt.target.result.split(',')[1]; // Remove data:*/*;base64,
+                };
+                reader.readAsDataURL(file);
+                showSuccessContact(`File "${file.name}" selected for upload`);
+                document.getElementById('selectedFileName').textContent = file.name;
+                document.getElementById('selectedFileInfo').style.display = 'block';
+            }
+        });
+
+        // Remove file handler
+        document.getElementById('removeFileBtn').addEventListener('click', function() {
+            document.getElementById('fileUpload').value = '';
+            uploadedFileName = '';
+            uploadedFileBase64 = '';
+            document.getElementById('selectedFileInfo').style.display = 'none';
+        });
+
+        // Form validation and submission handling
+        document.getElementById('contactForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const contactId = document.getElementById('contactId').value;
+            const subject = document.getElementById('subject').value.trim();
+            const message = document.getElementById('message').value.trim();
+
+            // Validate form
+            if (!contactId || !subject || !message) {
+                showErrorContact('Please fill all required fields');
+                return;
+            }
+
+            // Wait for file to be read if present
+            if (document.getElementById('fileUpload').files.length > 0 && !uploadedFileBase64) {
+                showErrorContact('Please wait for the file to finish uploading.');
+                return;
+            }
+
+            // Prepare payload
+            const payload = {
+                fileName: uploadedFileName,
+                clientCode: contactId,
+                subject: subject,
+                message: message,
+                imageBase64: uploadedFileBase64
+            };
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/contactSupport`, {
+                    method: 'POST',
+                    headers: {
+                        'accept': '*/*',
+                        'Authorization': `Bearer ${AUTH_TOKEN}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                if (response.ok) {
+                    showSuccessContact('Your message has been sent successfully!');
+                    this.reset();
+                    uploadedFileName = '';
+                    uploadedFileBase64 = '';
+                    document.getElementById('selectedFileInfo').style.display = 'none';
+                } else {
+                    const errorText = await response.text();
+                    showErrorContact('Failed to send message: ' + errorText);
+                }
+            } catch (err) {
+                showErrorContact('Error sending message: ' + err.message);
+            }
+        });
+        
+        // --- Callback radio logic ---
+        // Show/hide telephone input based on radio selection
+        document.getElementById('registeredNumberOption').addEventListener('change', function() {
+            if (this.checked) {
+                document.getElementById('telephoneInputDiv').style.display = 'none';
+            }
+        });
+        document.getElementById('otherNumberOption').addEventListener('change', function() {
+            if (this.checked) {
+                document.getElementById('telephoneInputDiv').style.display = 'block';
+            }
+        });
+
+        document.getElementById('callbackForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const useRegistered = document.getElementById('registeredNumberOption').checked;
+            let telephone = '';
+            if (useRegistered) {
+                telephone = registeredNumber;
+                if (!telephone || telephone.length < 10) {
+                    showErrorCallback('Registered number not available or invalid.');
+                    return;
+                }
+            } else {
+                telephone = document.getElementById('telephone').value;
+                // Validate phone number
+                if (!telephone || telephone.length < 10) {
+                    showErrorCallback('Please enter a valid phone number');
+                    return;
+                }
+            }
+            showSuccessCallback('Callback request submitted for ' + telephone + '. We will contact you soon!');
+            this.reset();
+            // Reset to default state
+            document.getElementById('telephoneInputDiv').style.display = 'none';
+            document.getElementById('registeredNumberOption').checked = true;
+            // Re-set the label in case of reset
+            document.getElementById('registeredNumberOption').nextElementSibling.innerHTML =
+                `Registered Number (${registeredNumber || 'N/A'})`;
+        });
+    </script>
+</body>
+</html>

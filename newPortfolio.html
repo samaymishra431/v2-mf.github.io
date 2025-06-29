@@ -1,0 +1,1755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home - FundMF</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif; /* Match index.html */
+    } /* <-- Add this closing brace */
+    body {
+        background-color: #FFFFFF;
+        color: #222;
+        max-width: 400px;
+        margin: 0 auto;
+        position: relative;
+    }
+    /* --- HEADER STYLES MATCHING home.html --- */
+    .header {
+        background-color: #597200; /* updated to match home.html */
+        color: white;
+        padding: 15px 20px 25px 20px;
+        font-family: Arial, sans-serif;
+        font-weight: bold;
+    }
+    .header-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        font-family: Arial, sans-serif;
+        font-weight: normal;
+    }
+    .menu-icon {
+        font-size: 28px;
+        color: white;
+        cursor: pointer;
+        font-family: Arial, sans-serif;
+        font-weight: normal;
+    }
+    .notification {
+        position: relative;
+    }
+    .notification i {
+        font-size: 24px;
+        color: white;
+        font-family: Arial, sans-serif;
+        font-weight: normal;
+    }
+    .notification-badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background-color: red;
+        color: white;
+        border-radius: 50%;
+        width: 16px;
+        height: 16px;
+        font-size: 12px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .user-greeting {
+        color: rgba(255,255,255,0.8);
+        font-size: 12px; /* matches home.html */
+        margin-bottom: 5px;
+        font-family: Arial, sans-serif;
+        font-weight: normal;
+    }
+    .welcome-text {
+        font-size: 16px; /* matches home.html */
+        font-weight: bold;
+        color: #FFFFFF;
+        font-family: Arial, sans-serif;
+    }
+    /* --- END HEADER STYLES --- */
+
+    .investment-card {
+        background: #ffff;
+        border-radius: 20px 20px 0 0;
+        margin-top: -15px;
+        padding: 28px 18px 0 18px;
+        box-shadow: none;
+    }
+    
+    .investment-label,
+    .investment-current {
+        color: #8a94a6;
+        font-size: 14px; /* matches home.html */
+        margin-bottom: 2px;
+        font-weight: 500;
+        font-family: Arial, sans-serif;
+    }
+    
+    .investment-amount,
+    .current-amount {
+        font-size: 30px; /* matches home.html */
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #222;
+        letter-spacing: 0.5px;
+        line-height: 1.1;
+        font-family: Arial, sans-serif;
+    }
+    
+    .current-amount {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0;
+    }
+    
+    .performance-indicator {
+        color: #16A34A;
+        font-size: 16px; /* matches home.html */
+        margin-left: 10px;
+        display: flex;
+        align-items: center;
+        font-weight: 700;
+        gap: 2px;
+        font-family: Arial, sans-serif;
+    }
+    .performance-indicator img {
+        width: 16px;
+        height: 16px;
+        margin-left: 3px;
+        vertical-align: middle;
+        display: inline-block;
+    }
+    
+    .investment-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 8px;
+    }
+    
+    .investment-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 8px;
+    }
+    
+    .transfer-icon {
+        font-size: 22px;
+        color: #222;
+        cursor: pointer;
+        opacity: 0.7;
+        font-family: Arial, sans-serif;
+    }
+    
+    .performance-row {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 24px;
+        margin-top: 22px;
+    }
+    .gain-loss-column {
+        flex: 1;
+        background: #fff;
+        border: 1.5px solid #e4e7ee;
+        border-radius: 6px;
+        padding: 12px 0 10px 0;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        min-width: 0;
+        box-shadow: none;
+        transition: box-shadow 0.15s;
+        position: relative;
+        gap: 10px;
+    }
+    .gain-loss-content {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 2px;
+    }
+    .gain-loss-column .circle-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 1.5px solid #e4e7ee;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+        margin-bottom: 0;
+        margin-right: 8px;
+    }
+    .gain-loss-column .gain-arrow {
+        color: #1db446;
+        font-size: 20px;
+    }
+    .gain-loss-column .loss-arrow {
+        color: #e53935;
+        font-size: 20px;
+    }
+    .gain-label, .loss-label {
+        color: #8a94a6;
+        font-size: 12px; /* matches home.html .fund-detail-item */
+        font-weight: 500;
+        margin-bottom: 0;
+        margin-top: 0;
+        margin-right: 0;
+        font-family: Arial, sans-serif;
+    }
+    .gain-amount, .loss-amount {
+        font-size: 14px; /* matches home.html gain/loss-amount */
+        font-weight: bold; /* matches home.html */
+        margin-bottom: 0;
+        margin-top: 0;
+        color: #222;
+        letter-spacing: 0.2px;
+        font-family: Arial, sans-serif;
+    }
+    .gain-amount { color: #0D0D12; } /* matches home.html */
+    .loss-amount { color: #0D0D12; } /* matches home.html */
+    
+    .file-options {
+        display: flex;
+        justify-content: space-between; /* Align items evenly */
+        align-items: center; /* Vertically align items */
+        margin-bottom: 18px;
+        margin-top: 0;
+    }
+    
+    .file-option {
+        flex: none; /* Prevent stretching */
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        cursor: pointer;
+        font-size: 10px; /* matches home.html .service-label */
+        color: #222;
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 7px;
+        padding: 5px 8px;
+        justify-content: center;
+        font-weight: 600;
+        box-shadow: 0 1px 2px rgba(60,72,88,0.04);
+        transition: background 0.15s, box-shadow 0.15s;
+        font-family: Arial, sans-serif;
+    }
+    .file-option:hover {
+        background: #f3f6fa;
+        box-shadow: 0 2px 6px rgba(60,72,88,0.07);
+    }
+    .excel-icon { 
+        /* Remove FontAwesome color/font-size, use image instead */
+        width: 18px; height: 18px; display: inline-block; background: url('./assets/images/excel.png') no-repeat center center; background-size: contain; 
+        vertical-align: middle;
+    }
+    .pdf-icon { 
+        /* Remove FontAwesome color/font-size, use image instead */
+        width: 18px; height: 18px; display: inline-block; background: url('./assets/images/pdf.svg') no-repeat center center; background-size: contain; 
+        vertical-align: middle;
+    }
+    .filter-icon { color: #8a94a6; font-size: 18px;}
+
+    .filter-section {
+        margin: 0; /* Remove margin to align with file-options */
+    }
+    .filter-btn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 14px; /* matches home.html .service-label */
+        color: #8a94a6;
+        cursor: pointer;
+        font-weight: 600;
+        padding: 10px 15px; /* Match file-option padding */
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        box-shadow: 0 1px 2px rgba(60,72,88,0.04);
+        transition: background 0.15s, box-shadow 0.15s;
+        font-family: Arial, sans-serif;
+    }
+    .filter-btn:hover {
+        background: #f3f6fa;
+        box-shadow: 0 2px 6px rgba(60,72,88,0.07);
+    }
+    
+    .excel-icon { color: #597200; font-size: 18px;}
+    .pdf-icon { color: #dc3545; font-size: 18px;}
+    
+    .filter-section {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 18px;
+        padding-bottom: 0;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .filter-btn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 14px; /* matches home.html .service-label */
+        color: #8a94a6;
+        cursor: pointer;
+        font-weight: 600;
+        padding: 4px 0;
+        font-family: Arial, sans-serif;
+    }
+    
+    .fund-item {
+        background: #fff;
+        border-radius: 6px; /* Changed from 1px to 16px for all corners */
+        border-bottom: 1px solid #DFE1E7;
+        margin-bottom: 18px;
+        overflow: hidden;
+        min-height: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+    }
+    .fund-card-header {
+        background: #719000;
+        display: flex;
+        align-items: center;
+        padding: 14px 16px 10px 16px;
+        /* Remove border-radius here */
+        border-radius: 0;
+        position: relative;
+    }
+    .fund-header-number {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: #FFFFFF;
+        color: #597200;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 14px;
+        margin-right: 14px;
+        flex-shrink: 0;
+    }
+    .fund-header-divider {
+        width: 1.5px;
+        height: 40px;
+        background: #b7c99c;
+        margin-right: 14px;
+        border-radius: 1px;
+        flex-shrink: 0;
+    }
+    .fund-header-details {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .fund-header-name {
+        color: #FFFFFF;
+        font-weight: 550; /* changed from 600px to 600 */
+        font-size: 14px;
+        margin-bottom: 2px;
+        line-height: 1.1;
+    }
+    .fund-header-type {
+        color: #FFFFFF;
+        font-size: 12px;
+        font-weight: 500;
+    }
+    .fund-header-actions {
+        display: flex;
+        gap: 8px;
+        margin-left: 18px;
+    }
+    .fund-header-btn {
+        padding: 8px 13px 6px 13px;
+        border-radius: 8px;
+        border: none;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        background: #fff;
+        color: #597200;
+        transition: background 0.15s;
+        outline: none;
+    }
+    .fund-header-btn.selected,
+    .fund-header-btn:active {
+        background: #FFFFFF;
+        color: #597200;
+    }
+    .fund-card-body {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 16px 10px 16px;
+        background: #FFFFFF;
+        border-radius: 0;
+        gap: 10px;
+    }
+    .fund-body-col {
+        display: flex;
+        flex-direction: column;
+        min-width: 80px;
+        flex: 1;
+        /* Remove align-items: center and text-align: center */
+    }
+    .fund-body-col:first-child {
+        align-items: flex-start;
+        text-align: left;
+    }
+    .fund-body-col:nth-child(2) {
+        align-items: center;
+        text-align: center;
+    }
+    .fund-body-col:last-child {
+        align-items: flex-end;
+        text-align: right;
+    }
+    .fund-body-label {
+        font-size: 12px;
+        color: #818898;
+        margin-bottom: 5px; /* Increased for more space below heading */
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .fund-body-pnl-amt {
+        font-size: 12px;
+        font-weight: 600;
+        margin-left: 4px;
+        color: #597200;
+    }
+    .fund-body-pnl-amt.negative {
+        color: #FC0000;
+    }
+    .fund-body-pnl-pct {
+        font-size: 16px;
+        font-weight: 600;
+        margin-top: 2px;
+        color: #597200;
+        line-height: 1.1;
+    }
+    .fund-body-pnl-pct.negative {
+        color: #FC0000;
+    }
+    .fund-body-value {
+        font-size: 14px;
+        font-weight: 600;
+        color: #222;
+        margin-top: 2px; /* Add space above value */
+    }
+
+    /* Overlay and Modal Styles */
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+    }
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1001;
+        justify-content: center;
+        align-items: center;
+    }
+    .modal-content {
+        background-color: white;
+        border-radius: 10px;
+        width: 80%;
+        max-width: 350px;
+        padding: 20px;
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+        /* Add for scrollable modal */
+        max-height: 90vh;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+    }
+    /* For transaction modal, allow wider and taller modal */
+    #transactionModal .modal-content {
+        max-width: 420px;
+        max-height: 90vh;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+    }
+    /* Make transaction modal body scrollable if content is long */
+    #transactionModalBody {
+        overflow-y: auto;
+        max-height: 55vh;
+        margin-bottom: 0;
+        /* Always show thin scrollbar for scroll indication */
+        scrollbar-width: thin;
+        scrollbar-color: #b7c99c #f3f6fa;
+    }
+    #transactionModalBody::-webkit-scrollbar {
+        width: 6px;
+        background: #f3f6fa;
+    }
+    #transactionModalBody::-webkit-scrollbar-thumb {
+        background: #b7c99c;
+        border-radius: 4px;
+    }
+    #transactionModalBody::-webkit-scrollbar-track {
+        background: #f3f6fa;
+        border-radius: 4px;
+    }
+    .modal-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        font-family: Arial, sans-serif;
+    }
+    .modal-message {
+        font-size: 16px;
+        color: #555;
+        margin-bottom: 20px;
+        font-family: Arial, sans-serif;
+        font-weight: normal;
+    }
+    .modal-buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+    .modal-cancel {
+        background-color: #eee;
+        color: #333;
+        border: none;
+        border-radius: 5px;
+        padding: 8px 15px;
+        font-weight: bold;
+        cursor: pointer;
+        font-family: Arial, sans-serif;
+    }
+    .modal-confirm {
+        background-color: #4d6a11;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 8px 15px;
+        font-weight: bold;
+        cursor: pointer;
+        font-family: Arial, sans-serif;
+    }
+
+    /* Sidebar Styles (match home.html) */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 70%;
+        height: 100%;
+        background-color: #FFFFFF;
+        z-index: 1000;
+        
+        display: none;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    }
+    .sidebar-header {
+        display: flex;
+        align-items: center;
+        padding-right: 30px;
+        padding-left: 30px;
+        padding-top: 24px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid #eee;
+        background-color: #F2F2F2;
+        margin-bottom: 30px;
+    }
+    .sidebar-logo {
+        height: 40px;
+        margin-right: 10px;
+    }
+    .sidebar-menu {
+        display: flex;
+        justify-content: flex-end;
+        font-size: 24px;
+        cursor: pointer;
+    }
+    .sidebar-item {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        border-radius: 30px;
+        margin: 5px 15px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        font-family: Arial, sans-serif;
+    }
+    .sidebar-item.active {
+        background-color: #f0f0f0;
+    }
+    .sidebar-icon {
+        margin-right: 15px;
+        color: #666;
+        width: 20px;
+        text-align: center;
+        font-family: Arial, sans-serif;
+    }
+    .sidebar-text {
+        color: #666;
+        font-family: Arial, sans-serif;
+    }
+    .show-sidebar {
+        display: block !important;
+    }
+    /* Add styles for sidebar child menu (copied from home.html) */
+    .sidebar-child-menu {
+        margin-left: 35px;
+        margin-top: 0;
+        margin-bottom: 0;
+        padding-left: 0;
+        display: none; /* Hide by default */
+    }
+    .sidebar-child-menu.open {
+        display: block; /* Show when open */
+    }
+    .sidebar-child-item {
+        display: flex;
+        align-items: center;
+        padding: 10px 15px 10px 10px;
+        border-radius: 30px;
+        margin: 0 15px 0 0;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        font-size: 15px;
+        color: #666;
+        font-family: Arial, sans-serif;
+    }
+    .sidebar-child-item.active {
+        background-color: #f0f0f0;
+        color: #000000;
+    }
+    .sidebar-item.active .sidebar-text {
+        color: #000000;
+    }
+    .sidebar-child-icon {
+        margin-right: 12px;
+        color: #9e9e9e;
+        width: 18px;
+        text-align: center;
+        font-size: 15px;
+        font-family: Arial, sans-serif;
+    }
+    /* --- Transaction Card Styles (from accountTransaction.html) --- */
+    .transaction-item {
+        background-color: white;
+        border-radius: 5px;
+        margin: 10px 0;
+        padding: 15px;
+        box-shadow: 0px 2px 4px rgba(0,0,0,0.05);
+    }
+    .transaction-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+    .transaction-row > div:first-child {
+        text-align: left;
+    }
+    .transaction-row > div:last-child {
+        text-align: right;
+    }
+    .transaction-label {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+    .transaction-value {
+        font-weight: bold;
+        font-size: 14px;
+    }
+    .profit {
+        color: white;
+        background-color: #2e8b57;
+        border-radius: 15px;
+        padding: 2px 8px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+    .loss {
+        color: white;
+        background-color: #ff6b6b;
+        border-radius: 15px;
+        padding: 2px 8px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+    /* --- End Transaction Card Styles --- */
+
+    /* Fund header for modal (matches screenshot) */
+    .modal-fund-header {
+        background-color: #6B8E23;
+        color: white;
+        border-radius: 6px;
+        padding: 14px 10px 10px 10px;
+        margin-bottom: 18px;
+        text-align: center;
+    }
+    .modal-fund-title {
+        font-size: 17px;
+        font-weight: bold;
+        margin-bottom: 4px;
+    }
+    .modal-fund-category {
+        font-size: 13px;
+        font-weight: 500;
+        color: #e5ffe5;
+    }
+
+    /* Modal Transaction History Heading */
+    .modal-transaction-heading {
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #222;
+        letter-spacing: 0.1px;
+    }
+    /* Border for each transaction card (all sides, rounded corners, matches screenshot) */
+    #transactionModalBody .transaction-item {
+        border: 1.5px solid #e3e8ee;
+        border-radius: 10px;
+        margin: 16px 0;
+        box-shadow: none;
+        padding: 15px;
+        background: #fff;
+    }
+    #transactionModalBody .transaction-item:last-child {
+        /* No extra margin for last */
+        margin-bottom: 0;
+    }
+    /* Remove previous border-bottom-only rule if present */
+
+    /* Add styles for custom icons */
+    .custom-investment-icon {
+        width: 24px;
+        height: 24px;
+        background: url('./assets/images/investmentFilter.png') no-repeat center center;
+        background-size: contain;
+        cursor: pointer;
+    }
+    .custom-filter-icon {
+        width: 18px;
+        height: 18px;
+        background: url('./assets/images/filter.png') no-repeat center center;
+        background-size: contain;
+    }
+
+    /* --- Filter Modal Redesign --- */
+    #filterModal {
+        align-items: flex-end !important;
+        justify-content: center !important;
+        z-index: 1002;
+    }
+    #filterModal .modal-content {
+        border-radius: 20px 20px 0 0 !important;
+        box-shadow: 0 8px 32px rgba(60,72,88,0.18);
+        padding: 0;
+        max-width: 100vw;
+        min-width: 0;
+        border: none;
+        width: 100vw;
+        margin: 0;
+        position: relative;
+        max-height: 65vh;
+        display: flex;
+        flex-direction: column;
+        animation: slideUpModal 0.18s;
+    }
+    @keyframes slideUpModal {
+        from { transform: translateY(100%);}
+        to { transform: translateY(0);}
+    }
+    #filterModal .modal-indicator {
+        width: 60px;
+        height: 5px;
+        background: #d1d5db;
+        border-radius: 3px;
+        margin: 12px auto 0 auto;
+    }
+    #filterModal .filter-modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 24px 10px 24px;
+        background: none;
+        color: #222;
+        font-size: 20px;
+        font-weight: 700;
+        border-radius: 0;
+        letter-spacing: 0.2px;
+    }
+    #filterModal .filter-modal-header .refresh-icon {
+        color: #4d6a11;
+        font-size: 18px;
+        margin-left: 8px;
+        cursor: pointer;
+    }
+    #filterModal .modal-body {
+        padding: 0;
+        margin: 0;
+        overflow-y: auto;
+        max-height: 48vh;
+    }
+    #filter-sort-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        margin: 0;
+        padding: 0;
+    }
+    .filter-sort-option {
+        display: flex;
+        align-items: center;
+        gap: 0;
+        font-size: 16px;
+        font-weight: 500;
+        color: #333;
+        background: #fff;
+        border: none;
+        border-bottom: 1px solid #e8e8e8;
+        border-radius: 0;
+        padding: 18px 24px;
+        cursor: pointer;
+        transition: background 0.18s, color 0.18s;
+        position: relative;
+        min-height: 56px;
+    }
+    .filter-sort-option:last-child {
+        border-bottom: none;
+    }
+    .filter-sort-option .sort-icon {
+        width: 24px;
+        height: 24px;
+        margin-right: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        color: #8a94a6;
+    }
+    .filter-sort-option.selected .sort-icon {
+        color: #4d6a11;
+    }
+    .filter-sort-option .sort-text {
+        flex-grow: 1;
+        font-size: 16px;
+        font-weight: 500;
+        color: #333;
+        display: flex;
+        align-items: center;
+    }
+    .filter-sort-option.selected .sort-text {
+        color: #4d6a11;
+        font-weight: 700;
+    }
+    .filter-sort-option .sort-subtext {
+        font-size: 14px;
+        color: #8a94a6;
+        margin-left: 8px;
+        font-weight: 500;
+    }
+    .filter-sort-option.selected {
+        background: #f0f8ff;
+    }
+    .filter-sort-option.selected .sort-arrow {
+        color: #4d6a11;
+        margin-left: 10px;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+    }
+    .filter-sort-option .sort-arrow {
+        margin-left: 10px;
+        font-size: 18px;
+        color: #8a94a6;
+        display: none;
+        align-items: center;
+    }
+    .filter-sort-option.selected .sort-arrow {
+        display: flex;
+    }
+    .filter-sort-option:hover {
+        background: #f8f9fa;
+    }
+    /* Hide old divider */
+    #filterModal .modal-divider {
+        display: none;
+    }
+</style>
+</head>
+<body>
+
+<!-- Overlay for sidebar background -->
+<div class="overlay"></div>
+
+<!-- Confirmation Modal -->
+<div class="modal" id="logoutModal">
+    <div class="modal-content">
+        <div class="modal-title">Confirm Logout</div>
+        <div class="modal-message">Are you sure you want to logout from your FundMF account?</div>
+        <div class="modal-buttons">
+            <button class="modal-cancel">Cancel</button>
+            <button class="modal-confirm">Logout</button>
+        </div>
+    </div>
+</div>
+
+<!-- Sidebar/Navigation Menu -->
+<div class="sidebar">
+    <div class="sidebar-header">
+        <img src="./assets/images/logo.png" alt="FundMF Logo" class="sidebar-logo">
+        <div style="flex-grow: 1;"></div>
+        <div class="sidebar-menu">
+            <img src="./assets/images/close.png" alt="Close" style="width:28px;height:28px;cursor:pointer;">
+        </div>
+    </div>
+    <div class="sidebar-item" data-page="homePage">
+        <img src="./assets/images/home_active.svg" alt="Dashboard Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+        <div class="sidebar-text">Dashboard</div>
+    </div>
+    <div class="sidebar-item active" data-page="portfolioPage">
+        <img src="./assets/images/sideBarPortfolio.png" alt="Portfolio Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+        <div class="sidebar-text">Portfolio</div>
+    </div>
+    <!-- <div class="sidebar-item" data-page="recentOrders">
+        <img src="./assets/images/recentOrder.png" alt="Recent Orders Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+        <div class="sidebar-text">Recent Orders</div>
+    </div> -->
+    <div class="sidebar-item" data-page="mandatePage">
+        <img src="./assets/images/mandate.png" alt="Mandate Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+        <div class="sidebar-text">Mandate</div>
+    </div>
+    <div class="sidebar-item" id="transactParent" style="cursor:pointer;">
+        <img src="./assets/images/transact.png" alt="Transact Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+        <div class="sidebar-text">Transact</div>
+        <i class="fas fa-chevron-down" id="transactChevron" style="margin-left:auto;color:#888;font-size:14px;"></i>
+    </div>
+    <div class="sidebar-child-menu" id="transactChildMenu">
+        <div class="sidebar-child-item active" data-page="createLumpsum" id="transactLumpsum">
+            <i class="fas fa-handshake sidebar-child-icon"></i>
+            <div>Purchase</div>
+        </div>
+        <div class="sidebar-child-item" data-page="createSip" id="transactSip">
+            <i class="fas fa-chart-bar sidebar-child-icon"></i>
+            <div>SIP</div>
+        </div>
+        <div class="sidebar-child-item" data-page="createStp" id="transactStp">
+            <i class="fas fa-file-alt sidebar-child-icon"></i>
+            <div>STP</div>
+        </div>
+        <div class="sidebar-child-item" data-page="createSwp" id="transactSwp">
+            <i class="fas fa-coins sidebar-child-icon"></i>
+            <div>SWP</div>
+        </div>
+        <!-- <div class="sidebar-child-item" data-page="nfo" id="transactNfo">
+            <i class="fas fa-rocket sidebar-child-icon"></i>
+            <div>NFO</div>
+        </div> -->
+        <div class="sidebar-child-item" data-page="portfolioPage" id="transactRedeem">
+            <i class="fas fa-wallet sidebar-child-icon"></i>
+            <div>Redeem</div>
+        </div>
+    </div>
+    <!-- <div class="sidebar-item" data-page="investPage">
+        <img src="./assets/images/invest.png" alt="Invest Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+        <div class="sidebar-text">Invest</div>
+    </div> -->
+    <!-- <div class="sidebar-item" data-page="accountPage">
+        <img src="./assets/images/Settings.png" alt="Settings Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+        <div class="sidebar-text">Settings</div>
+    </div> -->
+    <div class="sidebar-item" data-page="contactPage">
+        <img src="./assets/images/contactUs.png" alt="Contact Us Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+        <div class="sidebar-text">Contact Us</div>
+    </div>
+    <div class="sidebar-item" id="logoutItem">
+        <img src="./assets/images/logout.png" alt="Logout Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+        <div class="sidebar-text">Logout</div>
+    </div>
+</div>
+
+<!-- Main Header -->
+<div class="header">
+    <div class="header-top">
+        <div class="menu-icon">
+            <!-- Use your own sidebar menu icon -->
+            <img src="./assets/images/sidebar-menu.png" alt="Menu" style="width:28px;height:28px;cursor:pointer;">
+        </div>
+        <div class="notification">
+            <!-- Use your own bell icon -->
+            <img src="./assets/images/bell.png" alt="Notifications" style="width:28px;height:28px;">
+            <!-- <div class="notification-badge">2</div> -->
+        </div>
+    </div>
+    <div class="user-greeting">Hi John Doe · William</div>
+    <div class="welcome-text">Welcome to FundMF</div>
+</div>
+    
+<!-- Investment Card -->
+<div class="investment-card">
+    <div id="portfolio-summary"></div>
+    <div class="performance-row" id="performance-row"></div>
+    <div class="file-options">
+        <div style="display: flex; gap: 12px;">
+            <div class="file-option">
+                <span class="excel-icon"></span>
+                <span>Excel File</span>
+            </div>
+            <div class="file-option">
+                <span class="pdf-icon"></span>
+                <span>PDF File</span>
+            </div>
+        </div>
+        <div class="file-option" id="openFilterModalBtn" style="border: none; box-shadow: none;">
+            <div class="custom-filter-icon"></div>
+            <span>Filter</span>
+        </div>
+    </div>
+    <!-- Filter Modal -->
+    <div class="modal" id="filterModal">
+        <div class="modal-content">
+            <div class="modal-indicator"></div>
+            <div class="filter-modal-header">
+                <span>Sort</span>
+                <i class="fas fa-sync-alt refresh-icon" id="filterRefreshBtn"></i>
+            </div>
+            <div class="modal-body">
+                <div id="filter-sort-list">
+                    <div class="filter-sort-option" data-sort="alphabetical">
+                        <span class="sort-icon" id="sortIcon-alphabetical"><i class="fas fa-arrow-down"></i></span>
+                        <span class="sort-text">Alphabetically</span>
+                        <span class="sort-arrow"></span>
+                    </div>
+                    <div class="filter-sort-option" data-sort="invested">
+                        <span class="sort-icon" id="sortIcon-invested">₹</span>
+                        <span class="sort-text">Invested</span>
+                        <span class="sort-arrow"></span>
+                    </div>
+                    <div class="filter-sort-option" data-sort="current">
+                        <span class="sort-icon" id="sortIcon-current">₹</span>
+                        <span class="sort-text">Current</span>
+                        <span class="sort-arrow"></span>
+                    </div>
+                    <div class="filter-sort-option" data-sort="pnl-absolute">
+                        <span class="sort-icon" id="sortIcon-pnl-absolute" style="font-size:15px;font-weight:600;">P&amp;L</span>
+                        <span class="sort-text">
+                            Profit &amp; Loss
+                            <span class="sort-subtext">Absolute</span>
+                        </span>
+                        <span class="sort-arrow"></span>
+                    </div>
+                    <div class="filter-sort-option" data-sort="pnl-percent">
+                        <span class="sort-icon" id="sortIcon-pnl-percent" style="font-size:16px;font-weight:600;">%</span>
+                        <span class="sort-text">
+                            Profit &amp; Loss
+                            <span class="sort-subtext">Percent</span>
+                        </span>
+                        <span class="sort-arrow"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="fund-list"></div>
+</div>
+
+<script>
+// Define API base URL at the top
+const API_BASE_URL = 'http://122.176.151.191/MutualFund';
+
+// Sidebar functionality
+// Update menuIcon selector to use the img inside .menu-icon
+const menuIcon = document.querySelector('.menu-icon img');
+const sidebar = document.querySelector('.sidebar');
+const sidebarClose = document.querySelector('.sidebar-menu');
+const overlay = document.querySelector('.overlay');
+const logoutItem = document.getElementById('logoutItem');
+const logoutModal = document.getElementById('logoutModal');
+const modalCancel = document.querySelector('.modal-cancel');
+const modalConfirm = document.querySelector('.modal-confirm');
+
+// Open sidebar
+menuIcon.addEventListener('click', function() {
+    sidebar.classList.add('show-sidebar');
+    overlay.style.display = 'block';
+});
+
+// Close sidebar
+sidebarClose.addEventListener('click', function() {
+    sidebar.classList.remove('show-sidebar');
+    overlay.style.display = 'none';
+});
+
+// Close sidebar when clicking outside
+overlay.addEventListener('click', function() {
+    sidebar.classList.remove('show-sidebar');
+    overlay.style.display = 'none';
+});
+
+// Show logout confirmation modal
+logoutItem.addEventListener('click', function() {
+    sidebar.classList.remove('show-sidebar');
+    overlay.style.display = 'none';
+    logoutModal.style.display = 'flex';
+});
+
+// Cancel logout
+modalCancel.addEventListener('click', function() {
+    logoutModal.style.display = 'none';
+});
+
+// Confirm logout and redirect
+modalConfirm.addEventListener('click', function() {
+    window.top.location.href = 'index.html';
+});
+
+// Close modal when clicking outside
+logoutModal.addEventListener('click', function(event) {
+    if (event.target === logoutModal) {
+        logoutModal.style.display = 'none';
+    }
+});
+
+// Transact child menu toggle
+const transactParent = document.getElementById('transactParent');
+const transactChildMenu = document.getElementById('transactChildMenu');
+const transactChevron = document.getElementById('transactChevron');
+let transactMenuOpen = false;
+
+transactParent.addEventListener('click', function(e) {
+    transactMenuOpen = !transactMenuOpen;
+    if (transactMenuOpen) {
+        transactChildMenu.classList.add('open');
+        transactChevron.classList.remove('fa-chevron-down');
+        transactChevron.classList.add('fa-chevron-up');
+    } else {
+        transactChildMenu.classList.remove('open');
+        transactChevron.classList.remove('fa-chevron-up');
+        transactChevron.classList.add('fa-chevron-down');
+    }
+    e.stopPropagation();
+});
+
+// Add click event listeners for all sidebar child items (Transact)
+document.querySelectorAll('.sidebar-child-item').forEach(child => {
+    child.addEventListener('click', function(e) {
+        // Remove active class from all sidebar items and child items
+        document.querySelectorAll('.sidebar-item').forEach(sideItem => {
+            sideItem.classList.remove('active');
+        });
+        document.querySelectorAll('.sidebar-child-item').forEach(childItem => {
+            childItem.classList.remove('active');
+        });
+
+        // Add active class to clicked child
+        this.classList.add('active');
+
+        // Get the page ID from data attribute
+        const pageId = this.getAttribute('data-page');
+
+        // Close sidebar
+        sidebar.classList.remove('show-sidebar');
+        overlay.style.display = 'none';
+
+        // Send message to parent window to change page
+        if (window.parent && window.parent.postMessage) {
+            window.parent.postMessage({
+                action: 'changePage',
+                pageId: pageId
+            }, '*');
+        }
+
+        // Show a loader inside the iframe while the parent changes the page
+        showInFrameLoader();
+
+        // Prevent parent .sidebar-item click
+        e.stopPropagation();
+    });
+});
+
+// Update the sidebar item click handler (skip Transact parent and Logout)
+document.querySelectorAll('.sidebar-item').forEach(item => {
+    if (item.id !== 'logoutItem' && item.id !== 'transactParent') {
+        item.addEventListener('click', function() {
+            // Remove active class from all items
+            document.querySelectorAll('.sidebar-item').forEach(sideItem => {
+                sideItem.classList.remove('active');
+            });
+            document.querySelectorAll('.sidebar-child-item').forEach(child => {
+                child.classList.remove('active');
+            });
+
+            // Add active class to clicked item
+            this.classList.add('active');
+
+            // Get the page ID from data attribute
+            const pageId = this.getAttribute('data-page');
+
+            // Only proceed if we have a valid page ID
+            if (pageId) {
+                // Close sidebar
+                sidebar.classList.remove('show-sidebar');
+                overlay.style.display = 'none';
+
+                // Send message to parent window to change page
+                if (window.parent && window.parent.postMessage) {
+                    window.parent.postMessage({
+                        action: 'changePage',
+                        pageId: pageId
+                    }, '*');
+                }
+
+                // Show a loader inside the iframe while the parent changes the page
+                showInFrameLoader();
+            } else {
+                sidebar.classList.remove('show-sidebar');
+                overlay.style.display = 'none';
+            }
+        });
+    }
+});
+
+// Function to show a loader inside the iframe
+function showInFrameLoader() {
+    if (!document.getElementById('inFrameLoader')) {
+        const loaderDiv = document.createElement('div');
+        loaderDiv.id = 'inFrameLoader';
+        loaderDiv.style.position = 'fixed';
+        loaderDiv.style.top = '0';
+        loaderDiv.style.left = '0';
+        loaderDiv.style.width = '100%';
+        loaderDiv.style.height = '100%';
+        loaderDiv.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+        loaderDiv.style.display = 'flex';
+        loaderDiv.style.justifyContent = 'center';
+        loaderDiv.style.alignItems = 'center';
+        loaderDiv.style.zIndex = '10000';
+        const spinner = document.createElement('div');
+        spinner.style.width = '50px';
+        spinner.style.height = '50px';
+        spinner.style.border = '5px solid #e2ebc7';
+        spinner.style.borderRadius = '50%';
+        spinner.style.borderTopColor = '#4d6a11';
+        spinner.style.animation = 'spin 1s linear infinite';
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+        loaderDiv.appendChild(spinner);
+        document.body.appendChild(loaderDiv);
+    } else {
+        document.getElementById('inFrameLoader').style.display = 'flex';
+    }
+}
+
+// Add cursor pointer style to sidebar items for better UX
+document.querySelectorAll('.sidebar-item').forEach(element => {
+    element.style.cursor = 'pointer';
+});
+
+// --- Portfolio Data ---
+// Remove hardcoded data, will fetch from backend
+let portfolioSummary = {
+    invested: 0,
+    current: 0,
+    performance: 0,
+    gain: 0,
+    loss: 0
+};
+let funds = [];
+
+// --- Utility functions ---
+function formatCurrency(val) {
+    if (val >= 10000000) return "₹" + (val/10000000).toFixed(2).replace(/\.00$/, '') + "Cr";
+    if (val >= 100000) return "₹" + (val/100000).toFixed(2).replace(/\.00$/, '') + "L";
+    if (val >= 1000) return "₹" + (val/1000).toFixed(2).replace(/\.00$/, '') + "K";
+    return "₹" + val.toLocaleString();
+}
+function formatPercent(val) {
+    return (val >= 0 ? "+" : "") + val.toFixed(2) + "%";
+}
+
+// Helper to convert string to Proper Case
+function toProperCase(str) {
+    if (!str) return '';
+    return str
+        .toLowerCase()
+        .replace(/\b\w/g, c => c.toUpperCase());
+}
+
+// --- Fetch Portfolio Data from Backend ---
+async function fetchPortfolio() {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+        // Redirect to login if not authenticated
+        window.location.href = 'index.html';
+        return;
+    }
+    try {
+        const res = await fetch(`${API_BASE_URL}/myPortFolio`, {
+            method: 'POST',
+            headers: {
+                'accept': '*/*',
+                'Authorization': 'Bearer ' + token
+            }
+        });
+        const data = await res.json();
+        if (data && data.valid && data.details && data.details.length > 0) {
+            const d = data.details[0];
+            // Save for transaction modal access
+            window._lastPortfolioDetails = d;
+            // Parse invested/current/gain/loss/percent
+            portfolioSummary = {
+                invested: parseAmount(d.investedAmount),
+                current: parseAmount(d.currentAmount),
+                performance: parseFloat(d.percent) || 0,
+                gain: parseAmount(d.pnl) > 0 ? parseAmount(d.pnl) : 0,
+                loss: parseAmount(d.pnl) < 0 ? Math.abs(parseAmount(d.pnl)) : 0
+            };
+            // Parse funds
+            funds = (d.portFolioList || []).map(f => ({
+                name: f.amcName,
+                type: f.isin,
+                pnl: parseFloat(f.percentage) || 0,
+                invested: parseAmount(f.investedAmount),
+                current: parseAmount(f.currentAmount)
+            }));
+        }
+    } catch (err) {
+        // Optionally show error to user
+        console.error('Failed to fetch portfolio', err);
+    }
+    renderPortfolioSummary();
+    renderPerformanceRow();
+    renderFundList();
+}
+
+// Helper to parse "3.84 Cr", "5.00 L", "3.00 K", "169.61", "-1.12 L" etc.
+function parseAmount(val) {
+    if (!val) return 0;
+    if (typeof val === 'number') return val;
+    let v = val.replace(/,/g, '').trim();
+    let mult = 1;
+    if (v.endsWith('Cr')) {
+        mult = 10000000;
+        v = v.replace('Cr', '').trim();
+    } else if (v.endsWith('L')) {
+        mult = 100000;
+        v = v.replace('L', '').trim();
+    } else if (v.endsWith('K')) {
+        mult = 1000;
+        v = v.replace('K', '').trim();
+    }
+    return parseFloat(v) * mult;
+}
+
+// Set the initial display format to compact (Cr/L/K)
+let isIndianCurrency = false;
+
+// Modify renderPortfolioSummary to toggle between formats
+function renderPortfolioSummary() {
+    const el = document.getElementById('portfolio-summary');
+    el.innerHTML = `
+        <div class="investment-row">
+            <div>
+                <div class="investment-label">Invested</div>
+                <div class="investment-amount">${isIndianCurrency ? portfolioSummary.invested.toLocaleString('en-IN', { style: 'currency', currency: 'INR' }) : formatCurrency(portfolioSummary.invested)}</div>
+            </div>
+            <div class="investment-right">
+                <div class="custom-investment-icon"></div>
+            </div>
+        </div>
+        <div class="investment-current">Current</div>
+        <div class="current-amount">
+            ${isIndianCurrency ? portfolioSummary.current.toLocaleString('en-IN', { style: 'currency', currency: 'INR' }) : formatCurrency(portfolioSummary.current)}
+            <div class="performance-indicator">
+                ${portfolioSummary.performance}% <img src="./assets/images/performance-check.png" alt="Performance">
+            </div>
+        </div>
+    `;
+
+    // Add click event listener to toggle format
+    document.querySelector('.custom-investment-icon').addEventListener('click', function () {
+        isIndianCurrency = !isIndianCurrency;
+        renderPortfolioSummary();
+    });
+}
+
+// --- Render Gain/Loss Row ---
+function renderPerformanceRow() {
+    const el = document.getElementById('performance-row');
+    el.innerHTML = `
+        <div class="gain-loss-column">
+            <div class="circle-icon">
+                <i class="fas fa-arrow-up gain-arrow"></i>
+            </div>
+            <div class="gain-loss-content">
+                <div class="gain-label">Gain</div>
+                <div class="gain-amount">${formatCurrency(portfolioSummary.gain)}</div>
+            </div>
+        </div>
+        <div class="gain-loss-column">
+            <div class="circle-icon">
+                <i class="fas fa-arrow-down loss-arrow"></i>
+            </div>
+            <div class="gain-loss-content">
+                <div class="loss-label">Loss</div>
+                <div class="loss-amount">${formatCurrency(portfolioSummary.loss)}</div>
+            </div>
+        </div>
+    `;
+}
+
+// --- Render Fund List ---
+function renderFundList() {
+    const el = document.getElementById('fund-list');
+    el.innerHTML = funds.map((fund, idx) => {
+        // Show only Demat for even idx, only Physical for odd idx
+        let actions = '';
+        if (idx % 2 === 0) {
+            actions = `<button class="fund-header-btn selected">Demat</button>`;
+        } else {
+            actions = `<button class="fund-header-btn selected">Physical</button>`;
+        }
+        // Calculate absolute P&L (current - invested)
+        const pnlAmt = fund.current - fund.invested;
+        // Remove leading/trailing newlines and indentation
+        return (
+            '<div class="fund-item" data-fund-idx="' + idx + '" style="cursor:pointer;">' +
+                '<div class="fund-card-header">' +
+                    '<div class="fund-header-number">' + (idx+1) + '</div>' +
+                    '<div class="fund-header-divider"></div>' +
+                    '<div class="fund-header-details">' +
+                        '<div class="fund-header-name">' + toProperCase(fund.name) + '</div>' +
+                        '<div class="fund-header-type">' + fund.type + '</div>' +
+                    '</div>' +
+                    '<div class="fund-header-actions">' +
+                        actions +
+                    '</div>' +
+                '</div>' +
+                '<div class="fund-card-body">' +
+                    '<div class="fund-body-col">' +
+                        // P&L label and value in same row
+                        '<div class="fund-body-label">' +
+                            'P&amp;L ' +
+                            '<span class="fund-body-pnl-amt' + (pnlAmt < 0 ? ' negative' : '') + '" style="margin-left:4px;">' +
+                                (pnlAmt >= 0 ? '+' : '-') + formatCurrency(Math.abs(pnlAmt)) +
+                            '</span>' +
+                        '</div>' +
+                        // Percentage P&L below
+                        '<div class="fund-body-pnl-pct' + (fund.pnl < 0 ? ' negative' : '') + '">' +
+                            formatPercent(fund.pnl) +
+                            ' <i class="fas ' + (fund.pnl < 0 ? 'fa-arrow-down' : 'fa-arrow-up') + '"></i>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="fund-body-col">' +
+                        '<div class="fund-body-label">Invested</div>' +
+                        '<div class="fund-body-value">' + formatCurrency(fund.invested) + '</div>' +
+                    '</div>' + // <-- moved closing quote here
+                    '<div class="fund-body-col">' +
+                        '<div class="fund-body-label">Current</div>' +
+                        '<div class="fund-body-value">' + formatCurrency(fund.current) + '</div>' +
+                    '</div>' +
+                '</div>' +
+            '</div>'
+        );
+    }).join('');
+
+    // Add click event to each fund-item for redirection
+    document.querySelectorAll('.fund-item').forEach(item => {
+        item.addEventListener('click', function(e) {
+            if (e.target.classList.contains('fund-header-btn')) return;
+            const idx = parseInt(this.getAttribute('data-fund-idx'));
+            const fund = getOriginalFund(idx);
+            if (fund) {
+                localStorage.setItem('selectedFund', JSON.stringify(fund));
+                window.location.href = 'myInvestment.html'; // changed from accountTransaction.html
+            }
+        });
+        // No need to toggle selected state since only one button is present
+    });
+}
+
+// Helper to get original fund data with transactions
+function getOriginalFund(idx) {
+    // Find the original fund object from the last fetched data
+    if (!window._lastPortfolioDetails) return null;
+    const list = window._lastPortfolioDetails.portFolioList || [];
+    return list[idx] || null;
+}
+
+// --- Download Statement Handlers ---
+document.querySelectorAll('.file-option').forEach((btn, idx) => {
+    btn.addEventListener('click', function() {
+        if (idx === 0) {
+            // Excel
+            downloadStatement('excel');
+        } else if (idx === 1) {
+            // PDF
+            downloadStatement('pdf');
+        }
+    });
+});
+
+async function downloadStatement(type) {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+        window.location.href = 'index.html';
+        return;
+    }
+    let url = '';
+    let filename = '';
+    if (type === 'excel') {
+        url = `${API_BASE_URL}/getStatement`;
+        filename = 'FundMF-Statement.xlsx';
+    } else if (type === 'pdf') {
+        url = `${API_BASE_URL}/download`;
+        filename = 'FundMF-Statement.pdf';
+    } else {
+        return;
+    }
+    try {
+        // Detect if running in a WebView (simple check, improve as needed)
+        const isWebView = !!(window.cordova || window.Capacitor || window.ReactNativeWebView);
+
+        if (isWebView && window.cordova) {
+            // Cordova/PhoneGap example (requires cordova-plugin-file & cordova-plugin-file-transfer)
+            window.resolveLocalFileSystemURL(
+                cordova.file.externalDataDirectory,
+                function(dirEntry) {
+                    const filePath = dirEntry.nativeURL + filename;
+                    const fileTransfer = new FileTransfer();
+                    fileTransfer.download(
+                        encodeURI(url),
+                        filePath,
+                        function(entry) {
+                            alert('File downloaded: ' + entry.toURL());
+                        },
+                        function(error) {
+                            alert('Download failed: ' + error.source);
+                        },
+                        false,
+                        {
+                            headers: {
+                                'accept': '*/*',
+                                'Authorization': 'Bearer ' + token
+                            }
+                        }
+                    );
+                }
+            );
+        } else if (isWebView && window.Capacitor) {
+            // Capacitor example (requires @capacitor/filesystem and @capacitor/http)
+            const { Filesystem } = window.Capacitor.Plugins;
+            const { Http } = window.Capacitor.Plugins;
+            const response = await Http.downloadFile({
+                url: url,
+                headers: {
+                    'accept': '*/*',
+                    'Authorization': 'Bearer ' + token
+                },
+                filePath: filename,
+                method: 'GET'
+            });
+            alert('File downloaded: ' + response.path);
+        } else {
+            // Browser fallback (original logic)
+            const res = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'accept': '*/*',
+                    'Authorization': 'Bearer ' + token
+                }
+            });
+            if (!res.ok) throw new Error('Failed to download file');
+            const blob = await res.blob();
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            setTimeout(() => {
+                window.URL.revokeObjectURL(link.href);
+                link.remove();
+            }, 100);
+        }
+    } catch (err) {
+        alert('Failed to download file. Please try again.');
+    }
+}
+
+// --- Initial Render ---
+fetchPortfolio();
+
+// Fetch client name from localStorage and update the greeting
+const clientName = localStorage.getItem('clientName') || 'User';
+document.querySelector('.user-greeting').textContent = `Hi ${clientName}`;
+
+// --- Filter Modal Logic ---
+const filterModal = document.getElementById('filterModal');
+const openFilterModalBtn = document.getElementById('openFilterModalBtn');
+let selectedSort = 'alphabetical';
+let sortDirections = {
+    alphabetical: 'asc',
+    invested: 'asc',
+    current: 'asc',
+    'pnl-absolute': 'asc',
+    'pnl-percent': 'asc'
+};
+
+openFilterModalBtn.addEventListener('click', function() {
+    filterModal.style.display = 'flex';
+    highlightSelectedSort();
+});
+filterModal.addEventListener('click', function(e) {
+    if (e.target === filterModal) filterModal.style.display = 'none';
+});
+
+// Refresh icon resets sort to default
+document.getElementById('filterRefreshBtn').addEventListener('click', function() {
+    selectedSort = 'alphabetical';
+    sortDirections = {
+        alphabetical: 'asc',
+        invested: 'asc',
+        current: 'asc',
+        'pnl-absolute': 'asc',
+        'pnl-percent': 'asc'
+    };
+    highlightSelectedSort();
+    sortFunds(selectedSort, sortDirections[selectedSort]);
+    renderFundList();
+});
+
+document.querySelectorAll('.filter-sort-option').forEach(opt => {
+    opt.addEventListener('click', function() {
+        const sortType = this.getAttribute('data-sort');
+        if (selectedSort === sortType) {
+            // Toggle direction
+            sortDirections[sortType] = sortDirections[sortType] === 'asc' ? 'desc' : 'asc';
+        } else {
+            selectedSort = sortType;
+            // Always start with ascending on first select
+            sortDirections[sortType] = 'asc';
+        }
+        highlightSelectedSort();
+        sortFunds(selectedSort, sortDirections[selectedSort]);
+        renderFundList();
+        // filterModal.style.display = 'none'; // <-- Remove this line to keep modal open
+    });
+});
+
+function highlightSelectedSort() {
+    document.querySelectorAll('.filter-sort-option').forEach(opt => {
+        const sortType = opt.getAttribute('data-sort');
+        const icon = opt.querySelector('.sort-icon');
+        const arrow = opt.querySelector('.sort-arrow');
+        // Reset icon and arrow
+        if (icon) {
+            // Reset all icons to default
+            if (sortType === 'alphabetical') {
+                icon.innerHTML = '<i class="fas fa-arrow-down"></i>';
+                icon.style.color = '#8a94a6';
+            } else if (sortType === 'invested' || sortType === 'current') {
+                icon.textContent = '₹';
+                icon.style.color = '#8a94a6';
+            } else if (sortType === 'pnl-absolute') {
+                icon.textContent = 'P&L';
+                icon.style.color = '#8a94a6';
+            } else if (sortType === 'pnl-percent') {
+                icon.textContent = '%';
+                icon.style.color = '#8a94a6';
+            }
+        }
+        if (sortType === selectedSort) {
+            opt.classList.add('selected');
+            opt.setAttribute('aria-selected', 'true');
+            // Set arrow
+            if (sortType === 'alphabetical') {
+                // Only update the icon, not the arrow
+                if (icon) {
+                    icon.innerHTML = sortDirections[sortType] === 'asc'
+                        ? '<i class="fas fa-arrow-up"></i>'
+                        : '<i class="fas fa-arrow-down"></i>';
+                    icon.style.color = '#4d6a11';
+                }
+                if (arrow) arrow.innerHTML = '';
+            } else {
+                // For other sorts, update the arrow, not the icon
+                if (arrow) {
+                    arrow.innerHTML = sortDirections[sortType] === 'asc'
+                        ? '<i class="fas fa-arrow-up"></i>'
+                        : '<i class="fas fa-arrow-down"></i>';
+                }
+                if (icon) icon.style.color = '#4d6a11';
+            }
+        } else {
+            opt.classList.remove('selected');
+            opt.removeAttribute('aria-selected');
+            if (arrow) arrow.innerHTML = '';
+        }
+    });
+}
+
+// Sort funds based on the selected criteria
+function sortFunds(sortType, direction = 'asc') {
+    if (!Array.isArray(funds)) return;
+    let compare;
+    switch (sortType) {
+        case 'alphabetical':
+            compare = (a, b) => a.name.localeCompare(b.name);
+            break;
+        case 'invested':
+            compare = (a, b) => a.invested - b.invested;
+            break;
+        case 'current':
+            compare = (a, b) => a.current - b.current;
+            break;
+        case 'pnl-absolute':
+            compare = (a, b) => (a.current - a.invested) - (b.current - b.invested);
+            break;
+        case 'pnl-percent':
+            compare = (a, b) => a.pnl - b.pnl;
+            break;
+        default:
+            compare = () => 0;
+    }
+    funds.sort((a, b) => direction === 'asc' ? compare(a, b) : compare(b, a));
+}
+</script>
+<!-- Add Font Awesome JS for icons to work -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+</body>
+</html>

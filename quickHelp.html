@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help & Support - FundMF</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background-color: white;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background-color: #FFFFFF;
+            color: #FFFFFF;
+            padding: 12px 15px 0px 15px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        
+        .back-button {
+            color: #d4d4d4;
+            font-size: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .back-button:hover {
+            color: #62880a;
+        }
+        
+        .back-button .green-transaction {
+            display: none;
+        }
+        
+        /* Content header */
+        .content-header {
+            background-color: white;
+            padding: 20px;
+            padding-top: 18px;
+        }
+        
+        .page-title {
+            font-size: 22px;
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+        
+        .page-subtitle {
+            font-size: 16px;
+            color: #585858;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+        
+        .search-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 8px 15px 8px 40px;
+            border: 1px solid #858585;
+            border-radius: 25px;
+            background-color: #FFFFFF;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+        
+        .help-item {
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: white;
+        }
+        
+        .help-item:last-child {
+            border-bottom: none;
+        }
+        
+        .help-title {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .help-icon {
+            color: #666;
+            font-size: 16px;
+        }
+        
+        .message-container {
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .help-message {
+            font-size: 16px;
+            color: #000000;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        .send-message-btn {
+            background-color: #597200;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 12px;
+            font-weight: bold;
+            width: 100%;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        /* Accordion styling */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background-color: #f9f9f9;
+        }
+        
+        .accordion-content.active {
+            max-height: 500px;
+        }
+        
+        .faq-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #D4D4D4;
+            font-size: 14px;
+        }
+        
+        .faq-question {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .faq-answer {
+            color: #666;
+        }
+        
+        .content-container {
+            margin-bottom: 70px;
+        }
+        
+        .faq-question-toggle {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .faq-answer-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            color: #666;
+            padding-left: 10px;
+        }
+        .faq-answer-content.active {
+            max-height: 200px;
+            padding-top: 5px;
+        }
+        .faq-question-toggle .faq-q-icon {
+            margin-left: 8px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        /* Page Loader Styles */
+        .page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #e2ebc7;
+            border-radius: 50%;
+            border-top-color: #4d6a11;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loader -->
+    <div id="homeLoader" class="page-loader" style="display: none;">
+        <div class="loader"></div>
+    </div>
+    <!-- Header -->
+    <div class="header" style="justify-content: flex-start; padding: 12px 15px 0px 15px;">
+        <a class="back-button" id="backButton">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <!-- Removed the header text -->
+    </div>
+    <div class="content-container">
+        <!-- Content Header -->
+        <div class="content-header">
+            <div class="page-title">We're here to assist you with everything and anything on <strong>FundMF</strong>.</div>
+            <div class="page-subtitle">At FundMF, we aim to make your investment journey smoother and more confident. Explore our FAQs or share your concerns—we're here to help!</div>
+            
+            <!-- Search Bar -->
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" placeholder="Search Help">
+            </div>
+        </div>
+
+        <!-- Help Categories -->
+        <div class="help-categories" id="helpCategories">
+            <!-- Dynamic categories and FAQs will be loaded here -->
+        </div>
+
+        <!-- Message Help -->
+        <div class="message-container">
+            <div class="help-message">Still stuck? Help us a mail away</div>
+            <button class="send-message-btn">Send a message</button>
+        </div>
+    </div>
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Backend URL
+        const FAQ_API_URL = 'http://122.176.151.191/MutualFund/api/faqs';
+
+        // Store categories and their FAQs
+        let categoryFaqMap = {};
+
+        // Helper: Slugify category to use as HTML id
+        function slugify(text) {
+            return text.toString().toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '').replace(/\-\-+/g, '-');
+        }
+
+        // Render categories and FAQs dynamically
+        function renderCategoriesAndFaqs(faqs) {
+            // Group FAQs by category
+            categoryFaqMap = {};
+            faqs.forEach(faq => {
+                const cat = (faq.category || 'Others').trim();
+                if (!categoryFaqMap[cat]) categoryFaqMap[cat] = [];
+                categoryFaqMap[cat].push(faq);
+            });
+
+            const helpCategories = document.getElementById('helpCategories');
+            helpCategories.innerHTML = '';
+
+            Object.entries(categoryFaqMap).forEach(([category, faqs]) => {
+                const sectionId = slugify(category) + '-content';
+                const itemId = slugify(category) + '-item';
+
+                // Help item (category header)
+                const helpItem = document.createElement('div');
+                helpItem.className = 'help-item';
+                helpItem.id = itemId;
+                helpItem.innerHTML = `
+                    <div class="help-title">${category.toUpperCase()}</div>
+                    <i class="fas fa-plus help-icon"></i>
+                `;
+                // Accordion content (FAQ list)
+                const accordionContent = document.createElement('div');
+                accordionContent.className = 'accordion-content';
+                accordionContent.id = sectionId;
+
+                faqs.forEach(faq => {
+                    const faqItem = document.createElement('div');
+                    faqItem.className = 'faq-item';
+                    faqItem.innerHTML = `
+                        <div class="faq-question faq-question-toggle">
+                            ${faq.question}
+                            <span class="faq-q-icon"><i class="fas fa-plus"></i></span>
+                        </div>
+                        <div class="faq-answer-content">
+                            ${faq.answer}
+                        </div>
+                    `;
+                    accordionContent.appendChild(faqItem);
+                });
+
+                helpCategories.appendChild(helpItem);
+                helpCategories.appendChild(accordionContent);
+            });
+
+            attachAccordionListeners();
+            attachFAQToggleListeners();
+        }
+
+        // Attach listeners to category accordions
+        function attachAccordionListeners() {
+            document.querySelectorAll('.help-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const itemId = this.id;
+                    const contentId = itemId.replace('-item', '-content');
+                    const content = document.getElementById(contentId);
+                    const icon = this.querySelector('.help-icon');
+                    // Toggle content visibility
+                    if (content.classList.contains('active')) {
+                        content.classList.remove('active');
+                        icon.classList.remove('fa-minus');
+                        icon.classList.add('fa-plus');
+                    } else {
+                        // Close all other open sections
+                        document.querySelectorAll('.accordion-content').forEach(el => {
+                            el.classList.remove('active');
+                        });
+                        document.querySelectorAll('.help-icon').forEach(el => {
+                            el.classList.remove('fa-minus');
+                            el.classList.add('fa-plus');
+                        });
+                        // Open this section
+                        content.classList.add('active');
+                        icon.classList.remove('fa-plus');
+                        icon.classList.add('fa-minus');
+                    }
+                });
+            });
+        }
+
+        // Attach listeners to FAQ toggles
+        function attachFAQToggleListeners() {
+            document.querySelectorAll('.faq-question-toggle').forEach(q => {
+                q.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const answer = this.parentElement.querySelector('.faq-answer-content');
+                    const icon = this.querySelector('.faq-q-icon i');
+                    // Optionally close other answers in the same section
+                    this.parentElement.parentElement.querySelectorAll('.faq-answer-content').forEach(a => {
+                        if (a !== answer) {
+                            a.classList.remove('active');
+                            const otherIcon = a.parentElement.querySelector('.faq-q-icon i');
+                            if (otherIcon) {
+                                otherIcon.classList.remove('fa-minus');
+                                otherIcon.classList.add('fa-plus');
+                            }
+                        }
+                    });
+                    // Toggle this answer
+                    answer.classList.toggle('active');
+                    if (answer.classList.contains('active')) {
+                        icon.classList.remove('fa-plus');
+                        icon.classList.add('fa-minus');
+                    } else {
+                        icon.classList.remove('fa-minus');
+                        icon.classList.add('fa-plus');
+                    }
+                });
+            });
+        }
+
+        // Loader helpers (updated for new loader)
+        function showLoader() {
+            document.getElementById('homeLoader').style.display = 'flex';
+        }
+        function hideLoader() {
+            document.getElementById('homeLoader').style.display = 'none';
+        }
+
+        // Fetch FAQs from backend and render
+        function fetchAndRenderFAQs() {
+            showLoader();
+            fetch(FAQ_API_URL)
+                .then(res => res.json())
+                .then(data => {
+                    const faqs = Array.isArray(data.details) && Array.isArray(data.details[0]) ? data.details[0] : [];
+                    renderCategoriesAndFaqs(faqs);
+                })
+                .catch(() => {
+                    // Optionally show error or fallback
+                })
+                .finally(() => {
+                    hideLoader();
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('backButton').addEventListener('click', function() {
+                window.location.href = 'accountPage.html';
+            });
+
+            // Fetch and render FAQs from backend
+            fetchAndRenderFAQs();
+        });
+
+        // Search functionality
+        const searchInput = document.querySelector('.search-input');
+searchInput.addEventListener('input', function() {
+    const searchTerm = this.value.toLowerCase();
+    // Get all categories and their FAQ containers
+    const allCategoryItems = document.querySelectorAll('.help-item');
+    const allCategoryContents = document.querySelectorAll('.accordion-content');
+
+    if (searchTerm === '') {
+        // Show all categories and all questions
+        allCategoryItems.forEach(item => item.style.display = '');
+        allCategoryContents.forEach(content => {
+            content.classList.remove('active');
+            content.style.display = '';
+            // Show all FAQ items
+            content.querySelectorAll('.faq-item').forEach(faq => faq.style.display = '');
+        });
+        document.querySelectorAll('.help-icon').forEach(el => {
+            el.classList.remove('fa-minus');
+            el.classList.add('fa-plus');
+        });
+        return;
+    }
+
+    // Hide all categories and their contents initially
+    allCategoryItems.forEach(item => item.style.display = 'none');
+    allCategoryContents.forEach(content => {
+        content.classList.remove('active');
+        content.style.display = 'none';
+        content.querySelectorAll('.faq-item').forEach(faq => faq.style.display = 'none');
+    });
+    document.querySelectorAll('.help-icon').forEach(el => {
+        el.classList.remove('fa-minus');
+        el.classList.add('fa-plus');
+    });
+
+    // Show only the category and question(s) that match
+    document.querySelectorAll('.faq-item').forEach(item => {
+        const question = item.querySelector('.faq-question').textContent.toLowerCase();
+        const answer = item.querySelector('.faq-answer-content').textContent.toLowerCase();
+        if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+            // Show the matched FAQ item
+            item.style.display = '';
+            // Show its parent category section
+            const parentContent = item.closest('.accordion-content');
+            if (parentContent) {
+                parentContent.style.display = '';
+                parentContent.classList.add('active');
+                // Show the category header
+                const parentItem = document.getElementById(parentContent.id.replace('-content', '-item'));
+                if (parentItem) {
+                    parentItem.style.display = '';
+                    // Set icon to minus
+                    const icon = parentItem.querySelector('.help-icon');
+                    if (icon) {
+                        icon.classList.remove('fa-plus');
+                        icon.classList.add('fa-minus');
+                    }
+                }
+            }
+        }
+    });
+});
+
+        // Send message button
+        document.querySelector('.send-message-btn').addEventListener('click', function() {
+            window.location.href = 'contact.html';
+        });
+    </script>
+</body>
+</html>

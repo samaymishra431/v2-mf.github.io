@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - FundMF</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #FFFFFF;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .header {
+            background-color: #597200;
+            color: #FFFFFF;
+            padding: 60px 20px 25px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+        }
+        
+        .header-title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .settings-container {
+            background-color: #FFFFFF;
+            border-radius: 15px 15px 0 0;
+            margin-top: -10px;
+            padding: 20px;  
+        }
+        
+        .user-section {
+            display: flex;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 10px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background-color: #597200;
+            color: #FFFFFF;
+            font-weight: bold;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            font-size: 27px;
+        }
+        
+        .account-settings {
+            color: #ADADAD;
+            font-size: 18px;
+            margin: 15px 0 5px 0;
+        }
+        
+        .settings-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .settings-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            font-size: 18px;
+        }
+        
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+        
+        .chevron-icon {
+            color: #999;
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            border-radius: 34px;
+            transition: .4s;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: #FFFFFF;
+            border-radius: 50%;
+            transition: .4s;
+        }
+        
+        input:checked + .slider {
+            background-color: #597200;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <i class="fas fa-cog" style="font-size: 24px;"></i>
+        <div class="header-title">Settings</div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="settings-container">
+        <!-- User Profile Section -->
+        <div class="user-section">
+            <div class="user-avatar" id="userAvatar"></div>
+            <div class="user-info">
+                <div style="font-weight: 400; font-size: 18px;" id="userName"></div>
+            </div>
+        </div>
+        
+        <!-- Account Settings Label -->
+        <div class="account-settings">Account Settings</div>
+        
+        <!-- Settings List -->
+        <ul class="settings-list">
+            <li class="settings-item">
+                <div>Profile</div>
+                <i class="fas fa-chevron-right chevron-icon"></i>
+            </li>
+            <li class="settings-item">
+                <div>Change Password</div>
+                <i class="fas fa-chevron-right chevron-icon"></i>
+            </li>
+            <li class="settings-item">
+                <div>Enable Biometrics</div>
+                <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </li>
+            <li class="settings-item">
+                <div>Push Notifications</div>
+                <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </li>
+            <!-- <li class="settings-item">
+                <div>About Us</div>
+                <i class="fas fa-chevron-right chevron-icon"></i>
+            </li> -->
+             <li class="settings-item">
+                <div>Contact Us</div>
+                <i class="fas fa-chevron-right chevron-icon"></i>
+            </li>
+            <li class="settings-item">
+                <div>FAQ</div>
+                <i class="fas fa-chevron-right chevron-icon"></i>
+            </li>
+        </ul>
+
+    </div>
+
+    <script>
+        // JavaScript for toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set user name and avatar from localStorage
+            const clientName = localStorage.getItem('clientName') || 'User';
+            document.getElementById('userName').textContent = clientName;
+            document.getElementById('userAvatar').textContent = clientName.trim().charAt(0).toUpperCase();
+
+            const toggleSwitches = document.querySelectorAll('input[type="checkbox"]');
+            
+            toggleSwitches.forEach(switchEl => {
+                switchEl.addEventListener('change', function() {
+                    console.log(this.checked ? 'Enabled' : 'Disabled');
+                    // Add any additional functionality here
+                });
+            });
+            
+            // Handle navigation for specific pages
+            const navigationItems = document.querySelectorAll('.settings-item');
+            navigationItems.forEach(item => {
+                const itemText = item.querySelector('div').textContent;
+                
+                // Only add click handlers to items with chevron icons
+                if (item.querySelector('.fa-chevron-right')) {
+                    item.style.cursor = 'pointer';
+                    
+                    item.addEventListener('click', function() {
+                        let targetPage;
+                        
+                        // Define specific page targets
+                        if (itemText === 'Profile') {
+                            targetPage = 'userProfile.html';
+                        } else if (itemText === 'Change Password') {
+                            targetPage = 'changePassword.html';
+                        } else if (itemText === 'About Us') {
+                            targetPage = 'aboutUs.html';
+                        }
+                        else if (itemText === 'FAQ') {
+                            targetPage = 'comingSoon.html';
+                        }else if (itemText === 'Contact Us') {
+                            targetPage = 'contact.html';
+                        }
+                        
+                        if (targetPage) {
+                            console.log(`Navigating to: ${targetPage}`);
+                            
+                            // Direct navigation - this should work in most cases
+                            window.location.href = targetPage;
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home - FundMF</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+    }
+    
+    body {
+        background-color: #FFFFFF;
+        color: #333;
+        max-width: 800px;
+        margin: 0 auto;
+        position: relative;
+    }
+    
+    .status-bar {
+        background-color: #597200;
+        color: #FFFFFF;
+        padding: 5px 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 14px;
+        height: 25px;
+    }
+    
+    .status-bar-right {
+        display: flex;
+        align-items: center;
+    }
+    
+    .status-bar-icon {
+        margin-left: 5px;
+    }
+    
+    .header {
+        background-color: #597200;
+        color: #FFFFFF;
+        padding: 15px 20px 25px 20px;
+    }
+    
+    .header-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    
+    .menu-icon {
+        font-size: 28px;
+        color: #FFFFFF;
+        cursor: pointer;
+    }
+    
+    .notification {
+        position: relative;
+    }
+    
+    .notification i {
+        font-size: 24px;
+        color: #FFFFFF;
+    }
+    
+    .notification-badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background-color: red;
+        color: #FFFFFF;
+        border-radius: 50%;
+        width: 16px;
+        height: 16px;
+        font-size: 12px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .user-greeting {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+    
+    .welcome-text {
+        font-size: 16px;
+        font-weight: bold;
+        color: #FFFFFF;
+    }
+    
+    .investment-card {
+        background-color: #FFFFFF;
+        border-radius: 15px 15px 0 0;
+        margin-top: -15px;
+        padding: 20px;
+        padding-bottom: 0px;
+        border: 1px solid #e4e7ee; /* added border */
+        /* box-shadow: 0px 4px 8px rgba(0,0,0,0.1); */
+    }
+    
+    .investment-label {
+        color: #A0AEC0;
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+    
+    .investment-amount {
+        font-size: 30px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        color: #333;
+    }
+    
+    .investment-current {
+        color: #A0AEC0;
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+    
+    .current-amount {
+        font-size: 30px;
+        font-weight: bold;
+        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+        color: #333;
+    }
+    
+    .performance-indicator {
+        color: #16A34A;
+        font-size: 16px;
+        margin-left: 10px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .performance-positive {
+        color: #16A34A;
+    }
+        .performance-row {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 24px;
+        margin-top: 22px;
+    }
+    .gain-loss-column {
+        flex: 1;
+        background: #FFFFFF;
+        border: 1.5px solid #e4e7ee;
+        border-radius: 6px;
+        padding: 12px 0 10px 0;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        min-width: 0;
+        box-shadow: none;
+        transition: box-shadow 0.15s;
+        position: relative;
+        gap: 10px;
+    }
+    .gain-loss-content {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 2px;
+    }
+    .gain-loss-column .circle-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 1.5px solid #e4e7ee;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #FFFFFF;
+        margin-bottom: 0;
+        margin-right: 8px;
+    }
+    .gain-loss-column .gain-arrow {
+        color: #1db446;
+        font-size: 20px;
+    }
+    .gain-loss-column .loss-arrow {
+        color: #e53935;
+        font-size: 20px;
+    }
+    .gain-label, .loss-label {
+        color: #8a94a6;
+        font-size: 12px; /* matches home.html */
+        font-weight: 500;
+        margin-bottom: 0;
+        margin-top: 0;
+        margin-right: 0;
+    }
+    .gain-amount, .loss-amount {
+        font-size: 14px; /* matches home.html gain/loss-amount */
+        font-weight: bold; /* matches home.html */
+        margin-bottom: 0;
+        margin-top: 0;
+        color: #222;
+        letter-spacing: 0.2px;
+    }
+    .gain-amount { color: #0D0D12; } /* matches home.html */
+    .loss-amount { color: #0D0D12; } /* matches home.html */
+
+    .loss-icon {
+        color: #FC0000;
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+    
+    .gain-amount {
+        color: #0D0D12;
+        font-weight: 600;
+    }
+    
+    .loss-amount {
+        color: #0D0D12;
+        font-weight: 600;
+    }
+    
+    .section-title {
+        padding: 20px 15px 0px 15px; /* More top padding, less bottom */
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .section-title-services {
+        padding: 21px 15px 20px 15px; /* More top padding, less bottom */
+        font-size: 16px;
+        font-weight: bold;
+    }
+    
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        padding: 0 15px;
+    }
+    
+    .service-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+   .service-icon-box {
+    background-color: #a5c765;
+    border-radius: 10px;
+    width: 65px;
+    height: 65px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 5px;
+}
+
+.service-icon {
+    width: 32px;         /* Or any size that fits well */
+    height: 32px;
+    object-fit: contain; /* Keeps aspect ratio */
+}
+
+#largeServiceIcon {
+    width: 40px;         /* Or any size that fits well */
+    height: 40px;
+    object-fit: contain; /* Keeps aspect ratio */
+}
+
+.service-label {
+    font-size: 14px;
+}
+
+    
+    .new-fund-card {
+        background-color: #FFFFFF;
+        border-radius: 10px;
+        margin: 20px 15px 10px 15px; /* reduced bottom margin */
+        padding: 15px;
+        box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+        border: 1px solid #e4e7ee; /* added border */
+    }
+    
+    .fund-title {
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    
+    .fund-category {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
+    
+    .fund-details {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+    }
+    
+    .fund-detail-item {
+        font-size: 14px;
+    }
+    
+    .detail-value {
+        font-weight: bold;
+    }
+    
+    .apply-button {
+        background-color: #a5c765;
+        color: #333;
+        border: none;
+        border-radius: 25px;
+        padding: 10px;
+        font-weight: bold;
+        width: 100%;
+        cursor: pointer;
+    }
+    
+    /* Sidebar styles */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 70%;
+        height: 100%;
+        background-color: #FFFFFF;
+        z-index: 1000;
+        display: none;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    }
+    
+    .sidebar-header {
+        display: flex;
+        align-items: center;
+        padding-right: 30px;
+        padding-left: 30px;
+        padding-top: 24px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid #eee;
+        background-color: #F2F2F2;
+        margin-bottom: 30px;
+    }
+    
+    .sidebar-logo {
+        height: 40px;
+        margin-right: 10px;
+    }
+    
+    .sidebar-menu {
+        display: flex;
+        justify-content: flex-end;
+        font-size: 24px;
+        cursor: pointer;
+    }
+    
+    .sidebar-item {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        border-radius: 30px;
+        margin: 5px 15px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    
+    .sidebar-item.active {
+        background-color: #f0f0f0;
+    }
+    
+    .sidebar-icon {
+        margin-right: 15px;
+        color: #666;
+        width: 20px;
+        text-align: center;
+    }
+    
+    .sidebar-text {
+        color: #666;
+    }
+    
+    .show-sidebar {
+        display: block;
+    }
+    
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        display: none;
+    }
+    
+    /* Modal styles */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1001;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .modal-content {
+        background-color: #FFFFFF;
+        border-radius: 10px;
+        width: 80%;
+        max-width: 350px;
+        padding: 20px;
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .modal-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+    
+    .modal-message {
+        font-size: 16px;
+        color: #555;
+        margin-bottom: 20px;
+    }
+    
+    .modal-buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+    
+    .modal-cancel {
+        background-color: #eee;
+        color: #333;
+        border: none;
+        border-radius: 5px;
+        padding: 8px 15px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    
+    .modal-confirm {
+        background-color: #597200;
+        color: #FFFFFF;
+        border: none;
+        border-radius: 5px;
+        padding: 8px 15px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    /* Add styles for sidebar child menu */
+    .sidebar-child-menu {
+        margin-left: 35px;
+        margin-top: 0;
+        margin-bottom: 0;
+        padding-left: 0;
+        display: none; /* Hide by default */
+    }
+    .sidebar-child-menu.open {
+        display: block; /* Show when open */
+    }
+    .sidebar-child-item {
+        display: flex;
+        align-items: center;
+        padding: 10px 15px 10px 10px;
+        border-radius: 30px;
+        margin: 0 15px 0 0;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        font-size: 15px;
+        color: #666;
+    }
+    .sidebar-child-item.active {
+        background-color: #f0f0f0;
+        color: #000000;
+    }
+    .sidebar-item.active .sidebar-text {
+        color: #000000;
+    }
+    .sidebar-child-icon {
+        margin-right: 12px;
+        color: #9e9e9e;
+        width: 18px;
+        text-align: center;
+        font-size: 15px;
+    }
+
+    /* --- NFO Card Redesign --- */
+    .nfo-card {
+        background: #FFFFFF;
+        border-radius: 6px;
+        /* box-shadow: 0px 2px 8px rgba(0,0,0,0.07); */
+        border: 1px solid #DFE1E7;
+        margin: 16px 15px 16px 15px;
+        padding: 18px 18px 14px 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        min-width: 0;
+    }
+    .nfo-card-title {
+        font-size: 16px;
+        font-weight: 600;
+        /* margin-bottom: 2px; */
+        color: #222;
+    }
+    .nfo-card-category {
+        color: #888;
+        font-size: 13px;
+        margin-bottom: 5px;
+    }
+
+    .nfo-card-details-row {
+        display: flex;
+        justify-content: space-between;
+        border-top: 1px solid #ececec;
+        padding: 10px 0 8px 0;
+        gap: 32px;
+    }
+    .nfo-card-detail-col {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        min-width: 0;
+    }
+    .nfo-card-detail-label {
+        color: #888;
+        font-size: 13px;
+        margin-bottom: 2px;
+    }
+    .nfo-card-detail-value {
+        font-size: 16px;
+        font-weight: bold;
+        color: #222;
+    }
+    .nfo-card-apply-btn {
+        background: #a5c765;
+        color: #222;
+        border: none;
+        border-radius: 22px;
+        padding: 10px 0;
+        font-size: 16px;
+        font-weight: bold;
+        width: 100%;
+        cursor: pointer;
+        margin-top: 2px;
+        transition: background 0.15s;
+    }
+    .nfo-card-apply-btn:hover {
+        background: #8bb44c;
+    }
+    .nfo-card-objective-row {
+        display: flex;
+        align-items: flex-start; /* changed from center to flex-start */
+        gap: 8px;
+        margin-bottom: 4px;
+        min-height: 22px;
+        flex-wrap: wrap; /* allow wrapping if needed */
+    }
+    .nfo-card-objective {
+        font-size: 13px;
+        color: #555;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex: 1 1 auto;
+        transition: all 0.2s;
+        cursor: default;
+        min-width: 0;
+        /* ensure it doesn't push the button to next row */
+    }
+    .nfo-card-objective.expanded {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: unset;
+        word-break: break-word;
+        /* stays in the same flex row */
+    }
+    .nfo-card-showmore {
+        font-size: 13px;
+        color: #597200;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0 2px;
+        font-weight: bold;
+        outline: none;
+        transition: color 0.15s;
+        align-self: flex-start; /* keep button at the top of the row */
+        margin-top: 0;
+        margin-bottom: 0;
+        /* prevent button from moving to next row */
+        flex-shrink: 0;
+    }
+    .nfo-card-showmore:hover {
+        color: #a5c765;
+        text-decoration: underline;
+    }
+
+    .show-all-nfo-btn {
+        display: block;
+        margin: 0 auto 24px auto;
+        background: linear-gradient(90deg, #a5c765 0%, #597200 100%);
+        color: #fff;
+        border: none;
+        border-radius: 24px;
+        padding: 12px 32px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(165,199,101,0.10);
+        transition: background 0.2s, box-shadow 0.2s;
+        text-align: center;
+    }
+    .show-all-nfo-btn:hover {
+        background: linear-gradient(90deg, #8bb44c 0%, #597200 100%);
+        box-shadow: 0 4px 16px rgba(165,199,101,0.18);
+    }
+    /* Add style for show-all-link */
+    .show-all-link {
+        float: right;
+        font-size: 16px;
+        color: #597200;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+        margin-top: 2px;
+        margin-right: 15px;
+        text-decoration: none;
+        transition: color 0.15s;
+        font-weight: 600;
+    }
+    .show-all-link:hover {
+        color: #a5c765;
+    }
+</style>
+</head>
+<body>
+
+<!-- Overlay for sidebar background -->
+<div class="overlay"></div>
+
+<!-- Confirmation Modal -->
+<div class="modal" id="logoutModal">
+    <div class="modal-content">
+        <div class="modal-title">Confirm Logout</div>
+        <div class="modal-message">Are you sure you want to logout from your FundMF account?</div>
+        <div class="modal-buttons">
+            <button class="modal-cancel">Cancel</button>
+            <button class="modal-confirm">Logout</button>
+        </div>
+    </div>
+</div>
+
+<!-- Sidebar/Navigation Menu -->
+<div class="sidebar">
+    <div class="sidebar-header">
+        <img src="./assets/images/logo.png" alt="FundMF Logo" class="sidebar-logo">
+        <div style="flex-grow: 1;"></div>
+        <div class="sidebar-menu">
+            <!-- Replace FontAwesome cross with your own icon -->
+            <img src="./assets/images/close.png" alt="Close" style="width:28px;height:28px;cursor:pointer;">
+        </div>
+    </div>
+    
+    <div class="sidebar-item active" data-page="homePage">
+        <img src="./assets/images/home_active.svg" alt="Dashboard Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+        <div class="sidebar-text">Dashboard</div>
+    </div>
+    
+    <div class="sidebar-item" data-page="portfolioPage">
+        <img src="./assets/images/sideBarPortfolio.png" alt="Portfolio Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+        <div class="sidebar-text">Portfolio</div>
+    </div>
+    
+    <!-- <div class="sidebar-item" data-page="recentOrders">
+        <img src="./assets/images/recentOrder.png" alt="Recent Orders Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+        <div class="sidebar-text">Recent Orders</div>
+    </div> -->
+
+    <!-- Mandate parent with child menu -->
+    <div class="sidebar-item" data-page="mandatePage">
+        <img src="./assets/images/mandate.png" alt="Mandate Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+        <div class="sidebar-text">Mandate</div>
+    </div>
+
+    <!-- Transact parent with child menu -->
+    <div class="sidebar-item" id="transactParent" style="cursor:pointer;">
+        <img src="./assets/images/transact.png" alt="Transact Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+        <div class="sidebar-text">Transact</div>
+        <i class="fas fa-chevron-down" id="transactChevron" style="margin-left:auto;color:#888;font-size:14px;"></i>
+    </div>
+    <div class="sidebar-child-menu" id="transactChildMenu">
+        <div class="sidebar-child-item active" data-page="createLumpsum" id="transactLumpsum">
+            <i class="fas fa-handshake sidebar-child-icon"></i>
+            <div>Purchase</div>
+        </div>
+        <div class="sidebar-child-item" data-page="createSip" id="transactSip">
+            <i class="fas fa-chart-bar sidebar-child-icon"></i>
+            <div>SIP</div>
+        </div>
+        <div class="sidebar-child-item" data-page="createStp" id="transactStp">
+            <i class="fas fa-file-alt sidebar-child-icon"></i>
+            <div>STP</div>
+        </div>
+        <div class="sidebar-child-item" data-page="createSwp" id="transactSwp">
+            <i class="fas fa-coins sidebar-child-icon"></i>
+            <div>SWP</div>
+        </div>
+        <!-- <div class="sidebar-child-item" data-page="nfo" id="transactNfo">
+            <i class="fas fa-rocket sidebar-child-icon"></i>
+            <div>NFO</div>
+        </div> -->
+        <div class="sidebar-child-item" data-page="portfolioPage" id="transactRedeem">
+            <i class="fas fa-wallet sidebar-child-icon"></i>
+            <div>Redeem</div>
+        </div>
+    </div>
+
+    <!-- <div class="sidebar-item" data-page="investPage">
+        <img src="./assets/images/invest.png" alt="Invest Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+        <div class="sidebar-text">Invest</div>
+    </div> -->
+    
+    <!-- <div class="sidebar-item" data-page="accountPage">
+        <img src="./assets/images/Settings.png" alt="Settings Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+        <div class="sidebar-text">Settings</div>
+    </div> -->
+    
+    <div class="sidebar-item" data-page="contactPage">
+        <img src="./assets/images/contactUs.png" alt="Contact Us Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+        <div class="sidebar-text">Contact Us</div>
+    </div>
+    
+    <div class="sidebar-item" id="logoutItem">
+        <img src="./assets/images/logout.png" alt="Logout Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+        <div class="sidebar-text">Logout</div>
+    </div>
+</div>
+
+<!-- Main Header -->
+<div class="header">
+    <div class="header-top">
+        <div class="menu-icon">
+            <!-- Replace font-awesome bars with your own icon -->
+            <img src="./assets/images/sidebar-menu.png" alt="Menu" style="width:28px;height:28px;cursor:pointer;">
+        </div>
+        <div style="display:flex;align-items:center;gap:18px;">
+            <!-- Profile icon added here -->
+            <div class="profile-icon">
+                <img src="./assets/images/bell.png" alt="Profile" style="width:28px;height:28px;">
+            </div>
+            <!-- Notification removed -->
+        </div>
+    </div>
+    <div class="user-greeting" id="userGreeting"></div>
+    <div class="welcome-text">Welcome to FundMF</div>
+</div>
+    
+<!-- Investment Card -->
+<div class="investment-card">
+    <div class="investment-label">Invested</div>
+    <div class="investment-amount" id="investedAmount"></div>
+    <div class="investment-current">Current</div>
+    <div class="current-amount">
+        <span id="currentAmount"></span>
+        <div class="performance-indicator" id="performanceIndicator"></div>
+    </div>
+   <div class="performance-row">
+        <div class="gain-loss-column">
+            <div class="circle-icon">
+                <i class="fas fa-arrow-up gain-arrow"></i>
+            </div>
+            <div class="gain-loss-content">
+                <div class="gain-label">Gain</div>
+                <div class="gain-amount" id="gainAmount"></div>
+            </div>
+        </div>
+        <div class="gain-loss-column">
+            <div class="circle-icon">
+                <i class="fas fa-arrow-down loss-arrow"></i>
+            </div>
+            <div class="gain-loss-content">
+                <div class="loss-label">Loss</div>
+                <div class="loss-amount" id="lossAmount"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Services Section -->
+<div class="section-title-services">Our Services</div>
+<div class="services-grid">
+    <div class="service-item" data-page="createLumpsum" data-service="purchase">
+        <div class="service-icon-box">
+            <img src="./assets/images/purchase.png" alt="Purchase Icon" class="service-icon" id="largeServiceIcon">
+        </div>
+        <div class="service-label">Purchase</div>
+    </div>
+    <div class="service-item" data-page="createSip" data-service="sip">
+        <div class="service-icon-box">
+            <img src="./assets/images/growth.png" alt="SIP Icon" class="service-icon">
+        </div>
+        <div class="service-label">SIP</div>
+    </div>
+    <div class="service-item" data-page="createStp" data-service="stp">
+        <div class="service-icon-box">
+            <img src="./assets/images/stp.png" alt="STP Icon" class="service-icon" id="largeServiceIcon">
+        </div>
+        <div class="service-label">STP</div>
+    </div>
+    <div class="service-item" data-page="createSwp" data-service="swp">
+        <div class="service-icon-box">
+             <img src="./assets/images/profit.png" alt="SWP Icon" class="service-icon" id="largeServiceIcon">
+        </div>
+        <div class="service-label">SWP</div>
+    </div>
+    <div class="service-item" data-page="nfo" data-service="nfo">
+        <div class="service-icon-box">
+        <img src="./assets/images/nfo.png" alt="SWP Icon" class="service-icon">
+        </div>
+        <div class="service-label">NFO</div>
+    </div>
+    <div class="service-item" data-page="createSwp" data-service="redeem">
+        <div class="service-icon-box">
+            <img src="./assets/images/reedem.png" alt="Reedem Icon" class="service-icon" id="largeServiceIcon">
+        </div>
+        <div class="service-label">Redeem</div>
+    </div>
+</div>
+
+<!-- New Fund Offering -->
+<div class="section-title" style="position:relative;">
+    New Fund Offering
+    <button class="show-all-link" id="showAllNfoLink" type="button" style="display:none;">Show All</button>
+</div>
+<div id="nfoList"></div>
+
+<script>
+// --- CONFIG SECTION ---
+const API_BASE_URL = 'http://122.176.151.191/MutualFund';
+const AUTH_TOKEN = localStorage.getItem('authToken');
+
+// --- DATA SECTION ---
+const homeData = {
+    user: {
+        greeting: "" // will be set dynamically
+    },
+    investment: {
+        invested: "",      // will be set from API
+        current: "",       // will be set from API
+        performance: {
+            percent: "",
+            // Use your own icon image for performance indicator
+            icon: '<img src="./assets/images/performance-check.png" alt="Performance" style="width:16px;height:16px;margin-left:5px;vertical-align:middle;">'
+        },
+        gain: "",
+        loss: ""
+    }
+    // nfos will be loaded from backend
+};
+
+// --- DOM POPULATION SECTION ---
+window.addEventListener('DOMContentLoaded', function() {
+    // Retrieve client name from localStorage and set greeting
+    const clientName = localStorage.getItem('clientName') || "Guest";
+    homeData.user.greeting = `Hi ${clientName}`;
+    document.getElementById('userGreeting').textContent = homeData.user.greeting;
+
+    // Fetch portfolio and NFOs from back   end and render
+    fetchPortfolioAndRender();
+    fetchNFOs();
+
+    // Add cursor pointer style to service items for better UX
+    document.querySelectorAll('.service-item').forEach(element => {
+        element.style.cursor = 'pointer';
+        // Add click event for service items to open the correct page
+        element.addEventListener('click', function() {
+            const pageId = this.getAttribute('data-page');
+            const serviceType = this.getAttribute('data-service');
+            if (pageId) {
+                if (window.parent && window.parent.postMessage) {
+                    window.parent.postMessage({
+                        action: 'changePage',
+                        pageId: pageId,
+                        serviceType: serviceType // Pass the service type to the parent if needed
+                    }, '*');
+                }
+                showInFrameLoader();
+            }
+        });
+    });
+});
+
+// Fetch portfolio data and render investment card
+function fetchPortfolioAndRender() {
+    if (!AUTH_TOKEN) {
+        setInvestmentCard("-", "-", "-", "-", "-");
+        return;
+    }
+    fetch(`${API_BASE_URL}/myPortFolio`, {
+        method: 'POST',
+        headers: {
+            'accept': '*/*',
+            'Authorization': 'Bearer ' + AUTH_TOKEN
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        // Defensive: check structure for your API response
+        // data.details[0] contains the portfolio summary
+        const details = data && data.details && data.details[0] ? data.details[0] : {};
+        const invested = details.investedAmount || "-";
+        const current = details.currentAmount || "-";
+        const percent = details.percent !== undefined ? details.percent : "-";
+        // --- Updated gain/loss mapping to match portfolio.html ---
+        let pnl = details.pnl || "0";
+        // Parse pnl as number, handle "3.84 Cr", "5.00 L", etc.
+        function parseAmount(val) {
+            if (!val) return 0;
+            if (typeof val === 'number') return val;
+            let v = val.replace(/,/g, '').trim();
+            let mult = 1;
+            if (v.endsWith('Cr')) {
+                mult = 10000000;
+                v = v.replace('Cr', '').trim();
+            } else if (v.endsWith('L')) {
+                mult = 100000;
+                v = v.replace('L', '').trim();
+            } else if (v.endsWith('K')) {
+                mult = 1000;
+                v = v.replace('K', '').trim();
+            }
+            return parseFloat(v) * mult;
+        }
+        const pnlNum = parseAmount(pnl);
+        const gain = pnlNum > 0 ? pnl : "0";
+        const loss = pnlNum < 0 ? (pnl.startsWith('-') ? pnl.slice(1) : Math.abs(pnlNum).toString()) : "0";
+        setInvestmentCard(invested, current, percent, gain, loss);
+    })
+    .catch(() => {
+        setInvestmentCard("-", "-", "-", "-", "-");
+    });
+}
+
+function setInvestmentCard(invested, current, percent, gain, loss) {
+    document.getElementById('investedAmount').textContent = invested;
+    document.getElementById('currentAmount').textContent = current;
+    // Use the custom icon from homeData.investment.performance.icon
+    document.getElementById('performanceIndicator').innerHTML = (percent !== "-" ? percent + "% " : "- ") + homeData.investment.performance.icon;
+    // Always add ₹ symbol for gain/loss, even for 0 or "-"
+    function formatRupee(val) {
+        if (val === "-" || val === "" || val == null) return "₹0";
+        // If already starts with ₹, don't add again
+        return val.toString().trim().startsWith("₹") ? val : "₹" + val;
+    }
+    document.getElementById('gainAmount').textContent = formatRupee(gain);
+    document.getElementById('lossAmount').textContent = formatRupee(loss);
+}
+
+// Fetch NFOs from backend API and render them
+function fetchNFOs() {
+    const nfoList = document.getElementById('nfoList');
+    nfoList.innerHTML = '<div style="text-align:center;padding:20px;">Loading NFOs...</div>';
+    const showAllNfoLink = document.getElementById('showAllNfoLink');
+    if (!AUTH_TOKEN) {
+        nfoList.innerHTML = '<div style="color:red;text-align:center;padding:20px;">No auth token found.</div>';
+        showAllNfoLink.style.display = 'none';
+        return;
+    }
+    fetch(`${API_BASE_URL}/api/fnos/getUpcomingFNo`, {
+        method: 'GET',
+        headers: {
+            'accept': '*/*',
+            'Authorization': 'Bearer ' + AUTH_TOKEN
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        const nfos = (data && data.details && data.details[0] && data.details[0].live) ? data.details[0].live : [];
+        if (!nfos.length) {
+            nfoList.innerHTML = '<div style="text-align:center;padding:20px;">No NFOs available.</div>';
+            showAllNfoLink.style.display = 'none';
+            return;
+        }
+        nfoList.innerHTML = '';
+        // Show only first 2 NFOs
+        nfos.slice(0, 2).forEach((nfo, idx) => {
+            const minInvestment = '₹1,000';
+            const objective = nfo.investment_objective ? nfo.investment_objective.replace(/"/g, '&quot;') : '';
+            const card = document.createElement('div');
+            card.className = 'nfo-card';
+            card.innerHTML = `
+                <div class="nfo-card-title">${nfo.scheme_name || nfo.fund_name || ''}</div>
+                <div class="nfo-card-category">${nfo.category || ''}${nfo.sub_category ? ' | ' + nfo.sub_category : ''}</div>
+                
+                <div class="nfo-card-details-row">
+                    <div class="nfo-card-detail-col">
+                        <div class="nfo-card-detail-label">Offer close</div>
+                        <div class="nfo-card-detail-value">${nfo.close_date ? formatDate(nfo.close_date) : '-'}</div>
+                    </div>
+                    <div class="nfo-card-detail-col">
+                        <div class="nfo-card-detail-label">Min. investment</div>
+                        <div class="nfo-card-detail-value">${minInvestment}</div>
+                    </div>
+                </div>
+                <div class="nfo-card-objective-row">
+                    <span class="nfo-card-objective" title="${objective}">${objective}</span>
+                    ${objective.length > 80 ? `<button class="nfo-card-showmore" type="button">Show more</button>` : ''}
+                </div>
+                <button class="nfo-card-apply-btn apply-button" data-nfo-index="${idx}">Apply</button>
+            `;
+            card.dataset.nfo = JSON.stringify(nfo);
+            nfoList.appendChild(card);
+        });
+        nfoList.querySelectorAll('.apply-button').forEach(btn => btn.style.cursor = 'pointer');
+        // Show the "Show All" link if more than 2 NFOs
+        if (nfos.length > 2) {
+            showAllNfoLink.style.display = '';
+        } else {
+            showAllNfoLink.style.display = 'none';
+        }
+    })
+    .catch(() => {
+        nfoList.innerHTML = '<div style="color:red;text-align:center;padding:20px;">Failed to load NFOs.</div>';
+        document.getElementById('showAllNfoLink').style.display = 'none';
+    });
+}
+
+// Format date as 27th Jun 2025
+function formatDate(dateStr) {
+    const d = new Date(dateStr);
+    if (isNaN(d)) return dateStr;
+    const day = d.getDate();
+    const month = d.toLocaleString('en-GB', { month: 'short' });
+    const year = d.getFullYear();
+    // Helper to get ordinal suffix
+    function ordinal(n) {
+        if (n > 3 && n < 21) return 'th';
+        switch (n % 10) {
+            case 1: return 'st';
+            case 2: return 'nd';
+            case 3: return 'rd';
+            default: return 'th';
+        }
+    }
+    return `${day}${ordinal(day)} ${month} ${year}`;
+}
+
+// NFO apply button click handler (delegated)
+document.getElementById('nfoList').addEventListener('click', function(e) {
+    // Show more/less toggle
+    if (e.target.classList.contains('nfo-card-showmore')) {
+        const btn = e.target;
+        const objective = btn.parentElement.querySelector('.nfo-card-objective');
+        if (!objective) return;
+        if (objective.classList.contains('expanded')) {
+            objective.classList.remove('expanded');
+            btn.textContent = 'Show more';
+        } else {
+            objective.classList.add('expanded');
+            btn.textContent = 'Show less';
+        }
+        return;
+    }
+    // Apply button
+    if (e.target.classList.contains('apply-button')) {
+        // Accept both .nfo-card and .new-fund-card for backward compatibility
+        const card = e.target.closest('.nfo-card') || e.target.closest('.new-fund-card');
+        if (!card) return;
+        let nfo;
+        try {
+            nfo = JSON.parse(card.dataset.nfo);
+        } catch {
+            nfo = null;
+        }
+        if (nfo && window.parent && window.parent.postMessage) {
+            window.parent.postMessage({
+                action: 'changePage',
+                pageId: 'nfo',
+                nfoDetails: nfo
+            }, '*');
+        }
+        showInFrameLoader();
+    }
+});
+
+   // Sidebar functionality
+const menuIcon = document.querySelector('.menu-icon img');
+const sidebar = document.querySelector('.sidebar');
+const sidebarClose = document.querySelector('.sidebar-menu');
+const overlay = document.querySelector('.overlay');
+const logoutItem = document.getElementById('logoutItem');
+const logoutModal = document.getElementById('logoutModal');
+const modalCancel = document.querySelector('.modal-cancel');
+const modalConfirm = document.querySelector('.modal-confirm');
+
+// Open sidebar
+menuIcon.addEventListener('click', function() {
+    sidebar.classList.add('show-sidebar');
+    overlay.style.display = 'block';
+});
+
+// Close sidebar
+sidebarClose.addEventListener('click', function() {
+    sidebar.classList.remove('show-sidebar');
+    overlay.style.display = 'none';
+});
+
+// Close sidebar when clicking outside
+overlay.addEventListener('click', function() {
+    sidebar.classList.remove('show-sidebar');
+    overlay.style.display = 'none';
+});
+
+// Show logout confirmation modal
+logoutItem.addEventListener('click', function() {
+    sidebar.classList.remove('show-sidebar');
+    overlay.style.display = 'none';
+    logoutModal.style.display = 'flex';
+});
+
+// Cancel logout
+modalCancel.addEventListener('click', function() {
+    logoutModal.style.display = 'none';
+});
+
+// Confirm logout and redirect
+modalConfirm.addEventListener('click', function() {
+    window.top.location.href = 'index.html';
+});
+
+// Close modal when clicking outside
+logoutModal.addEventListener('click', function(event) {
+    if (event.target === logoutModal) {
+        logoutModal.style.display = 'none';
+    }
+});
+
+// Update the sidebar item click handler
+document.querySelectorAll('.sidebar-item').forEach(item => {
+    // Skip Mandate parent, Transact parent, and Logout
+    if (item.id !== 'logoutItem' && item.id !== 'mandateParent' && item.id !== 'transactParent') {
+        item.addEventListener('click', function() {
+            // Remove active class from all items
+            document.querySelectorAll('.sidebar-item').forEach(sideItem => {
+                sideItem.classList.remove('active');
+            });
+            document.querySelectorAll('.sidebar-child-item').forEach(child => {
+                child.classList.remove('active');
+            });
+
+            // Add active class to clicked item
+            this.classList.add('active');
+
+            // Get the page ID from data attribute
+            const pageId = this.getAttribute('data-page');
+
+            // Only proceed if we have a valid page ID
+            if (pageId) {
+                // Close sidebar
+                sidebar.classList.remove('show-sidebar');
+                overlay.style.display = 'none';
+
+                // Send message to parent window to change page
+                if (window.parent && window.parent.postMessage) {
+                    window.parent.postMessage({
+                        action: 'changePage',
+                        pageId: pageId
+                    }, '*');
+                }
+
+                // Show a loader inside the iframe while the parent changes the page
+                showInFrameLoader();
+            } else {
+                // For other items without page ID
+                sidebar.classList.remove('show-sidebar');
+                overlay.style.display = 'none';
+            }
+        });
+    }
+});
+
+// Transact child menu toggle
+const transactParent = document.getElementById('transactParent');
+const transactChildMenu = document.getElementById('transactChildMenu');
+const transactChevron = document.getElementById('transactChevron');
+let transactMenuOpen = false;
+
+transactParent.addEventListener('click', function(e) {
+    transactMenuOpen = !transactMenuOpen;
+    if (transactMenuOpen) {
+        transactChildMenu.classList.add('open');
+        transactChevron.classList.remove('fa-chevron-down');
+        transactChevron.classList.add('fa-chevron-up');
+    } else {
+        transactChildMenu.classList.remove('open');
+        transactChevron.classList.remove('fa-chevron-up');
+        transactChevron.classList.add('fa-chevron-down');
+    }
+    e.stopPropagation();
+});
+
+// Add click event listeners for all sidebar child items (Mandate & Transact)
+document.querySelectorAll('.sidebar-child-item').forEach(child => {
+    child.addEventListener('click', function(e) {
+        // Remove active class from all sidebar items and child items
+        document.querySelectorAll('.sidebar-item').forEach(sideItem => {
+            sideItem.classList.remove('active');
+        });
+        document.querySelectorAll('.sidebar-child-item').forEach(childItem => {
+            childItem.classList.remove('active');
+        });
+
+        // Add active class to clicked child
+        this.classList.add('active');
+
+        // Get the page ID from data attribute
+        const pageId = this.getAttribute('data-page');
+
+        // Close sidebar
+        sidebar.classList.remove('show-sidebar');
+        overlay.style.display = 'none';
+
+        // Send message to parent window to change page
+        if (window.parent && window.parent.postMessage) {
+            window.parent.postMessage({
+                action: 'changePage',
+                pageId: pageId
+            }, '*');
+        }
+
+        // Show a loader inside the iframe while the parent changes the page
+        showInFrameLoader();
+
+        // Prevent parent .sidebar-item click
+        e.stopPropagation();
+    });
+});
+
+// Function to show a loader inside the iframe
+function showInFrameLoader() {
+    // Create a loader overlay if it doesn't exist
+    if (!document.getElementById('inFrameLoader')) {
+        const loaderDiv = document.createElement('div');
+        loaderDiv.id = 'inFrameLoader';
+        loaderDiv.style.position = 'fixed';
+        loaderDiv.style.top = '0';
+        loaderDiv.style.left = '0';
+        loaderDiv.style.width = '100%';
+        loaderDiv.style.height = '100%';
+        loaderDiv.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+        loaderDiv.style.display = 'flex';
+        loaderDiv.style.justifyContent = 'center';
+        loaderDiv.style.alignItems = 'center';
+        loaderDiv.style.zIndex = '10000';
+        
+        const spinner = document.createElement('div');
+        spinner.style.width = '50px';
+        spinner.style.height = '50px';
+        spinner.style.border = '5px solid #e2ebc7';
+        spinner.style.borderRadius = '50%';
+        spinner.style.borderTopColor = '#597200';
+        spinner.style.animation = 'spin 1s linear infinite';
+        
+        // Add the keyframe animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        `;
+        
+        document.head.appendChild(style);
+        loaderDiv.appendChild(spinner);
+        document.body.appendChild(loaderDiv);
+    } else {
+        // Show the existing loader
+        document.getElementById('inFrameLoader').style.display = 'flex';
+    }
+}
+
+// Add event for "Show All" link
+document.getElementById('showAllNfoLink').addEventListener('click', function() {
+    window.location.href = 'nfo.html';
+});
+</script>
+</body>
+</html>

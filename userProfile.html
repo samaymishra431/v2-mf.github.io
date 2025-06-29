@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Details - FundMF</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background-color: white;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background-color: #FFFFFF;
+            color: #FFFFFF;
+            padding: 12px 15px 0px 15px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        
+        .back-button {
+            color: #d4d4d4;
+            font-size: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .back-button:hover {
+            color: #62880a;
+        }
+        
+        .back-button .green-transaction {
+            display: none;
+        }
+        
+        .profile-container {
+            background-color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0px 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .profile-initial {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #597200;
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            font-weight: bold;
+            margin: 0 auto 10px auto;
+            user-select: none;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+        
+        .user-email {
+            color: #ABABAB;
+            font-size: 13px;
+        }
+        
+        .form-section {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 8px;
+           
+        }
+        
+        @media (max-width: 767px) {
+            .profile-container,
+            .form-section {
+                padding: 18px;
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+        }
+        
+        .section-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 18px;
+        }
+        
+        .section-title i {
+            font-size: 18px;
+            color: #666;
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .form-label {
+            font-size: 12px;
+            color: #6C7278;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+        
+        .form-control {
+            border: 1px solid #DFE1E7;
+            border-radius: 10px;
+            background: #fafafa;
+            padding: 12px 16px;
+            font-size: 14px;
+            width: 100%;
+            box-shadow: none;
+            margin-top: 4px;
+            margin-bottom: 2px;
+            color: #222;
+            transition: border-color 0.2s;
+        }
+        
+        .form-control::placeholder {
+            color: #aaa;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #a5c765;
+            background: #fff;
+        }
+        
+        .form-control[readonly] {
+            background: #FFFFFF;
+            color: #222;
+            cursor: default;
+        }
+        
+        .status-badge {
+            background-color: #e8f5e9;
+            color: #2e8b57;
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .content-container {
+            margin-bottom: 70px;
+        }
+        
+        /* Button styles similar to the home page */
+        .action-button {
+            background-color: #a5c765;
+            color: #333;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 20px;
+            font-weight: bold;
+            width: 100%;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        
+        /* Service label colors similar to home page */
+        .section-label {
+            color: #4d6a11;
+            font-weight: 600;
+        }
+
+        /* Page Loader Styles */
+        .page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #e2ebc7;
+            border-radius: 50%;
+            border-top-color: #4d6a11;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loader -->
+    <div id="homeLoader" class="page-loader" style="display: none;">
+        <div class="loader"></div>
+    </div>
+    <!-- Header -->
+    <div class="header" style="justify-content: flex-start; padding: 12px 15px 0px 15px;">
+        <a class="back-button" id="backButton">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <!-- Removed the header text -->
+    </div>
+    
+    <div class="content-container">
+        <!-- Profile Section -->
+        <div class="profile-container">
+            <!-- Replace image with initial avatar -->
+            <div class="profile-initial" id="profileInitial"></div>
+            <h5 class="user-name">Aniket Mishra</h5>
+            <p class="user-email">aniket@example.com</p>
+        </div>
+        
+        <!-- User Info Section -->
+        <div class="form-section">
+            <div class="form-group">
+                <label class="form-label">Name</label>
+                <input type="text" class="form-control" placeholder="Enter Your Name" value="" readonly>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Username</label>
+                <input type="text" class="form-control" placeholder="Enter Your Username" value="" readonly>
+            </div>
+            <div class="form-group">
+                <label class="form-label">PAN Number</label>
+                <input type="text" class="form-control" placeholder="Enter PAN Number" value="" readonly>
+            </div>
+            <div class="form-group">
+                <label class="form-label">UCC</label>
+                <input type="text" class="form-control" placeholder="Enter Unique Client Code" value="" readonly>
+            </div>
+            <div class="form-group">
+                <label class="form-label">FATCA Status</label>
+                <div class="status-badge">Completed</div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Last Login</label>
+                <input type="text" class="form-control" placeholder="Display Last Login(or N/A)" value="" readonly>
+            </div>
+        </div>
+        
+        <!-- Dynamic Bank Details Sections -->
+        <div id="bank-details-container"></div>
+        
+        <!-- Depository Details Section -->
+        <div class="form-section">
+            <div class="section-title">
+                <span>Depository Details</span>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Client ID</label>
+                <input type="text" class="form-control" placeholder="Enter Client ID" value="" readonly>
+            </div>
+            <div class="form-group">
+                <label class="form-label">DP ID</label>
+                <input type="text" class="form-control" placeholder="Enter DP ID" value="" readonly>
+            </div>
+        </div>
+        
+        <!-- Other Details Section -->
+        <div class="form-section">
+            <div class="section-title">
+                <span>Other Details</span>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Date of Birth (DOB)</label>
+                <input type="text" class="form-control" placeholder="Enter DOB (e.g., DD/MM/YYYY)" value="" readonly>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Address</label>
+                <input type="text" class="form-control" placeholder="Enter Address" value="" readonly>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" placeholder="Enter Email" value="" readonly>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Mobile Number</label>
+                <input type="tel" class="form-control" placeholder="Enter Mobile Number" value="" readonly>
+            </div>
+        </div>
+        
+        <!-- Dynamic Nominee Details Sections -->
+        <div id="nominee-details-container"></div>
+        
+        <!-- Removed Action Button and its card -->
+    </div>
+    <script>
+        // Loader helpers
+        function showLoader() {
+            document.getElementById('homeLoader').style.display = 'flex';
+        }
+        function hideLoader() {
+            document.getElementById('homeLoader').style.display = 'none';
+        }
+
+        // Fetch client info from backend and render UI
+        async function fetchAndRenderClientInfo() {
+            const token = localStorage.getItem('authToken');
+            if (!token) return;
+
+            showLoader();
+            try {
+                const res = await fetch('http://122.176.151.191/MutualFund/getClientInfo', {
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'accept': '*/*'
+                    }
+                });
+                const data = await res.json();
+                const client = data.details[0][0];
+
+                // Set profile section
+                document.querySelector('.user-name').textContent = client.name || '';
+                document.querySelector('.user-email').textContent = client.email || '';
+                // Set profile initial
+                const initial = (client.name && client.name.trim().length > 0) ? client.name.trim()[0].toUpperCase() : '';
+                document.getElementById('profileInitial').textContent = initial;
+
+                // Fill static fields
+                document.querySelector('input[placeholder="Enter Your Name"]').value = client.name || '';
+                document.querySelector('input[placeholder="Enter Your Username"]').value = client.clientCode || '';
+                document.querySelector('input[placeholder="Enter PAN Number"]').value = client.panNumber || '';
+                document.querySelector('input[placeholder="Enter Unique Client Code"]').value = client.clientCode || '';
+                document.querySelector('input[placeholder="Display Last Login(or N/A)"]').value = client.lastLogin || 'N/A';
+
+                document.querySelector('input[placeholder="Enter DOB (e.g., DD/MM/YYYY)"]').value = client.dob || '';
+                document.querySelector('input[placeholder="Enter Address"]').value = client.address || '';
+                document.querySelector('input[placeholder="Enter Email"]').value = client.email || '';
+                document.querySelector('input[placeholder="Enter Mobile Number"]').value = client.mobileNo || '';
+
+                // Render banks
+                renderBanks(client.bankDetailsResponses || []);
+                // Render nominees
+                renderNominees(client.nominneResponses || []);
+            } catch (e) {
+                // fallback to empty/default
+            } finally {
+                hideLoader();
+            }
+        }
+
+        // Render bank sections from API
+        function renderBanks(banks) {
+            const container = document.getElementById('bank-details-container');
+            container.innerHTML = '';
+            banks.forEach((bank, idx) => {
+                const section = document.createElement('div');
+                section.className = 'form-section';
+                section.innerHTML = `
+                    <div class="section-title">
+                        <span>Bank Details ${banks.length > 1 ? idx + 1 : ''}</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Account Type</label>
+                        <input type="text" class="form-control" value="${bank.accountType || ''}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Bank Name</label>
+                        <input type="text" class="form-control" value="${bank.bankName || ''}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">IFSC Code</label>
+                        <input type="text" class="form-control" value="${bank.ifscCode || ''}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Account Number</label>
+                        <input type="text" class="form-control" placeholder="Enter Account Number" value="${bank.accountNo || ''}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Branch</label>
+                        <input type="text" class="form-control" value="${bank.branchName || ''}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">MICR</label>
+                        <input type="text" class="form-control" placeholder="Enter MICR Code" value="${bank.micrCode || ''}" readonly>
+                    </div>
+                `;
+                container.appendChild(section);
+            });
+            enableSectionToggle();
+        }
+
+        // Render nominee sections from API
+        function renderNominees(nominees) {
+            const container = document.getElementById('nominee-details-container');
+            container.innerHTML = '';
+            nominees.forEach((nominee, idx) => {
+                const section = document.createElement('div');
+                section.className = 'form-section';
+                section.innerHTML = `
+                    <div class="section-title">
+                        <span>Nominee Details ${nominees.length > 1 ? idx + 1 : ''}</span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Name</label>
+                        <input type="text" class="form-control" placeholder="Enter Nominee Name" value="${nominee.nomineeName || ''}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Percentage</label>
+                        <input type="text" class="form-control" placeholder="Enter Allocation(%)" value="${nominee.percentage || ''}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">PAN</label>
+                        <input type="text" class="form-control" placeholder="Enter Nominee PAN" value="${nominee.nomineePan || ''}" readonly>
+                    </div>
+                `;
+                container.appendChild(section);
+            });
+        }
+
+        // Toggle sections (for dynamic sections too)
+        function enableSectionToggle() {
+            document.querySelectorAll('.section-title').forEach(title => {
+                const icon = title.querySelector('i');
+                if (icon) {
+                    title.addEventListener('click', function() {
+                        const section = this.parentElement;
+                        const formGroups = section.querySelectorAll('.form-group');
+                        formGroups.forEach(group => {
+                            if (group.style.display === 'none') {
+                                group.style.display = 'block';
+                                icon.classList.remove('fa-chevron-up');
+                                icon.classList.add('fa-chevron-down');
+                            } else {
+                                group.style.display = 'none';
+                                icon.classList.remove('fa-chevron-down');
+                                icon.classList.add('fa-chevron-up');
+                            }
+                        });
+                    });
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchAndRenderClientInfo();
+            // ...existing code for other static sections...
+            document.getElementById('backButton').addEventListener('click', function() {
+                window.location.href = 'accountPage.html';
+            });
+        });
+    </script>
+</body>
+</html>

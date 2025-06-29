@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - FundMF</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background-color: white;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .header {
+            background-color: #4d6a11;
+            color: white;
+            padding: 15px 20px 25px 20px; /* match home.html */
+        }
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .menu-icon {
+            font-size: 28px;
+            color: white;
+            cursor: pointer;
+        }
+        .notification {
+            position: relative;
+        }
+        .notification i {
+            font-size: 24px;
+            color: white;
+        }
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            font-size: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .header-title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .settings-container {
+            background-color: white;
+            border-radius: 15px 15px 0 0;
+            margin-top: -10px;
+            padding: 20px;  
+        }
+        
+        .user-section {
+            display: flex;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 10px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background-color: #4d6a11;
+            color: white;
+            font-weight: bold;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+        }
+        
+        .account-settings {
+            color: #999;
+            font-size: 14px;
+            margin: 15px 0 5px 0;
+        }
+        
+        .settings-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .settings-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+        
+        .chevron-icon {
+            color: #999;
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            border-radius: 34px;
+            transition: .4s;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            border-radius: 50%;
+            transition: .4s;
+        }
+        
+        input:checked + .slider {
+            background-color: #4d6a11;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        .divider {
+            height: 1px;
+            background-color: #e0e0e0;
+            margin: 30px 0;
+        }
+
+        /* Sidebar styles (copied from home.html) */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 70%;
+            height: 100%;
+            background-color: white;
+            z-index: 1000;
+            padding-top: 20px;
+            display: none;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            padding: 0 15px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .sidebar-logo {
+            height: 40px;
+            margin-right: 10px;
+        }
+        .sidebar-menu {
+            display: flex;
+            justify-content: flex-end;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 5px 15px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .sidebar-item.active {
+            background-color: #f0f0f0;
+        }
+        .sidebar-icon {
+            margin-right: 15px;
+            color: #666;
+            width: 20px;
+            text-align: center;
+        }
+        .sidebar-text {
+            color: #666;
+        }
+        .show-sidebar {
+            display: block;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
+        /* Notification badge */
+        .notification {
+            position: relative;
+        }
+        .notification i {
+            font-size: 24px;
+            color: white;
+        }
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            font-size: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1001;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: white;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 350px;
+            padding: 20px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        .modal-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .modal-message {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        .modal-cancel {
+            background-color: #eee;
+            color: #333;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .modal-confirm {
+            background-color: #4d6a11;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- Overlay for sidebar background -->
+    <div class="overlay"></div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal" id="logoutModal">
+        <div class="modal-content">
+            <div class="modal-title">Confirm Logout</div>
+            <div class="modal-message">Are you sure you want to logout from your FundMF account?</div>
+            <div class="modal-buttons">
+                <button class="modal-cancel">Cancel</button>
+                <button class="modal-confirm">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar/Navigation Menu -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <img src="/assets/images/logo.jpeg" alt="FundMF Logo" class="sidebar-logo">
+            <div style="font-weight: bold; font-size: 18px;">FundMF</div>
+            <div style="flex-grow: 1;"></div>
+            <div class="sidebar-menu">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+        <div class="sidebar-item" data-page="homePage">
+            <i class="fas fa-home sidebar-icon"></i>
+            <div class="sidebar-text">Dashboard</div>
+        </div>
+        <div class="sidebar-item" data-page="portfolioPage">
+            <i class="fas fa-briefcase sidebar-icon"></i>
+            <div class="sidebar-text">Portfolio</div>
+        </div>
+        <div class="sidebar-item" data-page="recentOrders">
+            <i class="fas fa-clipboard-list sidebar-icon"></i>
+            <div class="sidebar-text">Recent Orders</div>
+        </div>
+        <div class="sidebar-item" data-page="mandatePage">
+            <i class="fas fa-file-signature sidebar-icon"></i>
+            <div class="sidebar-text">Mandate</div>
+        </div>
+        <div class="sidebar-item" data-page="accountTransaction">
+            <i class="fas fa-exchange-alt sidebar-icon"></i>
+            <div class="sidebar-text">Transact</div>
+        </div>
+        <div class="sidebar-item" data-page="investPage">
+            <i class="fas fa-chart-line sidebar-icon"></i>
+            <div class="sidebar-text">Invest</div>
+        </div>
+        <div class="sidebar-item active" data-page="accountPage">
+            <i class="fas fa-cog sidebar-icon"></i>
+            <div class="sidebar-text">Settings</div>
+        </div>
+        <div class="sidebar-item" data-page="contactPage">
+            <i class="fas fa-headset sidebar-icon"></i>
+            <div class="sidebar-text">Contact Us</div>
+        </div>
+        <div class="sidebar-item" id="logoutItem">
+            <i class="fas fa-sign-out-alt sidebar-icon"></i>
+            <div class="sidebar-text">Logout</div>
+        </div>
+    </div>
+
+    <!-- Header with menu and bell icon, Settings heading below (match home.html layout) -->
+    <div class="header">
+        <div class="header-top">
+            <div class="menu-icon">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="notification">
+                <i class="fas fa-bell"></i>
+                <div class="notification-badge" id="notificationCount"></div>
+            </div>
+        </div>
+        <div class="header-title">Settings</div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="settings-container">
+        <!-- User Profile Section -->
+        <div class="user-section">
+            <div class="user-avatar" id="userAvatar"></div>
+            <div class="user-info">
+                <div style="font-weight: bold;" id="userName"></div>
+            </div>
+        </div>
+        
+        <!-- Account Settings Label -->
+        <div class="account-settings">Account Settings</div>
+        
+        <!-- Settings List -->
+        <ul class="settings-list">
+            <li class="settings-item">
+                <div>Profile</div>
+                <i class="fas fa-chevron-right chevron-icon"></i>
+            </li>
+            <li class="settings-item">
+                <div>Change Password</div>
+                <i class="fas fa-chevron-right chevron-icon"></i>
+            </li>
+            <li class="settings-item">
+                <div>Enable Biometrics</div>
+                <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </li>
+            <li class="settings-item">
+                <div>Push Notifications</div>
+                <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </li>
+            <li class="settings-item">
+                <div>About Us</div>
+                <i class="fas fa-chevron-right chevron-icon"></i>
+            </li>
+            <li class="settings-item">
+                <div>Quick Help</div>
+                <i class="fas fa-chevron-right chevron-icon"></i>
+            </li>
+        </ul>
+        <div class="divider"></div>
+    </div>
+
+    <script>
+        // JavaScript for toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set user name and avatar from localStorage
+            const clientName = localStorage.getItem('clientName') || 'User';
+            document.getElementById('userName').textContent = clientName;
+            document.getElementById('userAvatar').textContent = clientName.trim().charAt(0).toUpperCase();
+
+            const toggleSwitches = document.querySelectorAll('input[type="checkbox"]');
+            
+            toggleSwitches.forEach(switchEl => {
+                switchEl.addEventListener('change', function() {
+                    console.log(this.checked ? 'Enabled' : 'Disabled');
+                    // Add any additional functionality here
+                });
+            });
+            
+            // Handle navigation for specific pages
+            const navigationItems = document.querySelectorAll('.settings-item');
+            navigationItems.forEach(item => {
+                const itemText = item.querySelector('div').textContent;
+                
+                // Only add click handlers to items with chevron icons
+                if (item.querySelector('.fa-chevron-right')) {
+                    item.style.cursor = 'pointer';
+                    
+                    item.addEventListener('click', function() {
+                        let targetPage;
+                        
+                        // Define specific page targets
+                        if (itemText === 'Profile') {
+                            targetPage = 'userProfile.html';
+                        } else if (itemText === 'Change Password') {
+                            targetPage = 'changePassword.html';
+                        } else if (itemText === 'About Us') {
+                            targetPage = 'aboutUs.html';
+                        }
+                        else if (itemText === 'Quick Help') {
+                            targetPage = 'quickHelp.html';
+                        }
+                        
+                        if (targetPage) {
+                            console.log(`Navigating to: ${targetPage}`);
+                            
+                            // Direct navigation - this should work in most cases
+                            window.location.href = targetPage;
+                        }
+                    });
+                }
+            });
+        });
+
+        // Notification count (set as in home.html)
+        document.addEventListener('DOMContentLoaded', function() {
+            // ...existing code...
+            document.getElementById('notificationCount').textContent = 2;
+            // ...existing code...
+        });
+
+        // Sidebar functionality (copied from home.html)
+        const menuIcon = document.querySelector('.menu-icon');
+        const sidebar = document.querySelector('.sidebar');
+        const sidebarClose = document.querySelector('.sidebar-menu');
+        const overlay = document.querySelector('.overlay');
+        const logoutItem = document.getElementById('logoutItem');
+        const logoutModal = document.getElementById('logoutModal');
+        const modalCancel = document.querySelector('.modal-cancel');
+        const modalConfirm = document.querySelector('.modal-confirm');
+
+        // Open sidebar
+        menuIcon.addEventListener('click', function() {
+            sidebar.classList.add('show-sidebar');
+            overlay.style.display = 'block';
+        });
+
+        // Close sidebar
+        sidebarClose.addEventListener('click', function() {
+            sidebar.classList.remove('show-sidebar');
+            overlay.style.display = 'none';
+        });
+
+        // Close sidebar when clicking outside
+        overlay.addEventListener('click', function() {
+            sidebar.classList.remove('show-sidebar');
+            overlay.style.display = 'none';
+        });
+
+        // Show logout confirmation modal
+        logoutItem.addEventListener('click', function() {
+            sidebar.classList.remove('show-sidebar');
+            overlay.style.display = 'none';
+            logoutModal.style.display = 'flex';
+        });
+
+        // Cancel logout
+        modalCancel.addEventListener('click', function() {
+            logoutModal.style.display = 'none';
+        });
+
+        // Confirm logout and redirect
+        modalConfirm.addEventListener('click', function() {
+            window.top.location.href = 'index.html';
+        });
+
+        // Close modal when clicking outside
+        logoutModal.addEventListener('click', function(event) {
+            if (event.target === logoutModal) {
+                logoutModal.style.display = 'none';
+            }
+        });
+
+        // Sidebar navigation
+        document.querySelectorAll('.sidebar-item').forEach(item => {
+            if (item.id !== 'logoutItem') {
+                item.addEventListener('click', function() {
+                    document.querySelectorAll('.sidebar-item').forEach(sideItem => {
+                        sideItem.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    const pageId = this.getAttribute('data-page');
+                    if (pageId) {
+                        sidebar.classList.remove('show-sidebar');
+                        overlay.style.display = 'none';
+                        if (window.parent && window.parent.postMessage) {
+                            window.parent.postMessage({
+                                action: 'changePage',
+                                pageId: pageId
+                            }, '*');
+                        }
+                        showInFrameLoader();
+                    } else {
+                        sidebar.classList.remove('show-sidebar');
+                        overlay.style.display = 'none';
+                    }
+                });
+            }
+        });
+
+        // Loader function (from home.html)
+        function showInFrameLoader() {
+            if (!document.getElementById('inFrameLoader')) {
+                const loaderDiv = document.createElement('div');
+                loaderDiv.id = 'inFrameLoader';
+                loaderDiv.style.position = 'fixed';
+                loaderDiv.style.top = '0';
+                loaderDiv.style.left = '0';
+                loaderDiv.style.width = '100%';
+                loaderDiv.style.height = '100%';
+                loaderDiv.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+                loaderDiv.style.display = 'flex';
+                loaderDiv.style.justifyContent = 'center';
+                loaderDiv.style.alignItems = 'center';
+                loaderDiv.style.zIndex = '10000';
+                const spinner = document.createElement('div');
+                spinner.style.width = '50px';
+                spinner.style.height = '50px';
+                spinner.style.border = '5px solid #e2ebc7';
+                spinner.style.borderRadius = '50%';
+                spinner.style.borderTopColor = '#4d6a11';
+                spinner.style.animation = 'spin 1s linear infinite';
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
+                `;
+                document.head.appendChild(style);
+                loaderDiv.appendChild(spinner);
+                document.body.appendChild(loaderDiv);
+            } else {
+                document.getElementById('inFrameLoader').style.display = 'flex';
+            }
+        }
+    </script>
+</body>
+</html>

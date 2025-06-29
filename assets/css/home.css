@@ -1,0 +1,74 @@
+body {
+    background-color: #f8f9fa;
+    font-family: Arial, sans-serif;
+    color: #333;
+}
+.container {
+    max-width: 800px;
+    padding: 20px;
+}
+.welcome-card {
+    background-color: #4d6a11;
+    color: white;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+}
+.stats-card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+}
+.feature-card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+    border-left: 4px solid #4d6a11;
+}
+.stat-value {
+    font-size: 24px;
+    font-weight: bold;
+    color: #4d6a11;
+}
+.stat-label {
+    font-size: 14px;
+    color: #666;
+}
+.news-card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+}
+.action-btn {
+    background-color: #b4e600;
+    color: #333;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 25px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+.section-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #4d6a11;
+}
+.feature-icon {
+    background-color: #dce6c0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    color: #4d6a11;
+}

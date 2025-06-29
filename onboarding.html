@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FundMF - Start Your Trading Journey</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #FFFFFF;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        /* HEADER from createSip.html */
+        .header {
+            background-color: #FFFFFF;
+            color: #FFFFFF;
+            padding: 12px 15px 0px 15px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        .back-button {
+            color: #d4d4d4;
+            font-size: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .back-button:hover {
+            color: #62880a;
+        }
+        .back-button .green-transaction {
+            display: none;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+        .heading {
+            text-align: center;
+            margin-bottom: 5px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .subheading {
+            text-align: center;
+            color: #6C7278;
+            font-size: 12px;
+            margin-bottom: 30px;
+        }
+        /* Progress steps (level) - use rounded and color from createSip.html */
+        .progress-container {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 30px;
+            padding: 0 10px;
+        }
+        .progress-line {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            right: 15px;
+            height: 2px;
+            background-color: #e0e0e0;
+            z-index: 1;
+        }
+        .progress-active-line {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            height: 2px;
+            background-color: #62880a;
+            z-index: 2;
+            transition: width 0.3s ease;
+        }
+        .step {
+            position: relative;
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 30px;
+        }
+        .step-circle {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+            border: 2px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 5px;
+            color: #A8A8A8; 
+            font-size: 10px;
+        }
+        .step-circle.active {
+            background-color: #62880a;
+            border-color: #62880a;
+            color: #fff; /* Dot color for active */
+        }
+        .step-circle.completed {
+            background-color: #62880a;
+            border-color: #62880a;
+            color: #fff; /* Dot color for completed */
+        }
+        .step-label {
+            font-size: 10px;
+            text-align: center;
+            color: #666;
+        }
+        /* Input/select border radius and color from createSip.html */
+        .form-control, .form-select {
+            width: 100%;
+            padding: 12px 10px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+        .form-control:focus, .form-select:focus {
+            outline: none;
+            border-color: #62880a;
+        }
+        
+        .container {
+            padding: 20px;
+            background-color: white;
+            min-height: 100vh;
+        }
+        
+        .form-step {
+            display: none;
+        }
+        
+        .form-step.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 12px;
+            color: #6C7278;
+            margin-bottom: 5px;
+        }
+        
+        .next-btn, .submit-btn, .continue-btn {
+            background-color: #62880a;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 15px;
+            width: 100%;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        
+        .next-btn:disabled, .submit-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .divider {
+    height: 5px;
+    background-color: #000000;
+    margin: 30px auto;
+    width: 148px;
+    display: block;
+    border-radius: 9px;
+}
+        
+        /* Success screen */
+        .success-container {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .success-icon {
+            color: #62880a;
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+        
+        .success-heading {
+            font-size: 18px;
+            color: #62880a;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        
+        .success-message {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .success-details {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .success-note {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        /* Radio button styling */
+        .radio-container {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        
+        .radio-option {
+            padding: 10px;
+            margin-bottom: 5px;
+        }
+        
+        .radio-option label {
+            display: block;
+            position: relative;
+            padding-left: 30px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .radio-option input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .radio-checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 20px;
+            width: 20px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 50%;
+        }
+        
+        .radio-option input:checked ~ .radio-checkmark {
+            background-color: white;
+            border: 1px solid #62880a;
+        }
+        
+        .radio-checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+        
+        .radio-option input:checked ~ .radio-checkmark:after {
+            display: block;
+        }
+        
+        .radio-option .radio-checkmark:after {
+            top: 4px;
+            left: 4px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #62880a;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header from createSip.html -->
+    <div class="header" style="justify-content: flex-start;">
+        <a class="back-button" id="backButton">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+    </div>
+    <div class="container">
+        <!-- Logo -->
+        <div class="logo">
+            <img src="./assets/images/logo.png" alt="Fund MF Logo">
+        </div>
+        
+        <!-- Heading -->
+        <h1 class="heading">Start Your Trading Journey Today</h1>
+        <p class="subheading">Register and Unlock Limitless Opportunities</p>
+        
+        <!-- Progress Steps -->
+        <div id="progressWrapper" style="display:none;">
+            <div class="progress-container">
+                <div class="progress-line"></div>
+                <div class="progress-active-line" id="progressLine"></div>
+                
+                <div class="step">
+                    <div class="step-circle active" id="step1">●</div>
+                    <div class="step-label">Personal</div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-circle" id="step2">●</div>
+                    <div class="step-label">Birth Info</div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-circle" id="step3">●</div>
+                    <div class="step-label">Work</div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-circle" id="step4">●</div>
+                    <div class="step-label">Contact</div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-circle" id="step5">●</div>
+                    <div class="step-label">Taxation</div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-circle" id="step6">●</div>
+                    <div class="step-label">Review</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Form Container -->
+        <form id="onboardingForm">
+            <!-- Step 1: Personal Information -->
+            <div class="form-step active" id="formStep1">
+                <div class="form-group">
+                    <label class="form-label">Phone No.</label>
+                    <input type="tel" class="form-control" name="phoneNo" id="phoneNo" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Email Id</label>
+                    <input type="email" class="form-control" name="emailId" id="emailId" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">PAN Number</label>
+                    <input type="text" class="form-control" name="panNumber" id="panNumber" required maxlength="10">
+                </div>
+                
+                <button type="button" class="next-btn" id="step1Next">Next</button>
+                
+                <div class="divider"></div>
+            </div>
+            
+            <!-- Step 2: Name Information -->
+            <div class="form-step" id="formStep2">
+                <div class="form-group">
+                    <label class="form-label">Primary Holder First Name</label>
+                    <input type="text" class="form-control" name="firstName" id="firstName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Primary Holder Middle Name</label>
+                    <input type="text" class="form-control" name="middleName" id="middleName">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Primary Holder Last Name</label>
+                    <input type="text" class="form-control" name="lastName" id="lastName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Father's Name</label>
+                    <input type="text" class="form-control" name="fatherName" id="fatherName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Gender</label>
+                    <div class="select-wrapper">
+                        <select class="form-control" name="gender" id="gender" required>
+                            <option value="" disabled selected>Select a Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Primary Holder DOB</label>
+                    <input type="date" class="form-control" name="dob" id="dob" required placeholder="DD/MM/YYYY">
+                </div>
+                
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" class="next-btn" id="step2Back" style="background:#6c757d;">Back</button>
+                    <button type="button" class="next-btn" id="step2Next">Next</button>
+                </div>
+                
+                <div class="divider"></div>
+            </div>
+            
+            <!-- Step 3: Birth Information -->
+            <div class="form-step" id="formStep3">
+                <div class="form-group">
+                    <label class="form-label">Country of Birth</label>
+                    <div class="select-wrapper">
+                        <select class="form-control" name="countryOfBirth" id="countryOfBirth" required>
+                            <option value="" disabled selected>Select a Country</option>
+                            <option value="india">India</option>
+                            <option value="usa">United States</option>
+                            <option value="uk">United Kingdom</option>
+                            <option value="canada">Canada</option>
+                            <option value="australia">Australia</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Place of Birth</label>
+                    <input type="text" class="form-control" name="placeOfBirth" id="placeOfBirth" required>
+                </div>
+                
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" class="next-btn" id="step3Back" style="background:#6c757d;">Back</button>
+                    <button type="button" class="next-btn" id="step3Next">Next</button>
+                </div>
+                
+                <div class="divider"></div>
+            </div>
+            
+            <!-- Step 4: Occupation Information -->
+            <div class="form-step" id="formStep4">
+                <div class="form-group">
+                    <label class="form-label">Occupation Code</label>
+                    <div class="select-wrapper">
+                        <select class="form-control" name="occupationCode" id="occupationCode" required>
+                            <option value="" disabled selected>Select a Occupation Code</option>
+                            <option value="01">Business</option>
+                            <option value="02">Service</option>
+                            <option value="03">Professional</option>
+                            <option value="04">Homemaker</option>
+                            <option value="05">Student</option>
+                            <option value="06">Retired</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Occupation Type</label>
+                    <div class="select-wrapper">
+                        <select class="form-control" name="occupationType" id="occupationType" required>
+                            <option value="" disabled selected>Select a Occupation Type</option>
+                            <option value="private">Private Sector</option>
+                            <option value="public">Public Sector</option>
+                            <option value="government">Government Service</option>
+                            <option value="business">Business</option>
+                            <option value="professional">Professional</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Wealth Source</label>
+                    <div class="select-wrapper">
+                        <select class="form-control" name="wealthSource" id="wealthSource" required>
+                            <option value="" disabled selected>Select a Wealth Source</option>
+                            <option value="salary">Salary</option>
+                            <option value="business">Business Income</option>
+                            <option value="inheritance">Inheritance / Gift</option>
+                            <option value="investments">Investments</option>
+                            <option value="real_estate">Real Estate</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Income Slab</label>
+                    <div class="select-wrapper">
+                        <select class="form-control" name="incomeSlab" id="incomeSlab" required>
+                            <option value="" disabled selected>Select a Income Slab</option>
+                            <option value="below_1l">Below ₹1 Lakh</option>
+                            <option value="1l_5l">₹1 Lakh - ₹5 Lakh</option>
+                            <option value="5l_10l">₹5 Lakh - ₹10 Lakh</option>
+                            <option value="10l_25l">₹10 Lakh - ₹25 Lakh</option>
+                            <option value="above_25l">Above ₹25 Lakh</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" class="next-btn" id="step4Back" style="background:#6c757d;">Back</button>
+                    <button type="button" class="next-btn" id="step4Next">Next</button>
+                </div>
+                
+                <div class="divider"></div>
+            </div>
+            
+            <!-- Step 5: Contact Information -->
+            <div class="form-step" id="formStep5">
+                <div class="form-group">
+                    <label class="form-label">Mobile No.</label>
+                    <input type="tel" class="form-control" name="mobileNo" id="mobileNo" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Mobile No. Belongs To</label>
+                    <div class="select-wrapper">
+                        <select class="form-control" name="mobileRelation" id="mobileRelation" required>
+                            <option value="" disabled selected>Please Select</option>
+                            <option value="self">Self</option>
+                            <option value="spouse">Spouse</option>
+                            <option value="parent">Parent</option>
+                            <option value="child">Child</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">E-mail Id</label>
+                    <input type="email" class="form-control" name="contactEmail" id="contactEmail" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">E-mail Id Belongs To</label>
+                    <div class="select-wrapper">
+                        <select class="form-control" name="emailRelation" id="emailRelation" required>
+                            <option value="" disabled selected>Please Select</option>
+                            <option value="self">Self</option>
+                            <option value="spouse">Spouse</option>
+                            <option value="parent">Parent</option>
+                            <option value="child">Child</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" class="next-btn" id="step5Back" style="background:#6c757d;">Back</button>
+                    <button type="button" class="next-btn" id="step5Next">Next</button>
+                </div>
+                
+                <div class="divider"></div>
+            </div>
+            
+            <!-- Step 6: Tax Information -->
+            <div class="form-step" id="formStep6">
+                <div class="form-group">
+                    <label class="form-label">Political Link Exposure</label>
+                    <div class="select-wrapper">
+                        <select class="form-control" name="politicalExposure" id="politicalExposure" required>
+                            <option value="" disabled selected>No</option>
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Tax Status</label>
+                    <div class="radio-container">
+                        <div class="radio-option">
+                            <label>
+                                <input type="radio" name="taxStatus" value="individual" checked>
+                                <span class="radio-checkmark"></span>
+                                Individual
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <label>
+                                <input type="radio" name="taxStatus" value="nri">
+                                <span class="radio-checkmark"></span>
+                                NRI
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <label>
+                                <input type="radio" name="taxStatus" value="huf">
+                                <span class="radio-checkmark"></span>
+                                HUF
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Holding Nature</label>
+                    <div class="select-wrapper">
+                        <select class="form-control" name="holdingNature" id="holdingNature" required>
+                            <option value="" disabled selected>Please Select</option>
+                            <option value="single">Single</option>
+                            <option value="joint">Joint</option>
+                            <option value="anyone_survivor">Anyone or Survivor</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" class="next-btn" id="step6Back" style="background:#6c757d;">Back</button>
+                    <button type="submit" class="submit-btn" id="submitForm">Submit</button>
+                </div>
+            </div>
+        </form>
+        
+        <!-- Success Screen -->
+        <div class="success-container" id="successScreen">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2 class="success-heading">SUCCESS</h2>
+            <p class="success-message">Thank you for your registration, we are working on your application.</p>
+            <p class="success-details">You will receive an OTP shortly. Client Code: <strong>STME-12345</strong></p>
+            <p class="success-note">Please verify with OTP to complete your Registration.</p>
+            <button class="continue-btn" id="continueBtn">Continue</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Form steps
+            const formSteps = document.querySelectorAll('.form-step');
+            const progressLine = document.getElementById('progressLine');
+            const stepCircles = document.querySelectorAll('.step-circle');
+            const form = document.getElementById('onboardingForm');
+            const successScreen = document.getElementById('successScreen');
+            
+            // Next buttons
+            const step1Next = document.getElementById('step1Next');
+            const step2Next = document.getElementById('step2Next');
+            const step3Next = document.getElementById('step3Next');
+            const step4Next = document.getElementById('step4Next');
+            const step5Next = document.getElementById('step5Next');
+            const submitBtn = document.getElementById('submitForm');
+            const continueBtn = document.getElementById('continueBtn');
+            
+            // Store form data
+            let formData = {};
+            
+            // Update progress bar
+            function updateProgress(step) {
+                const progressWidth = ((step - 1) / (stepCircles.length - 1)) * 100;
+                progressLine.style.width = `${progressWidth}%`;
+                // Show/hide progress bar depending on step
+                const progressWrapper = document.getElementById('progressWrapper');
+                if (step === 1) {
+                    progressWrapper.style.display = 'none';
+                } else {
+                    progressWrapper.style.display = 'block';
+                }
+                // Update step circles
+                stepCircles.forEach((circle, index) => {
+                    if (index + 1 < step) {
+                        circle.classList.remove('active');
+                        circle.classList.add('completed');
+                        circle.innerHTML = '<i class="fas fa-check" style="color: white; font-size: 10px;"></i>';
+                    } else if (index + 1 === step) {
+                        circle.classList.add('active');
+                        circle.innerHTML = '●';
+                    } else {
+                        circle.classList.remove('active', 'completed');
+                        circle.innerHTML = '●';
+                    }
+                });
+            }
+            
+            // Go to next step
+            function goToStep(currentStep, nextStep) {
+                formSteps[currentStep - 1].classList.remove('active');
+                formSteps[nextStep - 1].classList.add('active');
+                updateProgress(nextStep);
+                window.scrollTo(0, 0);
+            }
+            
+            // Validate inputs for each step
+            function validateStep(stepNumber) {
+                const currentStep = formSteps[stepNumber - 1];
+                const requiredInputs = currentStep.querySelectorAll('[required]');
+                let isValid = true;
+                
+                requiredInputs.forEach(input => {
+                    if (!input.value.trim()) {
+                        isValid = false;
+                        input.style.borderColor = '#ff6b6b';
+                    } else {
+                        input.style.borderColor = '#ddd';
+                    }
+                });
+                
+                return isValid;
+            }
+            
+            // Collect form data for each step
+            function collectFormData(stepNumber) {
+                const currentStep = formSteps[stepNumber - 1];
+                const inputs = currentStep.querySelectorAll('input, select');
+                
+                inputs.forEach(input => {
+                    if (input.type === 'radio') {
+                        if (input.checked) {
+                            formData[input.name] = input.value;
+                        }
+                    } else {
+                        formData[input.name] = input.value;
+                    }
+                });
+            }
+            
+            // Step 1 next button
+            step1Next.addEventListener('click', function() {
+                if (validateStep(1)) {
+                    collectFormData(1);
+                    goToStep(1, 2);
+                }
+            });
+            // Step 2 back button
+            document.getElementById('step2Back').addEventListener('click', function() {
+                goToStep(2, 1);
+            });
+            // Step 2 next button
+            step2Next.addEventListener('click', function() {
+                if (validateStep(2)) {
+                    collectFormData(2);
+                    goToStep(2, 3);
+                }
+            });
+            // Step 3 back button
+            document.getElementById('step3Back').addEventListener('click', function() {
+                goToStep(3, 2);
+            });
+            // Step 3 next button
+            step3Next.addEventListener('click', function() {
+                if (validateStep(3)) {
+                    collectFormData(3);
+                    goToStep(3, 4);
+                }
+            });
+            // Step 4 back button
+            document.getElementById('step4Back').addEventListener('click', function() {
+                goToStep(4, 3);
+            });
+            // Step 4 next button
+            step4Next.addEventListener('click', function() {
+                if (validateStep(4)) {
+                    collectFormData(4);
+                    goToStep(4, 5);
+                }
+            });
+            // Step 5 back button
+            document.getElementById('step5Back').addEventListener('click', function() {
+                goToStep(5, 4);
+            });
+            // Step 5 next button
+            step5Next.addEventListener('click', function() {
+                if (validateStep(5)) {
+                    collectFormData(5);
+                    goToStep(5, 6);
+                }
+            });
+            // Step 6 back button
+            document.getElementById('step6Back').addEventListener('click', function() {
+                goToStep(6, 5);
+            });
+            
+            // Form submission
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (validateStep(6)) {
+                    collectFormData(6);
+                    
+                    // Here you would typically send the formData to your server
+                    console.log('Form data submitted:', formData);
+                    
+                    // Hide form and show success screen
+                    form.style.display = 'none';
+                    successScreen.style.display = 'block';
+                }
+            });
+            
+            // Continue button on success screen
+            continueBtn.addEventListener('click', function() {
+                // Redirect to dashboard or another page
+                alert('Redirecting to dashboard...');
+            });
+            
+            // Input validation styling
+            document.querySelectorAll('.form-control').forEach(input => {
+                input.addEventListener('input', function() {
+                    if (this.hasAttribute('required') && !this.value.trim()) {
+                        this.style.borderColor = '#ff6b6b';
+                    } else {
+                        this.style.borderColor = '#ddd';
+                    }
+                });
+            });
+            
+            // Auto-populate email on contact step
+            document.getElementById('emailId').addEventListener('change', function() {
+                document.getElementById('contactEmail').value = this.value;
+            });
+            
+            // Auto-populate phone on contact step
+            document.getElementById('phoneNo').addEventListener('change', function() {
+                document.getElementById('mobileNo').value = this.value;
+            });
+            
+            // Initialize
+            updateProgress(1);
+
+            // Fix for back button functionality (redirect to index.html)
+            document.getElementById('backButton').addEventListener('click', function(e) {
+                e.preventDefault();
+                window.location.href = 'index.html';
+            });
+        });
+    </script>
+</body>
+</html>

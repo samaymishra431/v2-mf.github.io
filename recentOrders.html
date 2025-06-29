@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recent Orders - FundMF</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+    }
+    
+    body {
+        background-color: #FFFFFF;
+        color: #333;
+        max-width: 800px;
+        margin: 0 auto;
+        position: relative;
+        padding: 0px 5px;
+        padding-bottom: 70px; /* Add space for fixed time-filters */
+    }
+    
+    .header {
+        background-color: #FFFFFF;
+        color: #333;
+        padding: 15px 0 15px 0;
+        text-align: center;
+        font-weight: bold;
+        font-size: 28px;
+        margin-bottom: 10px;
+        position: relative;
+        /* Remove margin-left for proper centering */
+        margin-left: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 58px; /* Ensures enough height for icon and text */
+    }
+    .header a {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #d4d4d4;
+        text-decoration: none;
+        font-size: 20px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        height: 100%;
+    }
+    .header a img {
+        width: 28px;
+        height: 28px;
+        margin: 0; /* Remove margin-top for vertical centering */
+        display: block;
+    }
+    
+    .date-filter {
+        background-color: #F0F0F0;
+        padding: 20px 12px 12px 12px;
+        border-radius: 5px;
+        margin: 0 10px 15px 10px;
+        position: relative;
+        margin-top: 20px;
+        border: 1px solid #DFE1E7;
+    }
+    
+    .date-label {
+        font-size: 12px;
+        background-color: #719000;
+        color: #FFFFFF;
+        border-radius: 50px;
+        padding: 4px 12px;
+        position: absolute;
+        top: -14px;
+        left: 20px;
+        z-index: 2;
+        margin: 0;
+        font-weight: normal;
+        box-shadow: none;
+    }
+    .date-range {
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        width: 100%;
+        font-weight: normal;
+        position: relative;
+    }
+    .date-from {
+        display: flex;
+        align-items: center;
+        flex: none;
+        min-width: 0;
+        gap: 4px;
+    }
+    .date-to {
+        display: flex;
+        align-items: center;
+        position: absolute;
+        right: 0;
+        top: 0;
+        gap: 4px;
+    }
+    .date-label-text {
+    color: #818898;
+    font-size: 12px;
+    font-weight: 600;
+}
+    .date-value {
+        color: #34373a;
+        font-weight: bold;
+        font-size: 12px;
+        cursor: pointer;
+    }
+    .date-input-hidden {
+        display: none;
+    }
+    
+    .status-filter {
+        display: flex;
+        justify-content: space-between;
+        padding: 5px 15px 15px 15px;
+        font-size: 16px;
+        font-weight: 600;
+    }
+    
+    .payment-filter {
+        color: #597200;
+        display: flex;
+        align-items: center;
+    }
+    
+    .payment-icon {
+        margin-right: 5px;
+        font-size: 16px;
+    }
+    
+    .order-item {
+        background-color: #FFFFFF;
+        border-radius: 6px;
+        margin: 0 10px 16px 10px;
+        padding: 12px;
+        border: 1px solid #DFE1E7;
+    }
+    
+    .order-fund {
+        font-weight: 600;
+        font-size: 15px;
+        margin-bottom: 5px;
+    }
+    
+    .order-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 5px;
+    }
+    
+    .order-amount {
+        color: #818898;
+        font-size: 13px;
+        font-weight: 600;
+    }
+    
+    .order-status {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+    }
+    
+    .status-buy {
+        background-color: #719000;
+        color: #FFFFFF;
+        border-radius: 50px;
+        padding: 3px 12px;
+        font-size: 8px;
+        font-weight: 600;
+    }
+    
+    .status-sell {
+        background-color: #FC0000;
+        color: #FFFFFF;
+        border-radius: 50px;
+        padding: 3px 12px;
+        font-size: 8px;
+        font-weight: 600;
+    }
+    
+    .status-processing {
+        background-color: #e9ecef;
+        color: #333;
+        border-radius: 15px;
+        padding: 3px 12px;
+        font-size: 8px;
+        font-weight: 600;
+    }
+    
+    .status-completed {
+        background-color: #E8F1C8;
+        color: #597200;
+        border-radius: 15px;
+        padding: 3px 12px;
+        font-size: 8px;
+        font-weight: 600;
+    }
+    
+    .time-filters {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 0;
+        background: #FAFAFA;
+        border-radius: 6px;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0px;
+        max-width: 400px;
+        width: calc(100% - 32px);
+        margin: 0 auto;
+        z-index: 10; /* Lower than sidebar (sidebar is 1000) */
+        border: 1px solid #DFE1E7;
+        height: 48px;
+    }
+    
+    .time-filter-btn {
+        background: none;
+        border: none;
+        font-size: 16px;
+        font-weight: 500;
+        color: #34373a;
+        padding: 0 18px;
+        height: 48px;
+        border-radius: 12px;
+        transition: color 0.2s, background 0.2s;
+        outline: none;
+        box-shadow: none;
+        margin: 0;
+        display: flex;
+        align-items: center;
+    }
+    
+    .time-filter-btn.active {
+        color: #719000;
+        font-weight: bold;
+        background: none;
+        border-bottom: none;
+    }
+    
+    /* Sidebar styles (copied from mandate.html) */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 70%;
+        height: 100%;
+        background-color: #FFFFFF;
+        z-index: 1000;
+        display: none;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    }
+    .sidebar-header {
+        display: flex;
+        align-items: center;
+        padding-right: 30px;
+        padding-left: 30px;
+        padding-top: 24px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid #eee;
+        background-color: #F2F2F2;
+        margin-bottom: 30px;
+    }
+    .sidebar-logo {
+        height: 40px;
+        margin-right: 10px;
+    }
+    .sidebar-menu {
+        display: flex;
+        justify-content: flex-end;
+        font-size: 24px;
+        cursor: pointer;
+    }
+    .sidebar-item {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        border-radius: 30px;
+        margin: 5px 15px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    .sidebar-item.active {
+        background-color: #f0f0f0;
+    }
+    .sidebar-icon {
+        margin-right: 15px;
+        color: #666;
+        width: 20px;
+        text-align: center;
+    }
+    .sidebar-text {
+        color: #666;
+    }
+    .show-sidebar {
+        display: block;
+    }
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        display: none;
+    }
+    /* Sidebar child menu styles */
+    .sidebar-child-menu {
+        margin-left: 35px;
+        margin-top: 0;
+        margin-bottom: 0;
+        padding-left: 0;
+        display: none;
+    }
+    .sidebar-child-menu.open {
+        display: block;
+    }
+    .sidebar-child-item {
+        display: flex;
+        align-items: center;
+        padding: 10px 15px 10px 10px;
+        border-radius: 30px;
+        margin: 0 15px 0 0;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        font-size: 15px;
+        color: #666;
+    }
+    .sidebar-child-item.active {
+        background-color: #f0f0f0;
+        color: #000000;
+    }
+    .sidebar-item.active .sidebar-text {
+        color: #000000;
+    }
+    .sidebar-child-icon {
+        margin-right: 12px;
+        color: #9e9e9e;
+        width: 18px;
+        text-align: center;
+        font-size: 15px;
+    }
+
+    .datepicker-container {
+      width: 320px;
+      background: #FFFFFF;
+      border-radius: 0.375rem;
+      box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 0.15);
+      overflow: hidden;
+      user-select: none;
+      display: none; /* Hide by default */
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2000;
+      border: 1px solid #dee2e6;
+    }
+    .header-picker {
+      /* Remove background-color here */
+      color: #FFFFFF;
+      padding: 0.5rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-radius: 0.375rem 0.375rem 0 0;
+      font-weight: 600;
+      font-size: 0.7rem;
+      background: none; /* Ensure no background for the whole header */
+    }
+    .header-picker .from,
+    .header-picker .to {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      text-align: left;
+      background: none;
+      padding: 0.5rem 0.7rem;
+      border-radius: 0.375rem 0.375rem 0.375rem 0.375rem;
+      transition: background 0.2s;
+      color: #719000;
+    }
+    .header-picker .to {
+      align-items: flex-end;
+      text-align: right;
+    }
+    .header-picker .from.active-select {
+      background: #719000;
+      color: #fff;
+    }
+    .header-picker .to.active-select {
+      background: #719000;
+      color: #fff;
+    }
+    .header-picker .from:not(.active-select),
+    .header-picker .to:not(.active-select) {
+      background: none;
+      color: #000000;
+    }
+    .header-picker .from:not(.active-select) .date-value-date-picker,
+    .header-picker .to:not(.active-select) .date-value-date-picker {
+      color: #000000;
+    }
+    .header-picker .from.active-select .date-value-date-picker,
+    .header-picker .to.active-select .date-value-date-picker {
+      color: #fff;
+    }
+    .calendar {
+      padding: 0.8rem 1rem 1rem 1rem;
+      background-color: #FFFFFF;
+    }
+    .monthnav {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      color: #212529;
+      font-weight: 600;
+      font-size: 1rem;
+      justify-content: space-between;
+      user-select: none;
+    }
+    .monthnav button {
+      border: none;
+      background: none;
+      font-size: 1 rem;
+      color: #719000;
+      cursor: pointer;
+      padding: 0 0.3rem;
+      border-radius: 0.25rem;
+      transition: background-color 0.15s ease;
+    }
+    .monthnav button:hover {
+      background-color: #e7f1ff;
+    }
+    .monthnav select {
+      background: none; 
+      font-size: 1rem;
+      cursor: pointer;
+      font-weight: 600;
+      padding: 0.2rem;
+      padding-left: 0px;
+      border: none; 
+      outline: none; 
+    }
+    .weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      font-size: 0.75rem;
+      color: #6c757d;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+      user-select: none;
+    }
+    .days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 0.15rem;
+    }
+    .day {
+      width: 2.4rem;
+      height: 2.4rem;
+      line-height: 2.4rem;
+      border-radius: 0.375rem;
+      text-align: center;
+      font-weight: 500;
+      cursor: pointer;
+      color: #212529;
+      user-select: none;
+    }
+    .day.outside {
+      color: #ced4da;
+      cursor: default;
+    }
+    .day.disabled {
+      color: #dee2e6;
+      cursor: default;
+      pointer-events: none;
+    }
+    .day:hover:not(.disabled):not(.selected):not(.in-range) {
+      /* background-color: #e7f1ff; */ /* old blueish */
+      background-color: #e8f1c8; /* lighter green, related to selected */
+    }
+    .day.selected {
+      background-color: #719000;
+      color: #FFFFFF;
+      font-weight: 700;
+    }
+    .day.in-range {
+      background-color: #E8F1C8;
+      color: #000000;
+    }
+    .footer {
+      display: flex;
+      justify-content: flex-end;
+      padding: 0.7rem 1rem;
+      border-top: 1px solid #dee2e6;
+      gap: 0.75rem;
+    }
+    .footer button {
+      font-weight: 600;
+      border-radius: 0.375rem;
+      min-width: 80px;
+      padding: 0.4rem 0.9rem;
+      border: 1.5px solid transparent;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .btn-cancel {
+      background-color: transparent;
+      color: #6c757d;
+      border-color: transparent;
+    }
+    .btn-cancel:hover {
+      background-color: #f1f3f5;
+      color: #495057;
+    }
+    .btn-apply {
+      background-color: #719000;
+      color: #FFFFFF;
+      border-color: #719000;
+    }
+    .btn-apply:hover {
+      background-color: #a2b97a;
+      border-color: #a2b97a;
+    }
+.date-value-date-picker{
+    font-weight: 700;
+    font-size: 1rem;
+    margin-top: 2px;
+    color: #FFFFFF;
+}
+    
+</style>
+
+</head>
+<body>
+<!-- Overlay for sidebar background -->
+<div class="overlay"></div>
+<!-- Logout Modal -->
+<div class="modal" id="logoutModal">
+    <div class="modal-content">
+        <div class="modal-title">Confirm Logout</div>
+        <div class="modal-message">Are you sure you want to logout from your FundMF account?</div>
+        <div class="modal-buttons">
+            <button class="modal-cancel">Cancel</button>
+            <button class="modal-confirm">Logout</button>
+        </div>
+    </div>
+</div>
+<!-- Sidebar/Navigation Menu (copied from home.html, with Recent Orders active) -->
+<div class="sidebar">
+    <div class="sidebar-header">
+        <img src="./assets/images/logo.png" alt="FundMF Logo" class="sidebar-logo">
+        <div style="flex-grow: 1;"></div>
+        <div class="sidebar-menu">
+            <img src="./assets/images/close.png" alt="Close" style="width:28px;height:28px;cursor:pointer;">
+        </div>
+    </div>
+    <div class="sidebar-item" data-page="homePage">
+        <img src="./assets/images/home.svg" alt="Dashboard Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+        <div class="sidebar-text">Dashboard</div>
+    </div>
+    <div class="sidebar-item" data-page="portfolioPage">
+        <img src="./assets/images/sideBarPortfolio.png" alt="Portfolio Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+        <div class="sidebar-text">Portfolio</div>
+    </div>
+    <!-- <div class="sidebar-item active" data-page="recentOrders">
+        <img src="./assets/images/recentOrder.png" alt="Recent Orders Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+        <div class="sidebar-text">Recent Orders</div>
+    </div> -->
+    <div class="sidebar-item" data-page="mandatePage">
+        <img src="./assets/images/mandate.png" alt="Mandate Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+        <div class="sidebar-text">Mandate</div>
+    </div>
+    <div class="sidebar-item" id="transactParent" style="cursor:pointer;">
+        <img src="./assets/images/transact.png" alt="Transact Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+        <div class="sidebar-text">Transact</div>
+        <i class="fas fa-chevron-down" id="transactChevron" style="margin-left:auto;color:#888;font-size:14px;"></i>
+    </div>
+    <div class="sidebar-child-menu" id="transactChildMenu">
+        <div class="sidebar-child-item" data-page="createLumpsum" id="transactLumpsum">
+            <i class="fas fa-handshake sidebar-child-icon"></i>
+            <div>Purchase</div>
+        </div>
+        <div class="sidebar-child-item" data-page="createSip" id="transactSip">
+            <i class="fas fa-chart-bar sidebar-child-icon"></i>
+            <div>SIP</div>
+        </div>
+        <div class="sidebar-child-item" data-page="createStp" id="transactStp">
+            <i class="fas fa-file-alt sidebar-child-icon"></i>
+            <div>STP</div>
+        </div>
+        <div class="sidebar-child-item" data-page="createSwp" id="transactSwp">
+            <i class="fas fa-coins sidebar-child-icon"></i>
+            <div>SWP</div>
+        </div>
+        <div class="sidebar-child-item" data-page="portfolioPage" id="transactRedeem">
+            <i class="fas fa-wallet sidebar-child-icon"></i>
+            <div>Redeem</div>
+        </div>
+    </div>
+    <!-- <div class="sidebar-item" data-page="accountPage">
+        <img src="./assets/images/Settings.png" alt="Settings Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+        <div class="sidebar-text">Settings</div>
+    </div> -->
+    <div class="sidebar-item" data-page="contactPage">
+        <img src="./assets/images/contactUs.png" alt="Contact Us Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+        <div class="sidebar-text">Contact Us</div>
+    </div>
+    <div class="sidebar-item" id="logoutItem">
+        <img src="./assets/images/logout.png" alt="Logout Icon" class="sidebar-icon" style="width: 20px; height: 20px;">
+        <div class="sidebar-text">Logout</div>
+    </div>
+</div>
+<!-- Header -->
+<div class="header">
+    <a class="back-button" id="backButton">
+        <img src="./assets/images/sidebar-menu-active.svg" alt="Back">
+    </a>
+    <span style="flex:1;">Recent Orders</span>
+</div>
+
+<!-- Date Filter -->
+<div class="date-filter">
+    <div class="date-label">Date Range</div>
+    <div class="date-range">
+        <div class="date-from">
+            <span class="date-label-text">From:</span>
+            <span class="date-value" id="display-date-from"></span>
+            <input type="date" id="date-from" class="date-input-hidden" style="display:none;">
+        </div>
+        <div class="date-to">
+            <span class="date-label-text">To:</span>
+            <span class="date-value" id="display-date-to"></span>
+            <input type="date" id="date-to" class="date-input-hidden" style="display:none;">
+        </div>
+    </div>
+</div>
+<div class="datepicker-container" id="custom-datepicker" aria-label="Date range picker">
+    <div class="header-picker">
+      <div class="from">
+        <div class="date-label-date-picker">From</div>
+        <div class="date-value date-value-date-picker" id="from-display">Jun 1, 2025</div>
+      </div>
+      <div class="divider"></div>
+      <div class="to">
+        <div class="date-label-date-picker">To</div>
+        <div class="date-value date-value-date-picker" id="to-display">Jun 24, 2025</div>
+      </div>
+    </div>
+    <div class="calendar" aria-live="polite">
+      <div class="monthnav">
+        <button type="button" id="prev-month" aria-label="Previous month" tabindex="0">&#x276E;</button>
+        <div style="flex-grow: 1; text-align: center;">
+          <!-- Only show month name and year dropdown, not duplicate year -->
+          <span id="month-name" aria-atomic="true" aria-live="polite"></span>
+          <select id="year-dropdown" aria-label="Select year" style="display: inline-block; width: auto;">
+            <!-- Year options will be populated by JavaScript -->
+          </select>
+        </div>
+        <button type="button" id="next-month" aria-label="Next month" tabindex="0">&#x276F;</button>
+      </div>
+      <div class="weekdays" aria-hidden="true">
+        <div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div>
+      </div>
+      <div class="days" id="days-grid" role="grid" tabindex="0" aria-label="Days of the month">
+        <!-- Days populated by JS -->
+      </div>
+    </div>
+    <div class="footer">
+      <button class="btn-cancel" id="cancel-btn" type="button">Cancel</button>
+      <button class="btn-apply" id="apply-btn" type="button">Apply</button>
+    </div>
+  </div>
+<!-- Status Filter -->
+<div class="status-filter">
+    <div id="pending-orders-count">Pending orders (0)</div>
+    <div class="payment-filter">
+        <!-- Replace FontAwesome icon with your own image -->
+        <img src="./assets/images/payment.png" alt="Payment Icon" class="payment-icon" style="width: 18px; height: 18px; margin-right: 5px;">
+        Payment
+    </div>
+</div>
+
+<!-- Order Items -->
+<div id="orders-list"></div>
+
+<!-- Time Filters -->
+<div class="time-filters">
+    <button class="time-filter-btn">7 days</button>
+    <button class="time-filter-btn">30 days</button>
+    <button class="time-filter-btn">This Month</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script>
+    const API_BASE_URL = 'http://122.176.151.191/MutualFund';
+    let orders = [];
+    let allOrders = [];
+
+    // Helper to get status class
+    function getStatusClass(type, status) {
+        if (type === "Buy") {
+            if (status === "Processing") return "status-processing";
+            if (status === "Order Completed") return "status-completed";
+            return "status-buy";
+        }
+        if (type === "Sell") {
+            if (status === "Processing") return "status-processing";
+            if (status === "Order Completed") return "status-completed";
+            return "status-sell";
+        }
+        return "";
+    }
+
+    // Helper to convert DD-MM-YYYY to YYYY-MM-DD
+    function toISODate(ddmmyyyy) {
+        if (!ddmmyyyy) return '';
+        const [dd, mm, yyyy] = ddmmyyyy.split('-');
+        return `${yyyy}-${mm.padStart(2, '0')}-${dd.padStart(2, '0')}`;
+    }
+
+    // Helper to convert YYYY-MM-DD to DD-MM-YYYY
+    function toDisplayDate(iso) {
+        if (!iso) return '';
+        const [yyyy, mm, dd] = iso.split('-');
+        return `${dd}-${mm}-${yyyy}`;
+    }
+
+    // Render orders with optional date filtering
+    function renderOrders(filteredOrders = null) {
+        const ordersList = document.getElementById('orders-list');
+        ordersList.innerHTML = '';
+        let pendingCount = 0;
+        const list = filteredOrders || orders;
+        list.forEach(order => {
+            if (order.status === "Processing") pendingCount++;
+            const orderDiv = document.createElement('div');
+            orderDiv.className = 'order-item';
+            orderDiv.innerHTML = `
+                <div class="order-fund">${order.fund}</div>
+                <div class="order-bottom">
+                    <div class="order-amount">₹${Number(order.amount).toLocaleString()}</div>
+                    <div class="order-status">
+                        <span class="${order.type === 'Buy' ? 'status-buy' : 'status-sell'}">${order.type}</span>
+                        <span class="${order.status === 'Processing' ? 'status-processing' : 'status-completed'}">${order.status}</span>
+                    </div>
+                </div>
+            `;
+            ordersList.appendChild(orderDiv);
+        });
+        document.getElementById('pending-orders-count').textContent = `Pending orders (${pendingCount})`;
+    }
+
+    // Date filter logic
+    function filterByDate() {
+        const from = document.getElementById('date-from').value;
+        const to = document.getElementById('date-to').value;
+        let filtered = orders;
+        if (from) {
+            filtered = filtered.filter(o => o.isoDate >= from);
+        }
+        if (to) {
+            filtered = filtered.filter(o => o.isoDate <= to);
+        }
+        renderOrders(filtered);
+    }
+
+    // Fetch orders from backend
+    async function fetchOrders() {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            window.location.href = 'index.html';
+            return;
+        }
+        try {
+            const resp = await fetch(`${API_BASE_URL}/recentOrder?page=0&size=100`, {
+                method: 'GET',
+                headers: {
+                    'accept': '*/*',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const contentType = resp.headers.get('content-type');
+            if (!resp.ok) {
+                throw new Error(`HTTP error! status: ${resp.status}`);
+            }
+            if (!contentType || !contentType.includes('application/json')) {
+                // Not JSON, likely an error page
+                const text = await resp.text();
+                document.getElementById('orders-list').innerHTML = '<div class="alert alert-danger">Server returned an unexpected response. Please check if the backend is running and ngrok tunnel is active.<br><pre style="white-space:pre-wrap;word-break:break-all;">' + text.substring(0, 300) + '...</pre></div>';
+                return;
+            }
+            const data = await resp.json();
+            // Flatten and map backend data to UI format
+            const backendOrders = (data.data && data.data.flat()) || [];
+            allOrders = backendOrders.map(o => ({
+                fund: o.schemeName,
+                amount: o.amount,
+                type: o.purchaseType,
+                status: o.status || "Order Completed",
+                date: o.orderDate,
+                isoDate: toISODate(o.orderDate)
+            }));
+            orders = allOrders;
+            setupDateFilters();
+            renderOrders();
+        } catch (err) {
+            document.getElementById('orders-list').innerHTML = '<div class="alert alert-danger">Failed to load orders.<br>' + (err.message || '') + '</div>';
+        }
+    }
+
+    // Helper to format date as '21st Apr 2025'
+    function formatDisplayDate(iso) {
+        if (!iso) return '';
+        // Accept Date object or string
+        let yyyy, mm, dd;
+        if (iso instanceof Date) {
+            yyyy = iso.getFullYear();
+            mm = String(iso.getMonth() + 1).padStart(2, '0');
+            dd = String(iso.getDate()).padStart(2, '0');
+        } else if (typeof iso === 'string' && iso.includes('-')) {
+            [yyyy, mm, dd] = iso.split('-');
+        } else {
+            return '';
+        }
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        const day = parseInt(dd, 10);
+        let suffix = 'th';
+        if (day % 10 === 1 && day !== 11) suffix = 'st';
+        else if (day % 10 === 2 && day !== 12) suffix = 'nd';
+        else if (day % 10 === 3 && day !== 13) suffix = 'rd';
+        return `${day}${suffix} ${months[parseInt(mm,10)-1]} ${yyyy}`;
+    }
+
+    // Update display dates
+    function updateDisplayDates() {
+        document.getElementById('display-date-from').textContent = formatDisplayDate(document.getElementById('date-from').value);
+        document.getElementById('display-date-to').textContent = formatDisplayDate(document.getElementById('date-to').value);
+    }
+
+    // Set up date pickers based on orders
+    function setupDateFilters() {
+        if (!orders.length) return;
+        const isoDates = orders.map(o => o.isoDate).sort();
+        const minDate = isoDates[0];
+        const maxDate = isoDates[isoDates.length - 1];
+        const dateFrom = document.getElementById('date-from');
+        const dateTo = document.getElementById('date-to');
+        dateFrom.value = minDate;
+        dateTo.value = maxDate;
+        dateFrom.min = minDate;
+        dateFrom.max = maxDate;
+        dateTo.min = minDate;
+        dateTo.max = maxDate;
+        updateDisplayDates();
+        // Remove active class from all time filter buttons on load
+        document.querySelectorAll('.time-filter-btn').forEach(btn => btn.classList.remove('active'));
+    }
+
+    // Time filter functionality (optional: implement if needed)
+    const timeFilterBtns = document.querySelectorAll('.time-filter-btn');
+    const dateFrom = document.getElementById('date-from');
+    const dateTo = document.getElementById('date-to');
+    timeFilterBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            timeFilterBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            // Set date pickers based on button
+            const today = new Date();
+            let fromDate, toDate;
+            if (this.textContent.includes('7')) {
+                // 7 days: from 6 days ago to today
+                fromDate = new Date(today);
+                fromDate.setDate(today.getDate() - 6);
+                toDate = today;
+            } else if (this.textContent.includes('30')) {
+                // 30 days: from 29 days ago to today
+                fromDate = new Date(today);
+                fromDate.setDate(today.getDate() - 29);
+                toDate = today;
+            } else if (this.textContent.includes('Month')) {
+                // This Month: from 1st of this month to today
+                fromDate = new Date(today.getFullYear(), today.getMonth(), 1);
+                toDate = today;
+            }
+            // Format to YYYY-MM-DD
+            function fmt(d) {
+                return d.toISOString().slice(0, 10);
+            }
+            if (fromDate && toDate) {
+                dateFrom.value = fmt(fromDate);
+                dateTo.value = fmt(toDate);
+                updateDisplayDates(); // <-- update display after changing values
+                filterByDate();
+            }
+        });
+    });
+
+    // Sidebar functionality (from home.html)
+    const menuIcon = document.getElementById('backButton').querySelector('img');
+    const sidebar = document.querySelector('.sidebar');
+    const sidebarClose = document.querySelector('.sidebar-menu');
+    const overlay = document.querySelector('.overlay');
+    const logoutItem = document.getElementById('logoutItem');
+    const logoutModal = document.getElementById('logoutModal');
+    const modalCancel = document.querySelector('.modal-cancel');
+    const modalConfirm = document.querySelector('.modal-confirm');
+
+    // Open sidebar
+    menuIcon.addEventListener('click', function(e) {
+        e.preventDefault();
+        sidebar.classList.add('show-sidebar');
+        overlay.style.display = 'block';
+    });
+
+    // Close sidebar
+    sidebarClose.addEventListener('click', function() {
+        sidebar.classList.remove('show-sidebar');
+        overlay.style.display = 'none';
+    });
+
+    // Close sidebar when clicking outside
+    overlay.addEventListener('click', function() {
+        sidebar.classList.remove('show-sidebar');
+        overlay.style.display = 'none';
+    });
+
+    // Show logout confirmation modal
+    logoutItem.addEventListener('click', function() {
+        sidebar.classList.remove('show-sidebar');
+        overlay.style.display = 'none';
+        logoutModal.style.display = 'flex';
+    });
+
+    // Cancel logout
+    modalCancel.addEventListener('click', function() {
+        logoutModal.style.display = 'none';
+    });
+
+    // Confirm logout and redirect
+    modalConfirm.addEventListener('click', function() {
+        window.top.location.href = 'index.html';
+    });
+
+    // Close modal when clicking outside
+    logoutModal.addEventListener('click', function(event) {
+        if (event.target === logoutModal) {
+            logoutModal.style.display = 'none';
+        }
+    });
+
+    // Update the sidebar item click handler
+    document.querySelectorAll('.sidebar-item').forEach(item => {
+        // Skip Transact parent and Logout
+        if (item.id !== 'logoutItem' && item.id !== 'transactParent') {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.sidebar-item').forEach(sideItem => {
+                    sideItem.classList.remove('active');
+                });
+                document.querySelectorAll('.sidebar-child-item').forEach(child => {
+                    child.classList.remove('active');
+                });
+                this.classList.add('active');
+                const pageId = this.getAttribute('data-page');
+                if (pageId) {
+                    sidebar.classList.remove('show-sidebar');
+                    overlay.style.display = 'none';
+                    if (window.parent && window.parent.postMessage) {
+                        window.parent.postMessage({
+                            action: 'changePage',
+                            pageId: pageId
+                        }, '*');
+                    }
+                    showInFrameLoader();
+                } else {
+                    sidebar.classList.remove('show-sidebar');
+                    overlay.style.display = 'none';
+                }
+            });
+        }
+    });
+
+    // Transact child menu toggle
+    const transactParent = document.getElementById('transactParent');
+    const transactChildMenu = document.getElementById('transactChildMenu');
+    const transactChevron = document.getElementById('transactChevron');
+    let transactMenuOpen = false;
+
+    transactParent.addEventListener('click', function(e) {
+        transactMenuOpen = !transactMenuOpen;
+        if (transactMenuOpen) {
+            transactChildMenu.classList.add('open');
+            transactChevron.classList.remove('fa-chevron-down');
+            transactChevron.classList.add('fa-chevron-up');
+        } else {
+            transactChildMenu.classList.remove('open');
+            transactChevron.classList.remove('fa-chevron-up');
+            transactChevron.classList.add('fa-chevron-down');
+        }
+        e.stopPropagation();
+    });
+
+    // Add click event listeners for all sidebar child items (Transact)
+    document.querySelectorAll('.sidebar-child-item').forEach(child => {
+        child.addEventListener('click', function(e) {
+            document.querySelectorAll('.sidebar-item').forEach(sideItem => {
+                sideItem.classList.remove('active');
+            });
+            document.querySelectorAll('.sidebar-child-item').forEach(childItem => {
+                childItem.classList.remove('active');
+            });
+            this.classList.add('active');
+            const pageId = this.getAttribute('data-page');
+            sidebar.classList.remove('show-sidebar');
+            overlay.style.display = 'none';
+            if (window.parent && window.parent.postMessage) {
+                window.parent.postMessage({
+                    action: 'changePage',
+                    pageId: pageId
+                }, '*');
+            }
+            showInFrameLoader();
+            e.stopPropagation();
+        });
+    });
+
+    // Function to show a loader inside the iframe
+    function showInFrameLoader() {
+        if (!document.getElementById('inFrameLoader')) {
+            const loaderDiv = document.createElement('div');
+            loaderDiv.id = 'inFrameLoader';
+            loaderDiv.style.position = 'fixed';
+            loaderDiv.style.top = '0';
+            loaderDiv.style.left = '0';
+            loaderDiv.style.width = '100%';
+            loaderDiv.style.height = '100%';
+            loaderDiv.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+            loaderDiv.style.display = 'flex';
+            loaderDiv.style.justifyContent = 'center';
+            loaderDiv.style.alignItems = 'center';
+            loaderDiv.style.zIndex = '10000';
+            const spinner = document.createElement('div');
+            spinner.style.width = '50px';
+            spinner.style.height = '50px';
+            spinner.style.border = '5px solid #e2ebc7';
+            spinner.style.borderRadius = '50%';
+            spinner.style.borderTopColor = '#597200';
+            spinner.style.animation = 'spin 1s linear infinite';
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+            `;
+            document.head.appendChild(style);
+            loaderDiv.appendChild(spinner);
+            document.body.appendChild(loaderDiv);
+        } else {
+            document.getElementById('inFrameLoader').style.display = 'flex';
+        }
+    }
+
+    // Initial fetch
+    fetchOrders();
+
+    // --- Date Picker Click-to-Open and Change Handling ---
+    document.addEventListener('DOMContentLoaded', function() {
+        // Hide native date inputs
+        document.getElementById('date-from').style.display = 'none';
+        document.getElementById('date-to').style.display = 'none';
+
+        // Show custom datepicker when clicking on From/To
+        function showDatepicker() {
+            document.getElementById('custom-datepicker').style.display = 'block';
+        }
+        document.getElementById('display-date-from').addEventListener('click', showDatepicker);
+        document.getElementById('display-date-to').addEventListener('click', showDatepicker);
+
+        // Hide datepicker on outside click
+        document.addEventListener('mousedown', function(e) {
+            const dp = document.getElementById('custom-datepicker');
+            if (dp.style.display === 'block' && !dp.contains(e.target) &&
+                e.target.id !== 'display-date-from' && e.target.id !== 'display-date-to') {
+                dp.style.display = 'none';
+            }
+        });
+
+        // Update display and filter on native input change (for fallback)
+        document.getElementById('date-from').addEventListener('change', function() {
+            updateDisplayDates();
+            filterByDate();
+        });
+        document.getElementById('date-to').addEventListener('change', function() {
+            updateDisplayDates();
+            filterByDate();
+        });
+    });
+
+    // --- Custom Datepicker Integration ---
+    (function() {
+      // Utility functions for date comparison and formatting
+      function isSameDay(d1, d2) {
+        return d1.getFullYear() === d2.getFullYear() &&
+               d1.getMonth() === d2.getMonth() &&
+               d1.getDate() === d2.getDate();
+      }
+      function isDateBefore(d1, d2) {
+        return d1.getTime() < d2.getTime();
+      }
+      function isDateAfter(d1, d2) {
+        return d1.getTime() > d2.getTime();
+      }
+      function copyDate(d) {
+        return new Date(d.getTime());
+      }
+      function formatMonthYear(date) {
+        const options = { month: 'long', year: 'numeric' };
+        return date.toLocaleDateString('en-US', options);
+      }
+
+      // DOM Elements
+      const fromDisplay = document.getElementById('from-display');
+      const toDisplay = document.getElementById('to-display');
+      const monthNameEl = document.getElementById('month-name');
+      const daysGrid = document.getElementById('days-grid');
+      const prevMonthBtn = document.getElementById('prev-month');
+      const nextMonthBtn = document.getElementById('next-month');
+      const cancelBtn = document.getElementById('cancel-btn');
+      const applyBtn = document.getElementById('apply-btn');
+      const yearDropdown = document.getElementById('year-dropdown');
+      const customDatepicker = document.getElementById('custom-datepicker');
+      const fromSection = document.querySelector('.header-picker .from');
+      const toSection = document.querySelector('.header-picker .to');
+
+      // Initial state: use current filter values if available
+      function getDateFromInput(id, fallback) {
+        const val = document.getElementById(id).value;
+        if (val) {
+          const [yyyy, mm, dd] = val.split('-');
+          return new Date(Number(yyyy), Number(mm) - 1, Number(dd));
+        }
+        return fallback;
+      }
+      let selectedFrom = getDateFromInput('date-from', new Date(2025, 5, 1));
+      let selectedTo = getDateFromInput('date-to', new Date(2025, 5, 24));
+      let calendarYear = selectedFrom.getFullYear();
+      let calendarMonth = selectedFrom.getMonth();
+
+      // To keep track of clicking state (selecting from or to)
+      let selectingStart = true;
+      let tempFrom = copyDate(selectedFrom);
+      let tempTo = copyDate(selectedTo);
+
+      // Populate year dropdown
+      function populateYearDropdown() {
+        yearDropdown.innerHTML = '';
+        const currentYear = new Date().getFullYear();
+        const startYear = currentYear - 10;
+        const endYear = currentYear + 10;
+        for (let year = startYear; year <= endYear; year++) {
+          const option = document.createElement('option');
+          option.value = year;
+          option.textContent = year;
+          if (year === calendarYear) {
+            option.selected = true;
+          }
+          yearDropdown.appendChild(option);
+        }
+      }
+
+      // Generate calendar days for the given month and year
+      function generateCalendar(year, month) {
+        daysGrid.innerHTML = '';
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+        const daysInMonth = lastDay.getDate();
+        const startWeekday = firstDay.getDay();
+
+        const prevMonth = month === 0 ? 11 : month - 1;
+        const prevYear = month === 0 ? year - 1 : year;
+        const prevMonthLastDay = new Date(prevYear, prevMonth + 1, 0).getDate();
+
+        const totalSlots = 42;
+
+        for (let i = 0; i < totalSlots; i++) {
+          const dayEl = document.createElement('button');
+          dayEl.setAttribute('type', 'button');
+          dayEl.classList.add('day');
+
+          let dateObj = null;
+
+          if (i < startWeekday) {
+            const dayNumber = prevMonthLastDay - startWeekday + 1 + i;
+            dateObj = new Date(prevYear, prevMonth, dayNumber);
+            dayEl.classList.add('outside');
+          } else if (i < startWeekday + daysInMonth) {
+            const dayNumber = i - startWeekday + 1;
+            dateObj = new Date(year, month, dayNumber);
+          } else {
+            const dayNumber = i - (startWeekday + daysInMonth) + 1;
+            const nextMonth = (month === 11) ? 0 : month + 1;
+            const nextYear = (month === 11) ? year + 1 : year;
+            dateObj = new Date(nextYear, nextMonth, dayNumber);
+            dayEl.classList.add('outside');
+          }
+
+          dayEl.textContent = dateObj.getDate();
+
+          const ariaLabel = dateObj.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+          dayEl.setAttribute('aria-label', ariaLabel);
+          dayEl.setAttribute('data-date', dateObj.toISOString());
+
+          if (isSameDay(dateObj, tempFrom)) {
+            dayEl.classList.add('selected');
+            dayEl.setAttribute('aria-current', 'date');
+          }
+          if (isSameDay(dateObj, tempTo)) {
+            dayEl.classList.add('selected');
+            dayEl.setAttribute('aria-current', 'date');
+          }
+          if (isDateAfter(dateObj, tempFrom) && isDateBefore(dateObj, tempTo)) {
+            dayEl.classList.add('in-range');
+          }
+          if (isDateAfter(tempFrom, tempTo)) {
+            if (isDateAfter(dateObj, tempTo) && isDateBefore(dateObj, tempFrom)) {
+              dayEl.classList.add('in-range');
+            }
+          }
+
+          dayEl.addEventListener('click', () => {
+            if (dayEl.classList.contains('outside')) return;
+
+            const clickedDate = new Date(dayEl.getAttribute('data-date'));
+
+            if (selectingStart) {
+              tempFrom = clickedDate;
+              tempTo = tempFrom;
+              updateHeader(); // update highlight before toggling
+              selectingStart = false;
+              generateCalendar(calendarYear, calendarMonth);
+            } else {
+              tempTo = clickedDate;
+              if (isDateBefore(tempTo, tempFrom)) {
+                [tempFrom, tempTo] = [tempTo, tempFrom];
+              }
+              updateHeader(); // update highlight before toggling
+              selectingStart = true;
+              generateCalendar(calendarYear, calendarMonth);
+            }
+          });
+
+          daysGrid.appendChild(dayEl);
+        }
+      }
+
+      // Update header (date text and highlight)
+      function updateHeader() {
+        fromDisplay.textContent = formatDisplayDate(tempFrom);
+        toDisplay.textContent = formatDisplayDate(tempTo);
+        updateHeaderHighlight();
+      }
+
+      // Add this function to update the header-picker highlight
+      function updateHeaderHighlight() {
+        if (selectingStart) {
+          fromSection.classList.add('active-select');
+          toSection.classList.remove('active-select');
+        } else {
+          fromSection.classList.remove('active-select');
+          toSection.classList.add('active-select');
+        }
+      }
+
+      // Helper to set month name
+      function setMonthName(year, month) {
+        const months = [
+          "January", "February", "March", "April", "May", "June",
+          "July", "August", "September", "October", "November", "December"
+        ];
+        monthNameEl.textContent = months[month];
+      }
+
+      // Controls for month navigation
+      prevMonthBtn.addEventListener('click', () => {
+        if (calendarMonth === 0) {
+          calendarMonth = 11;
+          calendarYear--;
+        } else {
+          calendarMonth--;
+        }
+        setMonthName(calendarYear, calendarMonth);
+        generateCalendar(calendarYear, calendarMonth);
+      });
+
+      nextMonthBtn.addEventListener('click', () => {
+        if (calendarMonth === 11) {
+          calendarMonth = 0;
+          calendarYear++;
+        } else {
+          calendarMonth++;
+        }
+        setMonthName(calendarYear, calendarMonth);
+        generateCalendar(calendarYear, calendarMonth);
+      });
+
+      yearDropdown.addEventListener('change', (event) => {
+        calendarYear = parseInt(event.target.value, 10);
+        generateCalendar(calendarYear, calendarMonth);
+        setMonthName(calendarYear, calendarMonth);
+      });
+
+      cancelBtn.addEventListener('click', () => {
+        tempFrom = copyDate(selectedFrom);
+        tempTo = copyDate(selectedTo);
+        selectingStart = true;
+        updateHeader();
+        generateCalendar(calendarYear, calendarMonth);
+        customDatepicker.style.display = 'none';
+      });
+
+      applyBtn.addEventListener('click', () => {
+        selectedFrom = copyDate(tempFrom);
+        selectedTo = copyDate(tempTo);
+        fromDisplay.textContent = formatDisplayDate(selectedFrom);
+        toDisplay.textContent = formatDisplayDate(selectedTo);
+        selectingStart = true;
+        // Update hidden native inputs for compatibility
+        // function to format date as YYYY-MM-DD in local time
+        function toLocalISODate(d) {
+            const yyyy = d.getFullYear();
+            const mm = String(d.getMonth() + 1).padStart(2, '0');
+            const dd = String(d.getDate()).padStart(2, '0');
+            return `${yyyy}-${mm}-${dd}`;
+        }
+        document.getElementById('date-from').value = toLocalISODate(selectedFrom);
+        document.getElementById('date-to').value = toLocalISODate(selectedTo);
+        updateDisplayDates();
+        filterByDate();
+        customDatepicker.style.display = 'none';
+      });
+
+      // When opening the datepicker, sync tempFrom/tempTo with current filter
+      function syncTempWithInputs() {
+        selectedFrom = getDateFromInput('date-from', selectedFrom);
+        selectedTo = getDateFromInput('date-to', selectedTo);
+        tempFrom = copyDate(selectedFrom);
+        tempTo = copyDate(selectedTo);
+        calendarYear = selectedFrom.getFullYear();
+        calendarMonth = selectedFrom.getMonth();
+        updateHeader();
+        setMonthName(calendarYear, calendarMonth);
+        generateCalendar(calendarYear, calendarMonth);
+        populateYearDropdown();
+      }
+
+      // Show custom datepicker when clicking on From/To
+      function showDatepicker() {
+        syncTempWithInputs();
+        customDatepicker.style.display = 'block';
+      }
+      document.getElementById('display-date-from').addEventListener('click', showDatepicker);
+      document.getElementById('display-date-to').addEventListener('click', showDatepicker);
+
+      // Hide datepicker on outside click
+      document.addEventListener('mousedown', function(e) {
+        if (customDatepicker.style.display === 'block' && !customDatepicker.contains(e.target) &&
+            e.target.id !== 'display-date-from' && e.target.id !== 'display-date-to') {
+          customDatepicker.style.display = 'none';
+        }
+      });
+
+      // Initial setup
+      syncTempWithInputs();
+    })();
+  </script>
+</body>
+</html>

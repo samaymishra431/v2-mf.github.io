@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Investment - FundMF</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+    body {
+        background: #FFFFFF;
+        color: #222;
+        max-width: 800px;
+        margin: 0 auto;
+        font-family: Arial, sans-serif;
+    }
+    .investment-container {
+        padding: 0 16px 32px 16px; /* Match home.html horizontal spacing */
+        min-height: 100vh;
+        background: #FFFFFF;
+        max-width: 800px; /* Ensure same as home.html */
+        margin: 0 auto;   /* Center horizontally */
+    }
+    .investment-header {
+        text-align: center;
+        font-size: 20px;
+        margin-top: 37px;
+        margin-bottom: 18px;
+        color: #222;
+        letter-spacing: 0.1px;
+    }
+    .investment-card {
+        background: #FFFFFF;
+        /* border-radius: 16px; */
+        /* box-shadow: 0 1px 2px rgba(60,72,88,0.04); */
+        padding: 5px;
+        margin: 0 0 0 0;
+        /* border: 1.5px solid #e4e7ee; */
+        position: relative; /* Ensure positioning context for sidebar */
+    }
+    .fund-title-box {
+        border-radius: 6px;
+        border: 1.5px solid #DFE1E7;
+        padding: 16px 10px 10px 10px;
+        margin-bottom: 18px;
+        background: #FFFFFF;
+        text-align: center;
+    }
+    .fund-title {
+        font-size: 17px;
+        font-weight: 400;
+        color: #222;
+        margin-bottom: 15px;
+    }
+    .fund-category {
+        font-size: 13px;
+        font-weight: 500;
+        color: #8a94a6;
+    }
+    .investment-table {
+        width: 100%;
+        margin: 18px 0 0 0;
+        border-collapse: separate;
+        border-spacing: 0 8px;
+    }
+    .investment-table td {
+        font-size: 15px;
+        color: #8a94a6;
+        font-weight: 500;
+        padding: 0 0 2px 0;
+    }
+    .investment-table .label {
+        font-size: 12px;
+        color: #818898;
+        font-weight: 500;
+    }
+    .investment-table .value {
+        font-size: 16px;
+        color: #222;
+        font-weight: 600;
+    }
+    .investment-table .loading {
+        color: #424242;
+        font-weight: 500;
+    }
+    .investment-table .pnl-label {
+        color: #8a94a6;
+    }
+    .investment-table .pnl-value {
+        color: #597200;
+        font-weight: 700;
+    }
+    .investment-table .daychange-label {
+        color: #8a94a6;
+    }
+    .investment-table .daychange-value {
+        color: #597200;
+        font-weight: 700;
+    }
+    .investment-status-row {
+        display: flex;
+        align-items: center;
+        margin: 18px 0 0 0;
+        gap: 10px;
+    }
+    .investment-status-label {
+        font-size: 14px;
+        color: #8a94a6;
+        font-weight: 500;
+    }
+    .investment-status-badge {
+        background: #eafbe4;
+        color: #04AA29;
+        font-size: 12px;
+        font-weight: 600;
+        border-radius: 26px;
+        padding: 8px 18px;
+        display: inline-block;
+        letter-spacing: 0.5px;
+    }
+    .investment-actions {
+        margin-top: 24px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .buy-more-btn {
+        flex: 1;
+        background: #A5C765;
+        color: #324000;
+        font-size: 14px;
+        font-weight: 550;
+        border: none;
+        border-radius: 50px;
+        padding: 8px 0;
+        cursor: pointer;
+        transition: background 0.15s;
+        box-shadow: 0 1px 2px rgba(60,72,88,0.04);
+    }
+    .buy-more-btn:hover {
+        background: #a2b97a;
+    }
+    .more-options-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #A5C765;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 22px;
+    color: #324000;
+}
+    /* Sidebar overlay only inside card */
+    .sidebar-overlay {
+        display: none;
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        z-index: 10;
+        border-radius: 6px;
+    }
+    .sidebar-overlay.open {
+        display: block;
+    }
+    /* .investment-sidebar {
+        display: none;
+        position: absolute;
+        top: 5px;
+        right: 0;
+        height: 70%;
+        width: 240px;
+        background: #222;
+        z-index: 20;
+        box-shadow: -2px 0 12px rgba(0, 0, 0, 0.18);
+        padding: 38px 0 0 0;
+        border-radius: 6px 1px 0 6px;
+        transition: transform 0.2s;
+    } */
+
+    .investment-sidebar {
+        display: none;
+        position: absolute;
+        top: 75px;
+        right: -18px;
+        height: 70%;
+        width: 240px;
+        /* background: #222; */
+        z-index: 20;
+        /* box-shadow: -2px 0 12px rgba(0, 0, 0, 0.18); */
+        padding: 38px 0 0 0;
+        border-radius: 6px 1px 0 6px;
+        transition: transform 0.2s;
+    }
+    .investment-sidebar.open {
+        display: block;
+    }
+    .sidebar-items {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        text-align: right; /* Right align the sidebar items */
+    }
+    .sidebar-items li {
+        /* Optionally, ensure items are right-aligned */
+        display: block;
+        text-align: right;
+        padding-right: 24px; /* Add equal space from right for all icons/items */
+    }
+    .sidebar-actions-list {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        margin: 0;
+        padding: 0 24px 0 0; /* Right padding instead of left */
+    }
+    .sidebar-action-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-direction: row; /* Icon on left, button on right */
+        justify-content: flex-end; /* Align to the right */
+    }
+    .sidebar-action-btn {
+        background: #597200;
+        color: #FFFFFF;
+        font-size: 12px;
+        font-weight: 400;
+        border: none;
+        border-radius: 50px;
+        padding: 7px 18px 7px 18px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        min-width: 0;
+        box-shadow: none;
+        letter-spacing: 0.1px;
+        transition: background 0.15s;
+    }
+    .sidebar-action-btn:active,
+    .sidebar-action-btn:hover {
+        background: #b7c99c;
+        color: #222;
+    }
+    .sidebar-action-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: #597200;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #FFFFFF;
+        font-size: 12px;
+        margin: 0; /* Remove margins */
+        flex-shrink: 0; /* Prevent icon from shrinking */
+    }
+    /* Sidebar styles */
+    .sidebar {
+        background: transparent; /* Make sidebar background transparent */
+        position: absolute;
+        left: 0;
+        right: 0;
+        /* Adjust top dynamically via JS, default 2px below three dots */
+        z-index: 10;
+        /* Remove box-shadow or border if present for full transparency */
+    }
+    .header {
+        background-color: #FFFFFF;
+        color: #FFFFFF;
+        padding: 12px 15px 0px 0px;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+    }
+    
+    .back-button {
+        color: #d4d4d4;
+        font-size: 20px;
+        margin-right: 15px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .back-button:hover {
+        color: #62880a;
+    }
+    
+    .back-button .green-transaction {
+        display: none;
+    }
+    /* Sidebar menu container */
+    .sidebar-menu {
+        /* ...existing code... */
+        text-align: right; /* Align text and inline elements to the right */
+    }
+
+    /* Each menu item row */
+    .sidebar-menu .menu-item {
+        display: flex;
+        flex-direction: row-reverse; /* Icon on right, label on left */
+        align-items: center;
+        justify-content: flex-end; /* Push content to the right */
+        margin-bottom: 16px; /* Adjust spacing as needed */
+    }
+
+    /* Adjust icon and label spacing */
+    .sidebar-menu .menu-item .icon {
+        margin-left: 8px; /* Space between label and icon */
+        margin-right: 0;
+    }
+
+    /* Add this media query for medium screens */
+    @media (min-width: 512px) {
+        .investment-sidebar {
+            top: 50px;
+        }
+    }
+    /* Add this media query for very small screens */
+    @media (max-width: 289px) {
+        .investment-sidebar {
+            top: 94px;
+        }
+    }
+</style>
+</head>
+<body>
+<div class="investment-container">
+    <!-- Header -->
+    <div class="header" style="justify-content: flex-start;">
+        <a class="back-button" id="backButton">
+            <i class="fas fa-arrow-left"></i>
+            <!-- <span class="green-transaction"></span> -->
+        </a>
+        <!-- Removed the header text -->
+    </div>
+    <div class="investment-header">My Investment</div>
+    <div class="investment-card">
+        <div class="fund-title-box">
+            <div class="fund-title" id="fundTitle">Kotak Energy Opportunities Fund</div>
+            <div class="fund-category" id="fundCategory">Direct | Growth | Equity - Sectoral/Thematic</div>
+        </div>
+        <table class="investment-table">
+            <tr>
+                <td class="label">Invested</td>
+                <td class="label" style="text-align:right;">Avg. NAV</td>
+            </tr>
+            <tr>
+                <td class="value loading" id="investedValue">Loading</td>
+                <td class="value loading" style="text-align:right;" id="avgNavValue">Loading</td>
+            </tr>
+            <tr>
+                <td class="label">Current</td>
+                <td class="label" style="text-align:right;">P&amp;L</td>
+            </tr>
+            <tr>
+                <td class="value loading" id="currentValue">Loading</td>
+                <td class="value loading" style="text-align:right;" id="pnlValue">Loading</td>
+            </tr>
+            <tr>
+                <td class="label">Day Change</td>
+                <td class="label" style="text-align:right;">Day Change</td>
+            </tr>
+            <tr>
+                <td class="value loading" id="dayChangeValue">Loading</td>
+                <td class="value loading" style="text-align:right;" id="dayChangeValue2">Loading</td>
+            </tr>
+        </table>
+        <div class="investment-status-row">
+            <div class="investment-status-label">Status</div>
+            <!-- Move badge below label -->
+        </div>
+        <div style="margin-left: 0; margin-top: 4px;">
+            <div class="investment-status-badge" id="statusBadge">ACTIVE</div>
+        </div>
+        <div class="investment-actions">
+            <button class="buy-more-btn">Buy More</button>
+            <button class="more-options-btn" id="openSidebarBtn"><i class="fas fa-ellipsis-v"></i></button>
+        </div>
+        <!-- Sidebar overlay and sidebar INSIDE investment-card -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+        <div class="investment-sidebar" id="investmentSidebar">
+            <div class="sidebar-actions-list">
+                <div class="sidebar-action-row">
+                    <button class="sidebar-action-btn" id="transactionHistoryBtn">Transaction history</button>
+                    <span class="sidebar-action-icon" id="transactionHistoryIcon">
+                        <img src="./assets/images/transaction-history.png" alt="Transaction history" width="15" height="15" />
+                    </span>
+                </div>
+                <div class="sidebar-action-row">
+                    <button class="sidebar-action-btn">Redeem</button>
+                    <span class="sidebar-action-icon">
+                        <img src="./assets/images/redeem1.png" alt="Redeem" width="15" height="15" />
+                    </span>
+                </div>
+                <div class="sidebar-action-row">
+                    <button class="sidebar-action-btn">STP (Transfer)</button>
+                    <span class="sidebar-action-icon">
+                        <img src="./assets/images/stp-transfer.png" alt="STP Transfer" width="15" height="15" />
+                    </span>
+                </div>
+                <div class="sidebar-action-row">
+                    <button class="sidebar-action-btn">STP (Withdraw)</button>
+                    <span class="sidebar-action-icon">
+                        <img src="./assets/images/stp-withdraw.png" alt="STP Withdraw" width="15" height="15" />
+                    </span>
+                </div>
+                <div class="sidebar-action-row">
+                    <button class="sidebar-action-btn">SIP (Invest)</button>
+                    <span class="sidebar-action-icon">
+                        <img src="./assets/images/sip-invest.png" alt="SIP Invest" width="15" height="15" />
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+<script>
+    // Sidebar open/close logic (now inside investment-card)
+    const openSidebarBtn = document.getElementById('openSidebarBtn');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const investmentSidebar = document.getElementById('investmentSidebar');
+
+    openSidebarBtn.addEventListener('click', function(e) {
+        investmentSidebar.classList.add('open');
+        sidebarOverlay.classList.add('open');
+    });
+
+    sidebarOverlay.addEventListener('click', function(e) {
+        investmentSidebar.classList.remove('open');
+        sidebarOverlay.classList.remove('open');
+    });
+
+    document.addEventListener('mousedown', function(event) {
+        if (
+            investmentSidebar.classList.contains('open') &&
+            !investmentSidebar.contains(event.target) &&
+            !openSidebarBtn.contains(event.target)
+        ) {
+            investmentSidebar.classList.remove('open');
+            sidebarOverlay.classList.remove('open');
+        }
+    });
+
+    // Populate fund details from localStorage
+    function toProperCase(str) {
+        if (!str) return '';
+        return str
+            .toLowerCase()
+            .replace(/\b\w/g, c => c.toUpperCase());
+    }
+
+    function formatCurrency(val) {
+        if (!val && val !== 0) return 'N/A';
+        if (typeof val === 'string') val = parseFloat(val.replace(/,/g, ''));
+        if (isNaN(val)) return 'N/A';
+        if (val >= 10000000) return "₹" + (val/10000000).toFixed(2).replace(/\.00$/, '') + "Cr";
+        if (val >= 100000) return "₹" + (val/100000).toFixed(2).replace(/\.00$/, '') + "L";
+        if (val >= 1000) return "₹" + (val/1000).toFixed(2).replace(/\.00$/, '') + "K";
+        return "₹" + val.toLocaleString();
+    }
+
+    function parseAmount(val) {
+        if (!val) return 0;
+        if (typeof val === 'number') return val;
+        let v = val.replace(/,/g, '').trim();
+        let mult = 1;
+        if (v.endsWith('Cr')) {
+            mult = 10000000;
+            v = v.replace('Cr', '').trim();
+        } else if (v.endsWith('L')) {
+            mult = 100000;
+            v = v.replace('L', '').trim();
+        } else if (v.endsWith('K')) {
+            mult = 1000;
+            v = v.replace('K', '').trim();
+        }
+        return parseFloat(v) * mult;
+    }
+
+    function fillFundDetails() {
+        const fund = JSON.parse(localStorage.getItem('selectedFund'));
+        if (!fund) return;
+        document.getElementById('fundTitle').textContent = toProperCase(fund.amcName) || 'Unknown Fund';
+        document.getElementById('fundCategory').textContent = fund.category || fund.type || 'Unknown Category';
+
+        // Fill investment table
+        document.getElementById('investedValue').textContent = formatCurrency(parseAmount(fund.investedAmount));
+        document.getElementById('avgNavValue').textContent = fund.navQty || fund.nav || 'N/A';
+        document.getElementById('currentValue').textContent = formatCurrency(parseAmount(fund.currentAmount));
+        // P&L
+        let pnl = 0;
+        if (fund.currentAmount && fund.investedAmount) {
+            pnl = parseAmount(fund.currentAmount) - parseAmount(fund.investedAmount);
+        }
+        document.getElementById('pnlValue').textContent = (pnl >= 0 ? '+' : '-') + formatCurrency(Math.abs(pnl));
+        // Day Change (if available)
+        document.getElementById('dayChangeValue').textContent = fund.dayInvChange || 'N/A';
+        document.getElementById('dayChangeValue2').textContent =
+            (fund.dayChangePercentage !== undefined && fund.dayChangePercentage !== null)
+                ? fund.dayChangePercentage + '%'
+                : 'N/A';
+        // Status
+        document.getElementById('statusBadge').textContent = (fund.status || 'ACTIVE').toUpperCase();
+    }
+
+    fillFundDetails();
+
+    // Transaction history button logic
+    document.getElementById('transactionHistoryBtn').addEventListener('click', function() {
+        // Close sidebar first
+        investmentSidebar.classList.remove('open');
+        sidebarOverlay.classList.remove('open');
+        // Redirect to accountTransaction.html
+        window.location.href = 'accountTransaction.html';
+    });
+
+    // Also allow clicking the icon to open transaction history
+    document.getElementById('transactionHistoryIcon').addEventListener('click', function() {
+        investmentSidebar.classList.remove('open');
+        sidebarOverlay.classList.remove('open');
+        window.location.href = 'accountTransaction.html';
+    });
+
+    // Optional: Back button logic
+    document.getElementById('backButton').addEventListener('click', function() {
+        window.location.href = 'newPortfolio.html'; // Redirect to portfolio page
+    });
+</script>
+</body>
+</html>

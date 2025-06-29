@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>New Fund Offerings (NFO) - FundMF</title>
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+      <style>
+         * {
+         margin: 0;
+         padding: 0;
+         box-sizing: border-box;
+         font-family: Arial, sans-serif;
+         }
+         body {
+         background-color: #FFFFFF;
+         color: #333;
+         max-width: 800px;
+         margin: 0 auto;
+         min-height: 100vh;
+         }
+         .header {
+         background-color: #FFFFFF;
+         color: #FFFFFF;
+         padding: 12px 15px 0px 15px;
+         position: sticky;
+         top: 0;
+         z-index: 1000;
+         display: flex;
+         align-items: center;
+         justify-content: flex-start;
+         }
+         .back-button {
+         color: #d4d4d4;
+         font-size: 20px;
+         margin-right: 15px;
+         cursor: pointer;
+         position: relative;
+         overflow: hidden;
+         }
+         .back-button:hover {
+         color: #62880a;
+         }
+         .content-container {
+         padding: 0; /* Remove horizontal padding to avoid double margin */
+         box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+         background-color: #FFFFFF;
+         }
+         .logo-container {
+         background-color: #FFFFFF;
+         padding: 20px;
+         text-align: center;
+         padding-top: 0px;
+         }
+         .logo {
+         height: 40px;
+         display: inline-block;
+         vertical-align: middle;
+         margin-right: 10px;
+         margin-top: 10px;
+         }
+         .page-title {
+         font-size: 16px;
+         font-weight: bold;
+         color: #FFFFFF;
+         margin: 0;
+         }
+         .page-subtitle {
+         font-size: 14px;
+         color: #666;
+         text-align: center;
+         padding: 10px 50px;
+         padding-bottom: 0;
+         line-height: 1.5;
+         }
+         .section-header {
+         padding-right: 18px;
+         padding-left: 18px;
+         padding-bottom: 0;
+         padding-top: 18px;
+         font-size: 18px;
+         font-weight: 600;
+         display: flex;
+         align-items: center;
+         }
+         .count-badge {
+         color: #333;
+         border-radius: 18px;
+         padding: 2px 5px;
+         font-size: 18px;
+         }
+         .fund-card {
+         background-color: #FFFFFF;
+         border-radius: 6px;
+         margin: 16px 15px 16px 15px;
+         padding: 18px 18px 14px 18px;
+         border: 1px solid #DFE1E7;
+         text-align: left;
+         font-size: 14px; 
+         }
+         .fund-title {
+         font-size: 16px;
+         font-weight: bold;
+         margin-bottom: 5px;
+         color: #222;
+         /* text-align: center; */
+         }
+         .fund-category {
+         color: #888;
+         font-size: 13px;
+         font-weight: 400;
+         margin-bottom: 10px;
+         /* text-align: center; */
+         }
+         .fund-details {
+         display: flex;
+         justify-content: flex-start;
+         border-top: 1px solid #ececec;
+         padding: 10px 0 8px 0;
+         gap: 32px;
+         }
+         .fund-detail-item {
+         display: flex;
+         flex-direction: column;
+         align-items: flex-start;
+         text-align: left;
+         min-width: 0;
+         }
+         .fund-detail-item.close-date {
+         margin-left: auto;
+         }
+         .detail-label {
+         color: #888;
+         font-size: 13px;
+         margin-bottom: 2px;
+         }
+         .detail-value {
+         font-size: 16px;
+         font-weight: bold;
+         color: #222;
+         }
+         .apply-button {
+         background-color: #a5c765;
+         color: #222;
+         border: none;
+         border-radius: 22px;
+         padding: 10px 0;
+         font-weight: bold;
+         width: 100%;
+         cursor: pointer;
+         font-size: 16px;
+         margin-top: 8px;
+         transition: background 0.2s;
+         }
+         .apply-button:hover {
+         background-color: #8bb44c;
+         }
+         .fund-objective-row {
+         display: flex;
+         align-items: flex-start;
+         gap: 8px;
+         margin-bottom: 4px;
+         min-height: 22px;
+         flex-wrap: wrap;
+         }
+         .fund-objective {
+         font-size: 13px;
+         color: #555;
+         white-space: nowrap;
+         overflow: hidden;
+         text-overflow: ellipsis;
+         flex: 1 1 auto;
+         transition: all 0.2s;
+         cursor: default;
+         min-width: 0;
+         }
+         .fund-objective.expanded {
+         white-space: normal;
+         overflow: visible;
+         text-overflow: unset;
+         word-break: break-word;
+         }
+         .fund-showmore {
+         font-size: 13px;
+         color: #4d6a11;
+         background: none;
+         border: none;
+         cursor: pointer;
+         padding: 0 2px;
+         font-weight: bold;
+         outline: none;
+         transition: color 0.15s;
+         align-self: flex-start;
+         margin-top: 0;
+         margin-bottom: 0;
+         flex-shrink: 0;
+         }
+         .fund-showmore:hover {
+         color: #a5c765;
+         text-decoration: underline;
+         }
+         @media (max-width: 767px) {
+         .content-container {
+         padding: 0; /* Also remove on mobile */
+         }
+         }
+         .heading {
+         text-align: center;
+         margin-bottom: 5px;
+         font-size: 28px;
+         font-weight: bold;
+         margin-right: 12px;
+         margin-left: 12px;
+         }
+      </style>
+   </head>
+   <body>
+      <div class="header" style="justify-content: flex-start;">
+         <a class="back-button" id="backButton">
+         <i class="fas fa-arrow-left"></i>
+         </a>
+      </div>
+      <div class="content-container">
+         <div class="logo-container">
+            <img src="./assets/images/logo.png" alt="FundMF Logo" class="logo">
+         </div>
+         <h1 class="heading">New Fund Offerings (NFO)</h1>
+         <div class="page-subtitle">
+            An NFO is the initial subscription opportunity for any new fund being launched by an investment company
+         </div>
+         <div class="section-header">
+            <div>Open Now</div>
+            <div class="count-badge" id="openCount">(0)</div>
+         </div>
+         <div id="openNFOContainer"></div>
+         <div class="section-header">
+            <div>Recently closed</div>
+            <div class="count-badge" id="closedCount">(0)</div>
+         </div>
+         <div id="closedNFOContainer"></div>
+      </div>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+      <script>
+         const API_BASE_URL = 'http://122.176.151.191/MutualFund';
+         const token = localStorage.getItem('authToken');
+         
+         // ...existing code...
+         function renderNFOs(containerId, nfos, isClosed) {
+         const container = document.getElementById(containerId);
+         container.innerHTML = '';
+         nfos.forEach((nfo, idx) => {
+         const card = document.createElement('div');
+         card.className = 'fund-card' + (isClosed ? ' closed-badge' : '');
+         const objective = nfo.investment_objective ? nfo.investment_objective.replace(/"/g, '&quot;') : '';
+         const showMoreBtn = objective.length > 80 ? `<button class="fund-showmore" type="button">Show more</button>` : '';
+         card.innerHTML = `
+             <div class="fund-title">${nfo.scheme_name || nfo.fund_name || nfo.title}</div>
+             <div class="fund-category">
+                 ${nfo.category ? nfo.category : ''}${nfo.sub_category ? ' | ' + nfo.sub_category : ''}
+             </div>
+             <div class="fund-details">
+                 <div class="fund-detail-item">
+                     <div class="detail-label">Offer close</div>
+                     <div class="detail-value">${nfo.close_date ? formatDate(nfo.close_date) : ''}</div>
+                 </div>
+                 <div class="fund-detail-item close-date">
+                     <div class="detail-label">Min. investment</div>
+                     <div class="detail-value">₹1,000</div>
+                 </div>
+             </div>
+             <div class="fund-objective-row">
+                 <span class="fund-objective" title="${objective}">${objective}</span>
+                 ${showMoreBtn}
+             </div>
+             <button class="apply-button">Apply</button>
+         `;
+         card.dataset.nfo = JSON.stringify(nfo);
+         container.appendChild(card);
+         });
+         }
+         // ...existing code...
+         
+         function formatDate(dateStr) {
+             if (!dateStr) return '';
+             const d = new Date(dateStr);
+             if (isNaN(d)) return dateStr;
+             const day = d.getDate();
+             const month = d.toLocaleString('en-US', { month: 'short' });
+             const year = d.getFullYear();
+             function ordinal(n) {
+                 if (n > 3 && n < 21) return 'th';
+                 switch (n % 10) {
+                     case 1: return 'st';
+                     case 2: return 'nd';
+                     case 3: return 'rd';
+                     default: return 'th';
+                 }
+             }
+             return `${day}${ordinal(day)} ${month} ${year}`;
+         }
+         
+         function fetchNFOs() {
+             fetch(`${API_BASE_URL}/api/fnos/getUpcomingFNo`, {
+                 method: 'GET',
+                 headers: {
+                     'accept': '*/*',
+                     'Authorization': `Bearer ${token}`
+                 }
+             })
+             .then(res => res.json())
+             .then(data => {
+                 const details = data.details && data.details[0] ? data.details[0] : {};
+                 const openNFOs = details.live || [];
+                 const closedNFOs = details.closed || [];
+                 renderNFOs('openNFOContainer', openNFOs, false);
+                 renderNFOs('closedNFOContainer', closedNFOs, true);
+                 document.getElementById('openCount').textContent = `(${openNFOs.length})`;
+                 document.getElementById('closedCount').textContent = `(${closedNFOs.length})`;
+             })
+             .catch(() => {
+                 renderNFOs('openNFOContainer', [], false);
+                 renderNFOs('closedNFOContainer', [], true);
+                 document.getElementById('openCount').textContent = `(0)`;
+                 document.getElementById('closedCount').textContent = `(0)`;
+             });
+         }
+         
+         fetchNFOs();
+         
+         document.body.addEventListener('click', function(e) {
+             if (e.target.classList.contains('fund-showmore')) {
+                 const btn = e.target;
+                 const objective = btn.parentElement.querySelector('.fund-objective');
+                 if (!objective) return;
+                 if (objective.classList.contains('expanded')) {
+                     objective.classList.remove('expanded');
+                     btn.textContent = 'Show more';
+                 } else {
+                     objective.classList.add('expanded');
+                     btn.textContent = 'Show less';
+                 }
+                 return;
+             }
+             if (e.target.classList.contains('apply-button')) {
+                 const fundCard = e.target.closest('.fund-card');
+                 const fundName = fundCard.querySelector('.fund-title').textContent;
+                 if (fundCard.classList.contains('closed-badge')) {
+                     alert(`This fund offering (${fundName}) is closed. Please check other available NFOs.`);
+                 } else {
+                     alert(`Redirecting to application form for ${fundName}`);
+                 }
+             }
+         });
+         
+         document.getElementById('backButton').addEventListener('click', function(e) {
+             if (window.parent && window.parent.postMessage) {
+                 window.parent.postMessage({
+                     action: 'changePage',
+                     pageId: 'homePage'
+                 }, '*');
+             }
+             e.preventDefault();
+         });
+      </script>
+   </body>
+</html>

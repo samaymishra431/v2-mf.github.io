@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FundMF - Lumpsum Purchase</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            background-color: #FFFFFF;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .header {
+            background-color: #FFFFFF;
+            color: #FFFFFF;
+            padding: 12px 15px 0px 15px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        .back-button {
+            color: #d4d4d4;
+            font-size: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .back-button:hover {
+            color: #62880a;
+        }
+        .back-button .green-transaction {
+            display: none;
+        }
+        .content-container {
+            padding: 20px;
+            box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+            background-color: #FFFFFF;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+        .heading {
+            text-align: center;
+            margin-bottom: 5px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .subheading {
+            text-align: center;
+            color: #6C7278;
+            font-size: 12px;
+            margin-bottom: 30px;
+        }
+        /* .divider {
+            height: 1px;
+            background-color: #e0e0e0;
+            margin: 30px 0;
+        } */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            display: block;
+            font-size: 12px;
+            color: #6C7278;
+            margin-bottom: 5px;
+        }
+        .form-control, .form-select {
+            width: 100%;
+            padding: 12px 10px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+        .form-control:focus, .form-select:focus {
+            outline: none;
+            border-color: #62880a;
+        }
+        .payment-options {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .payment-option {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 16px;
+            color: #19b96a;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .payment-option input[type="checkbox"] {
+            accent-color: #19b96a;
+            width: 18px;
+            height: 18px;
+        }
+        .button-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .button-container button {
+            flex: 1;
+            border: none;
+            border-radius: 4px;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .reset-btn {
+            background-color: #6c757d;
+            color: #FFFFFF;
+        }
+        .submit-btn {
+            background-color: #62880a;
+            color: #FFFFFF;
+        }
+        .alert {
+            display: none;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        @media (max-width: 767px) {
+            .content-container {
+                padding: 18px;
+            }
+            .payment-options {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .button-container {
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header" style="justify-content: flex-start;">
+        <a class="back-button" id="backButton">
+            <i class="fas fa-arrow-left"></i>
+            <!-- <span class="green-transaction"></span> -->
+        </a>
+        <!-- Removed the header text -->
+    </div>
+    <div class="content-container">
+        <!-- Logo -->
+        <div class="logo">
+            <img src="./assets/images/logo.png" alt="FundMF Logo">
+        </div>
+        <!-- Heading -->
+        <h1 class="heading">Lumpsum Purchase</h1>
+        <p class="subheading">Place a lumpsum order for your mutual funds</p>
+        <!-- <div class="divider"></div> -->
+        <!-- Success Alert -->
+        <div class="alert alert-success" id="successAlert">
+            <i class="fas fa-check-circle"></i> Lumpsum order placed successfully!
+        </div>
+        <!-- Lumpsum Form -->
+        <form id="lumpsumForm">
+            <!-- AMC Name -->
+            <div class="form-group">
+                <label class="form-label">AMC Name</label>
+                <select class="form-select" id="amcName" required>
+                    <option value="" selected disabled>SELECT AMC NAME</option>
+                    <option value="hdfc">HDFC Mutual Fund</option>
+                    <option value="sbi">SBI Mutual Fund</option>
+                    <option value="kotak">Kotak Mutual Fund</option>
+                    <option value="axis">Axis Mutual Fund</option>
+                    <option value="icici">ICICI Prudential Mutual Fund</option>
+                </select>
+            </div>
+            <!-- Scheme Name -->
+            <div class="form-group">
+                <label class="form-label">Scheme Name</label>
+                <select class="form-select" id="schemeName" required>
+                    <option value="" selected disabled>SELECT SCHEME NAME</option>
+                </select>
+            </div>
+            <!-- Amount -->
+            <div class="form-group">
+                <label class="form-label">Amount</label>
+                <input type="number" class="form-control" id="amount" min="1" required>
+            </div>
+            <!-- Payment Options -->
+            <div class="form-group">
+                <label class="form-label">Payment Mode</label>
+                <div class="payment-options">
+                    <label class="payment-option">
+                        <input type="checkbox" id="netBanking" name="paymentMode" value="netbanking">
+                        Net Banking/Debit Card
+                    </label>
+                    <label class="payment-option">
+                        <input type="checkbox" id="mandate" name="paymentMode" value="mandate">
+                        Mandate
+                    </label>
+                    <label class="payment-option">
+                        <input type="checkbox" id="neft" name="paymentMode" value="neft">
+                        NEFT
+                    </label>
+                </div>
+            </div>
+            <div class="button-container">
+                <button type="reset" class="reset-btn">Reset</button>
+                <button type="submit" class="submit-btn">Place Order</button>
+            </div>
+        </form>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Back button
+            document.getElementById('backButton').addEventListener('click', function(e) {
+                e.preventDefault();
+                if (window.parent && window.parent.postMessage) {
+                    window.parent.postMessage({
+                        action: 'changePage',
+                        pageId: 'homePage'
+                    }, '*');
+                }
+            });
+
+            // Populate scheme dropdown based on AMC selection
+            const schemeData = {
+                hdfc: [
+                    "HDFC Balanced Advantage Fund",
+                    "HDFC Mid-Cap Opportunities Fund",
+                    "HDFC Small Cap Fund",
+                    "HDFC Flexi Cap Fund"
+                ],
+                sbi: [
+                    "SBI Blue Chip Fund",
+                    "SBI Small Cap Fund",
+                    "SBI Focused Equity Fund",
+                    "SBI Magnum Equity ESG Fund"
+                ],
+                kotak: [
+                    "Kotak Standard Multicap Fund",
+                    "Kotak Emerging Equity Fund",
+                    "Kotak Equity Opportunities Fund",
+                    "Kotak Energy Opportunities Fund"
+                ],
+                axis: [
+                    "Axis Bluechip Fund",
+                    "Axis Midcap Fund",
+                    "Axis Small Cap Fund",
+                    "Axis Focused 25 Fund"
+                ],
+                icici: [
+                    "ICICI Prudential Bluechip Fund",
+                    "ICICI Prudential Value Discovery Fund",
+                    "ICICI Prudential Technology Fund",
+                    "ICICI Prudential Banking & Financial Services Fund"
+                ]
+            };
+            document.getElementById('amcName').addEventListener('change', function() {
+                const selectedAMC = this.value;
+                const schemeDropdown = document.getElementById('schemeName');
+                schemeDropdown.innerHTML = '<option value="" selected disabled>SELECT SCHEME NAME</option>';
+                if (selectedAMC && schemeData[selectedAMC]) {
+                    schemeData[selectedAMC].forEach(scheme => {
+                        const option = document.createElement('option');
+                        option.value = scheme.toLowerCase().replace(/\s+/g, '-');
+                        option.textContent = scheme;
+                        schemeDropdown.appendChild(option);
+                    });
+                }
+            });
+
+            // Form submit
+            const form = document.getElementById('lumpsumForm');
+            const successAlert = document.getElementById('successAlert');
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                // Collect form data (for demo)
+                const data = {
+                    amcName: document.getElementById('amcName').value,
+                    schemeName: document.getElementById('schemeName').value,
+                    amount: document.getElementById('amount').value,
+                    paymentModes: Array.from(document.querySelectorAll('input[name="paymentMode"]:checked')).map(cb => cb.value)
+                };
+                console.log('Lumpsum Form Data:', data);
+                // Show success
+                successAlert.style.display = 'block';
+                form.reset();
+                window.scrollTo(0, 0);
+                setTimeout(() => { successAlert.style.display = 'none'; }, 5000);
+            });
+        });
+    </script>
+</body>
+</html>

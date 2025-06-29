@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transaction History - FundMF</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+    }
+    
+    body {
+        background-color: #FFFFFF;
+        color: #333;
+        position: relative;
+        margin: 0;
+        background-image: url('./assets/images/transactionHistoryBackground.svg');
+        background-size: contain; /* Changed from cover to contain */
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+        min-height: 100vh;
+        height: 100vh; /* Ensure full viewport height */
+        width: 100vw;
+        overflow-x: hidden;
+    }
+
+    .main-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding-left: 6px;   /* Move padding here */
+        padding-right: 6px;  /* Move padding here */
+    }
+    
+    .header {
+        /* background-color: #FFFFFF; */
+        color: #333;
+        padding: 15px;
+        text-align: center;
+        font-weight: bold;
+        font-size: 18px;
+    }
+    .header a i {
+        color: #d4d4d4;
+        transition: color 0.2s;
+    }
+    .header a:hover i {
+        color: #698700;
+    }
+    
+    .fund-header {
+        background-color: #698700;
+        color: white;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 10px;
+        text-align: center;
+    }
+    
+    .fund-title {
+        font-size: 18px;
+        font-weight: 600; /* changed from 600px to 600 for semi-bold */
+        margin-bottom: 5px;
+    }
+    
+    .fund-category {
+        font-size: 14px;
+    }
+    
+    .transaction-item {
+        background-color: #FFFFFF;
+        border-radius: 6px;
+        margin: 10px;
+        padding: 15px;
+        border: 1px solid #DFE1E7;
+    }
+    
+    .transaction-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+    
+    .transaction-row > div:first-child {
+        text-align: left;
+    }
+    
+    .transaction-row > div:last-child {
+        text-align: right;
+    }
+    
+    .transaction-label {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+    
+    .transaction-value {
+        font-weight: bold;
+        font-size: 14px;
+    }
+    
+    .profit {
+        color: #FFFFFF;
+        background-color: #719000;
+        border-radius: 15px;
+        padding: 4px 8px 3px 8px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+    
+    .loss {
+        color: #FFFFFF;
+        background-color: #ff6b6b;
+        border-radius: 15px;
+        padding: 2px 8px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+</style>
+</head>
+<body>
+
+<div class="main-container">
+    <!-- Header -->
+    <div class="header">
+        <a href="myInvestment.html" style="text-decoration: none; color: inherit; position: absolute; left: 15px; top: 15px;">
+            <i class="fa fa-arrow-left"></i>
+        </a>
+        Transaction History
+    </div>
+
+    <!-- Fund Header -->
+    <div class="fund-header">
+        <div class="fund-title"></div>
+        <div class="fund-category"></div>
+    </div>
+
+    <!-- Transaction Items Container -->
+    <div id="transaction-container"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Fetch selected fund details from local storage
+    const selectedFund = JSON.parse(localStorage.getItem('selectedFund'));
+
+    // Helper to determine background color for P&L
+    function getPnlBgColor(pnl) {
+        if (!pnl) return '#719000';
+        // Remove all characters except digits, minus, and dot
+        const cleaned = String(pnl).replace(/[^0-9.-]/g, '');
+        const num = Number(cleaned);
+        if (isNaN(num)) return '#719000';
+        return num < 0 ? '#FC0000' : '#719000';
+    }
+
+    // Helper to add ordinal suffix to date
+    function getOrdinalSuffix(n) {
+        n = Number(n);
+        if (isNaN(n)) return '';
+        const j = n % 10, k = n % 100;
+        if (j == 1 && k != 11) return n + "st";
+        if (j == 2 && k != 12) return n + "nd";
+        if (j == 3 && k != 13) return n + "rd";
+        return n + "th";
+    }
+
+    // Helper to format date with ordinal suffix
+    function formatDateWithOrdinal(dateStr) {
+        if (!dateStr) return 'N/A';
+        // Try to parse as YYYY-MM-DD or DD/MM/YYYY or similar
+        let d = new Date(dateStr);
+        if (isNaN(d)) {
+            // Try DD/MM/YYYY
+            const parts = dateStr.split(/[\/\-]/);
+            if (parts.length === 3) {
+                // Assume DD/MM/YYYY
+                d = new Date(parts[2], parts[1] - 1, parts[0]);
+            }
+        }
+        if (isNaN(d)) return dateStr; // fallback to original
+
+        const day = getOrdinalSuffix(d.getDate());
+        const month = d.toLocaleString('default', { month: 'short' });
+        const year = d.getFullYear();
+        return `${day} ${month} ${year}`;
+    }
+
+    // Helper to convert string to Proper Case
+    function toProperCase(str) {
+        if (!str) return '';
+        return str
+            .toLowerCase()
+            .replace(/\b\w/g, c => c.toUpperCase());
+    }
+
+    // Helper to format a value to 2 decimal places if it's a number
+    function formatTwoDecimals(val) {
+        if (val === null || val === undefined || val === '') return 'N/A';
+        const num = Number(val);
+        if (isNaN(num)) return val;
+        return num.toFixed(2);
+    }
+
+    if (selectedFund) {
+        // Update fund header
+        document.querySelector('.fund-title').textContent = toProperCase(selectedFund.amcName) || 'Unknown Fund';
+        document.querySelector('.fund-category').textContent = selectedFund.category || selectedFund.type || 'Unknown Category';
+
+        // Render transaction history
+        const transactionContainer = document.getElementById('transaction-container');
+        transactionContainer.innerHTML = (selectedFund.transactions || []).map(tx => `
+            <div class="transaction-item">
+                <div class="transaction-row">
+                    <div>
+                        <div class="transaction-label">Date</div>
+                        <div class="transaction-value">${formatDateWithOrdinal(tx.transactionDate) || 'N/A'}</div>
+                    </div>
+                    <div>
+                        <div class="transaction-label">Days</div>
+                        <div class="transaction-value">${tx.days || 'N/A'}</div>
+                    </div>
+                    <div>
+                        <div class="transaction-label">Amount</div>
+                        <div class="transaction-value">${formatTwoDecimals(tx.amount)}</div>
+                    </div>
+                </div>
+                <div class="transaction-row">
+                    <div>
+                        <div class="transaction-label">NAV</div>
+                        <div class="transaction-value">${formatTwoDecimals(tx.nav)}</div>
+                    </div>
+                    <div>
+                        <div class="transaction-label">Units</div>
+                        <div class="transaction-value">${formatTwoDecimals(tx.units || tx.quantity)}</div>
+                    </div>
+                    <div>
+                        <div class="transaction-label">P&L</div>
+                        <div class="transaction-value">
+                            <span class="profit" style="background-color: ${getPnlBgColor(tx.pnl)};">
+                                ${formatTwoDecimals(tx.pnl)}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    } else {
+        alert('No fund selected. Redirecting to portfolio.');
+        window.location.href = 'newPortfolio.html';
+    }
+</script>
+</body>
+</html>

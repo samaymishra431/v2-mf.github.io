@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mandate Status - FundMF</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #FFFFFF;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background-color: #FFFFFF;
+            color: #FFFFFF;
+            padding: 12px 15px 0px 15px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        .back-button {
+            color: #d4d4d4;
+            font-size: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .back-button:hover {
+            color: #62880a;
+        }
+        /* Remove the green-transaction bar if not needed */
+        .back-button .green-transaction {
+            display: none;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+        .heading {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .page-title {
+            display: block;
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        
+        .content-container {
+            padding: 20px;
+            box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+            background-color: #FFFFFF;
+            /* Remove margin here, as in createSip.html */
+        }
+
+        @media (max-width: 767px) {
+            .content-container {
+                padding: 18px;
+            }
+        }
+        
+        .export-buttons {
+            display: flex;
+            gap: 21px;
+            margin-bottom: 25px;
+            justify-content: center;
+        }
+        
+        .export-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 8px 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #FFFFFF;
+            font-size: 14px;
+            cursor: pointer;
+            color: #333;
+            text-decoration: none;
+        }
+        /* Add style for export button icons (images) */
+        .export-button img {
+            width: 22px;
+            height: 22px;
+            object-fit: contain;
+            display: inline-block;
+        }
+        
+        .info-section {
+            margin-bottom: 20px;
+        }
+        
+        .info-label {
+            font-size: 12px;
+            color: #6C7278;
+            margin-bottom: 5px;
+        }
+        
+        .info-value {
+            padding: 12px 15px;
+            border: 1px solid #DFE1E7;
+            border-radius: 10px;
+            background-color: #FFFFFF;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        
+        .status-pill {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: #E8FFEA;
+            color: #04AA29;
+            border-radius: 30px;
+            font-weight: 400;
+            text-align: center;
+            min-width: 100px;
+        }
+        
+        .status-mandate-row {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 15px;
+        }
+        .status-mandate-col {
+            /* Remove flex: 1 here, will set individually below */
+        }
+        .status-col {
+            flex: 0 0 auto;
+            min-width: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .mandateid-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header" style="justify-content: flex-start; z-index: 1000;">
+        <a class="back-button" id="backButton">
+            <i class="fas fa-arrow-left"></i>
+            <!-- <span class="green-transaction"></span> -->
+        </a>
+        <!-- Removed the header text -->
+    </div>
+
+    <!-- Content Container -->
+    <div class="content-container">
+        <div class="logo">
+            <img src="./assets/images/logo.png" alt="FundMF Logo">
+        </div>
+         <h1 class="heading">Mandate Status</h1>
+        <!-- Export Buttons -->
+        <div class="export-buttons">
+            <a href="#" class="export-button">
+                <img src="./assets/images/excel.png" alt="Excel Icon">
+                Excel File
+            </a>
+            <a href="#" class="export-button">
+                <img src="./assets/images/pdf.svg" alt="PDF Icon">
+                PDF File
+            </a>
+        </div>
+        
+        <!-- Status and Mandate ID in same row -->
+        <div class="status-mandate-row">
+            <div class="status-col">
+                <p class="info-label" style="margin-bottom: 4px;">Status</p>
+                <span class="status-pill" id="statusPill">ACTIVE</span>
+            </div>
+            <div class="mandateid-col">
+                <p class="info-label">MANDATE ID</p>
+                <div class="info-value" id="mandateIdValue">MANDATE123456</div>
+            </div>
+        </div>
+        
+        <!-- Client Code -->
+        <div class="info-section">
+            <p class="info-label">Client Code</p>
+            <div class="info-value" id="clientCodeValue">Client Code</div>
+        </div>
+        
+        <!-- Client Name -->
+        <div class="info-section">
+            <p class="info-label">Client Name</p>
+            <div class="info-value" id="clientNameValue">Client Name</div>
+        </div>
+        
+        <!-- Bank Name -->
+        <div class="info-section">
+            <p class="info-label">Bank Name</p>
+            <div class="info-value" id="bankNameValue">Bank Name</div>
+        </div>
+        
+        <!-- Bank Branch -->
+        <div class="info-section">
+            <p class="info-label">Bank Branch</p>
+            <div class="info-value" id="bankBranchValue">A-101, Connaught Place, New Delhi, Delhi 110001, India</div>
+        </div>
+        
+        <!-- Amount -->
+        <div class="info-section">
+            <p class="info-label">Amount</p>
+            <div class="info-value" id="amountValue">Amount</div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // --- Populate mandate data from localStorage ---
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mandate data population
+            const mandate = JSON.parse(localStorage.getItem('selectedMandate') || '{}');
+            if (mandate && Object.keys(mandate).length > 0) {
+                // Status
+                document.getElementById('statusPill').textContent = 'ACTIVE';
+                // Mandate ID (fallback if not present)
+                document.getElementById('mandateIdValue').textContent = mandate.id || 'MANDATE123456';
+                // Client Code (fallback)
+                document.getElementById('clientCodeValue').textContent = mandate.clientCode || 'Client Code';
+                // Client Name (fallback)
+                document.getElementById('clientNameValue').textContent = mandate.clientName || 'Client Name';
+                // Bank Name
+                document.getElementById('bankNameValue').textContent = mandate.bank || 'Bank Name';
+                // Bank Branch (fallback)
+                document.getElementById('bankBranchValue').textContent = mandate.bankBranch || 'A-101, Connaught Place, New Delhi, Delhi 110001, India';
+                // Amount
+                document.getElementById('amountValue').textContent = mandate.amount || 'Amount';
+            }
+
+            // Back button navigates to mandate.html
+            document.getElementById('backButton').addEventListener('click', function(e) {
+                e.preventDefault();
+                window.location.href = 'mandate.html';
+            });
+        });
+
+        // Export button functionality
+        document.querySelectorAll('.export-button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const fileType = this.textContent.trim();
+                alert(`Exporting ${fileType}...`);
+                // In a real app, this would trigger the file download
+            });
+        });
+    </script>
+</body>
+</html>

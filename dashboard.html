@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>FundMF App</title>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+      <style>
+         * {
+         margin: 0;
+         padding: 0;
+         box-sizing: border-box;
+         font-family: Arial, sans-serif;
+         }
+         body {
+         overflow: hidden;
+         height: 100vh;
+         }
+         .main-container {
+         display: flex;
+         flex-direction: column;
+         height: 100vh;
+         max-width: 800px;
+         margin: 0 auto;
+         position: relative;
+         }
+         .page-container {
+         flex: 1;
+         display: none;
+         overflow: hidden;
+         position: relative;
+         }
+         .page-container.active {
+         display: block;
+         }
+         .iframe-container {
+         width: 100%;
+         height: 100%;
+         border: none;
+         }
+         .nav-footer {
+         display: flex;
+         justify-content: space-between;
+         background-color: #FFFFFF;
+        
+         z-index: 100;
+         border-radius: 0 0 16px 16px;
+         height: 66px;
+         margin: 0;
+         padding: 0;
+         align-items: flex-end; /* Align nav items to the bottom */
+         }
+         .nav-item {
+         display: flex;
+         flex-direction: column;
+         align-items: center;
+         flex: 1;
+         cursor: pointer;
+         color: #222;
+         font-size: 12px;
+         padding: 0 0 10px 0; /* Only a little bottom padding */
+         background: none;
+         border-radius: 0;
+         margin: 0;
+         position: relative;
+         z-index: 1;
+         transition: color 0.2s;
+         height: 66px; /* Reduce height to remove extra space */
+         justify-content: flex-end;
+         }
+         .nav-item .icon-circle {
+         width: auto;
+         height: auto;
+         border-radius: 0;
+         background: none;
+         margin-bottom: 2px;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         transition: none;
+         padding: 0;
+         }
+         .nav-item i,
+         .nav-item img.nav-icon-img {
+         font-size: 22px;
+         width: 22px;
+         height: 22px;
+         margin-bottom: 2px;
+         filter: none;
+         }
+         .nav-item .nav-label {
+         font-size: 12px;
+         margin-top: 2px;
+         font-weight: 400;
+         letter-spacing: 0.01em;
+         }
+         .nav-item.active {
+         color: #111;
+         background: #F4F4F4;
+         margin-bottom: 0;
+         padding-bottom: 10px;
+         }
+         .nav-item.active .nav-label {
+             font-weight: 600;
+         }
+         .nav-item:not(.active) {
+         color: #000000;
+         background: none;
+         }
+         .nav-item.active i,
+         .nav-item.active img.nav-icon-img {
+         color: #111;
+         filter: none;
+         }
+         
+         /* Home icon filled when active, outlined when inactive */
+         .nav-item#homeNav.active i.fa-home {
+         font-weight: 900;
+         }
+         .nav-item#homeNav:not(.active) i.fa-home {
+         font-weight: 400;
+         }
+         /* Remove focus outline */
+         .nav-item:focus {
+         outline: none;
+         box-shadow: none;
+         }
+         /* Remove icon background for all */
+         .icon-circle {
+         background: none !important;
+         border-radius: 0 !important;
+         }
+         /* Remove border radius from nav-footer */
+         .nav-footer {
+         border-radius: 0 0 16px 16px !important;
+         }
+         /* Remove extra margin/padding from nav-footer */
+         .nav-footer {
+         margin: 0;
+         padding: 0;
+         }
+         /* Page Loader Styles */
+         .page-loader {
+         position: absolute;
+         top: 0;
+         left: 0;
+         width: 100%;
+         height: 100%;
+         background-color: rgba(255, 255, 255, 0.9);
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         z-index: 1000;
+         }
+         
+         .loader {
+         width: 50px;
+         height: 50px;
+         border: 5px solid #e2ebc7;
+         border-radius: 50%;
+         border-top-color: #4d6a11;
+         animation: spin 1s linear infinite;
+         }
+         
+         @keyframes spin {
+         0% { transform: rotate(0deg); }
+         100% { transform: rotate(360deg); }
+         }
+         
+         .hidden {
+         display: none;
+         }
+         .nav-item .nav-icon-img,
+.nav-item .nav-icon-img-active {
+    width: 25px !important;
+    height: 25px !important;
+    font-size: 25px !important;
+    margin-bottom: 2px;
+    object-fit: contain;
+    display: inline;
+}
+.nav-item .nav-icon-img-active {
+    display: none;
+}
+.nav-item.active .nav-icon-img {
+    display: none;
+}
+.nav-item.active .nav-icon-img-active {
+    display: inline;
+}
+      </style>
+   </head>
+   <body>
+      <div class="main-container">
+         <!-- Page Containers -->
+         <div id="homePage" class="page-container active">
+            <div id="homeLoader" class="page-loader">
+               <div class="loader"></div>
+            </div>
+            <iframe src="home.html" class="iframe-container" title="Home Page" data-loader="homeLoader"></iframe>
+         </div>
+         <div id="portfolioPage" class="page-container">
+            <div id="portfolioLoader" class="page-loader">
+               <div class="loader"></div>
+            </div>
+            <iframe src="newPortfolio.html" class="iframe-container" title="newPortfolio Page" data-loader="portfolioLoader"></iframe>
+         </div>
+         <div id="investPage" class="page-container">
+            <div id="investLoader" class="page-loader">
+               <div class="loader"></div>
+            </div>
+            <iframe src="invest.html" class="iframe-container" title="Invest Page" data-loader="investLoader"></iframe>
+         </div>
+         <div id="accountPage" class="page-container">
+            <div id="accountLoader" class="page-loader">
+               <div class="loader"></div>
+            </div>
+            <iframe src="accountPage.html" class="iframe-container" title="Account Page" data-loader="accountLoader"></iframe>
+         </div>
+         <div id="contactPage" class="page-container">
+            <div id="contactLoader" class="page-loader">
+               <div class="loader"></div>
+            </div>
+            <iframe src="contact.html" class="iframe-container" title="Contact Us Page" data-loader="contactLoader"></iframe>
+         </div>
+         <!-- Add these new page containers to your main HTML file -->
+         <div id="mandatePage" class="page-container">
+            <div id="mandateLoader" class="page-loader">
+               <div class="loader"></div>
+            </div>
+            <iframe src="mandate.html" class="iframe-container" title="Mandate Page" data-loader="mandateLoader"></iframe>
+         </div>
+         <div id="accountTransaction" class="page-container">
+            <div id="transactionLoader" class="page-loader">
+               <div class="loader"></div>
+            </div>
+            <iframe src="accountTransaction.html" class="iframe-container" title="Transaction Page" data-loader="transactionLoader"></iframe>
+         </div>
+         <div id="recentOrders" class="page-container">
+            <div id="ordersLoader" class="page-loader">
+               <div class="loader"></div>
+            </div>
+            <iframe src="recentOrders.html" class="iframe-container" title="Recent Orders Page" data-loader="ordersLoader"></iframe>
+         </div>
+         
+         <div id="nfo" class="page-container">
+            <div id="nfoLoader" class="page-loader">
+               <div class="loader"></div>
+            </div>
+            <iframe src="nfo.html" class="iframe-container" title="NFO Page" data-loader="nfoLoader"></iframe>
+         </div>
+         <div id="createSip" class="page-container">
+            <div id="sipLoader" class="page-loader">
+               <div class="loader"></div>
+            </div>
+            <iframe src="comingSoon.html" class="iframe-container" title="Create SIP Page" data-loader="sipLoader"></iframe>
+         </div>
+         <!-- Add this block for SWP page support -->
+         <div id="createSwp" class="page-container">
+            <div id="swpLoader" class="page-loader">
+               <div class="loader"></div>
+            </div>
+            <iframe src="comingSoon.html" class="iframe-container" title="Create SWP Page" data-loader="swpLoader"></iframe>
+         </div>
+         <!-- Add this block for Lumpsum page support -->
+         <div id="createLumpsum" class="page-container">
+            <div id="lumpsumLoader" class="page-loader">
+               <div class="loader"></div>
+            </div>
+            <iframe src="comingSoon.html" class="iframe-container" title="Create Lumpsum Page" data-loader="lumpsumLoader"></iframe>
+         </div>
+         <!-- Add this block for STP page support -->
+         <div id="createStp" class="page-container">
+            <div id="stpLoader" class="page-loader">
+               <div class="loader"></div>
+            </div>
+            <iframe src="comingSoon.html" class="iframe-container" title="Create STP Page" data-loader="stpLoader"></iframe>
+         </div>
+         <!-- Add this block for Mandate Registration page support -->
+         <div id="createMandate" class="page-container">
+            <div id="mandateRegLoader" class="page-loader">
+               <div class="loader"></div>
+            </div>
+            <iframe src="createMandate.html" class="iframe-container" title="Mandate Registration Page" data-loader="mandateRegLoader"></iframe>
+         </div>
+         <!-- Navigation Footer -->
+         <div class="nav-footer">
+            <div class="nav-item active" id="homeNav">
+               <div class="icon-circle">
+                  <img src="./assets/images/home.svg" alt="Home" class="nav-icon-img">
+                  <img src="./assets/images/home_active.svg" alt="Home Active" class="nav-icon-img-active">
+               </div>
+               <div class="nav-label">Home</div>
+            </div>
+            <div class="nav-item" id="portfolioNav">
+               <div class="icon-circle">
+                  <img src="./assets/images/portfolio.svg" alt="Portfolio" class="nav-icon-img">
+                  <img src="./assets/images/portfolio_active.svg" alt="Portfolio Active" class="nav-icon-img-active">
+               </div>
+               <div class="nav-label">Portfolio</div>
+            </div>
+            <div class="nav-item" id="recentOrdersNav">
+               <div class="icon-circle">
+                  <img src="./assets/images/recentOrders.svg" alt="Recent Orders" class="nav-icon-img">
+                  <img src="./assets/images/recentOrders_active.svg" alt="Recent Orders Active" class="nav-icon-img-active">
+               </div>
+               <div class="nav-label">Recent Orders</div>
+            </div>
+            <div class="nav-item" id="accountNav">
+               <div class="icon-circle">
+                  <img src="./assets/images/user.svg" alt="Account" class="nav-icon-img">
+                  <img src="./assets/images/user_active.svg" alt="Account Active" class="nav-icon-img-active">
+               </div>
+               <div class="nav-label">Account</div>
+            </div>
+         </div>
+      </div>
+      <script>
+         const pageIds = [
+          'homePage', 
+          'portfolioPage', 
+          'investPage', 
+          'accountPage', 
+          'contactPage',
+          'mandatePage',
+          'accountTransaction',
+          'recentOrders',
+          'nfo',
+          'createSip',
+          'createSwp',
+          'createLumpsum',
+          'createStp',
+          'createMandate',
+         ];
+          const navItems = document.querySelectorAll('.nav-item');
+          
+          // Function to change page with loader
+          function changePage(pageId) {
+              // Only proceed if this is a valid page ID
+              if (pageIds.includes(pageId)) {
+                  // Hide all pages
+                  pageIds.forEach(id => document.getElementById(id).classList.remove('active'));
+                  
+                  // Show selected page
+                  document.getElementById(pageId).classList.add('active');
+                  
+                  // Show the loader for the selected page
+                  const pageContainer = document.getElementById(pageId);
+                  const loader = pageContainer.querySelector('.page-loader');
+                  if (loader) {
+                      loader.classList.remove('hidden');
+                      // Set timestamp for when the loader was shown
+                      loader.setAttribute('data-shown-time', Date.now());
+                      
+                      // Force hide loader after a short delay (backup solution)
+                      setTimeout(() => {
+                          loader.classList.add('hidden');
+                      }, 2000);
+                  }
+                  
+                  // Refresh iframe src to ensure content loads properly
+                  const iframe = pageContainer.querySelector('iframe');
+                  if (iframe) {
+                      const currentSrc = iframe.src;
+                      iframe.src = "about:blank";
+                      setTimeout(() => {
+                          iframe.src = currentSrc;
+                      }, 50);
+                  }
+                  
+                  // Update nav items
+                  navItems.forEach(nav => nav.classList.remove('active'));
+                  // Use special case for recentOrdersNav
+                  let navId = pageId.replace('Page', 'Nav');
+                  if (pageId === 'recentOrders') navId = 'recentOrdersNav';
+                  document.getElementById(navId)?.classList.add('active');
+              }
+          }
+          
+          // Set up click handlers for nav items
+          navItems.forEach(item => {
+              item.addEventListener('click', function() {
+                  const navId = this.id;
+                  let pageId = navId.replace('Nav', 'Page');
+                  // Special case: recentOrdersNav should open recentOrders page
+                  if (navId === 'recentOrdersNav') pageId = 'recentOrders';
+                  changePage(pageId);
+              });
+          });
+         
+          // Listen for messages from iframes
+          window.addEventListener('message', function(event) {
+              if (event.data && event.data.action === 'changePage') {
+                  changePage(event.data.pageId);
+              }
+          });
+         
+          // Apply scrollbar hiding to iframes and handle iframe loading
+          document.querySelectorAll('iframe').forEach(iframe => {
+              // Force hide loader when iframe loads or errors
+              function hideLoader() {
+                  const loaderId = iframe.getAttribute('data-loader');
+                  if (loaderId) {
+                      const loader = document.getElementById(loaderId);
+                      if (loader) {
+                          loader.classList.add('hidden');
+                      }
+                  }
+              }
+              
+              // Set events to hide loader
+              iframe.onload = function() {
+                  hideLoader();
+                  
+                  try {
+                      const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+                      
+                      const style = iframeDocument.createElement('style');
+                      style.textContent = `
+                          ::-webkit-scrollbar {
+                              display: none;
+                          }
+                          body {
+                              -ms-overflow-style: none;
+                              scrollbar-width: none;
+                              max-width: 800px;
+                              margin: 0 auto;
+                          }
+                      `;
+                      
+                      iframeDocument.head.appendChild(style);
+                  } catch (e) {
+                      console.log("Cannot access iframe content due to same-origin policy");
+                  }
+              };
+              
+              // Also handle error cases
+              iframe.onerror = hideLoader;
+              
+              // If iframe fails to load within 3 seconds, hide the loader anyway
+              setTimeout(() => {
+                  const loaderId = iframe.getAttribute('data-loader');
+                  if (loaderId) {
+                      const loader = document.getElementById(loaderId);
+                      if (loader && !loader.classList.contains('hidden')) {
+                          loader.classList.add('hidden');
+                      }
+                  }
+              }, 3000);
+          });
+          
+          // Handle all loaders
+          window.addEventListener('DOMContentLoaded', () => {
+              // Hide all loaders on the initial page after a short delay
+              setTimeout(() => {
+                  document.querySelectorAll('.page-loader').forEach(loader => {
+                      loader.classList.add('hidden');
+                  });
+              }, 800); // Show loader for at least 800ms for better UX
+              
+              // Add global backup solution to hide all loaders after 2.5 seconds
+              // This ensures no loader gets stuck
+              setInterval(() => {
+                  document.querySelectorAll('.page-loader').forEach(loader => {
+                      if (!loader.classList.contains('hidden') && 
+                          !loader.parentElement.classList.contains('active')) {
+                          loader.classList.add('hidden');
+                      }
+                  });
+                  
+                  // For the active page, ensure its loader doesn't stay visible too long
+                  const activePage = document.querySelector('.page-container.active');
+                  if (activePage) {
+                      const activeLoader = activePage.querySelector('.page-loader');
+                      if (activeLoader && !activeLoader.classList.contains('hidden')) {
+                          const loaderShownTime = activeLoader.getAttribute('data-shown-time');
+                          const currentTime = Date.now();
+                          
+                          if (!loaderShownTime) {
+                              activeLoader.setAttribute('data-shown-time', currentTime);
+                          } else if (currentTime - parseInt(loaderShownTime) > 2500) {
+                              activeLoader.classList.add('hidden');
+                          }
+                      }
+                  }
+              }, 500);
+          });
+      </script>
+   </body>
+</html>

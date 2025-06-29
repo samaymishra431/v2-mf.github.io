@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Date Range Picker</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background-color: #f8f9fa;
+      padding: 2rem;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .datepicker-container {
+      width: 320px;
+      background: white;
+      border-radius: 0.375rem;
+      box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 0.15);
+      overflow: hidden;
+      user-select: none;
+    }
+    .header-picker {
+      background-color: #0d6efd; 
+      color: white;
+      padding: 0.5rem 1rem;
+      display: flex;
+      justify-content: center; 
+      border-radius: 0.375rem 0.375rem 0 0;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .header-picker .from, .header .to {
+      text-align: center; 
+    }
+    .header-picker .date-label-date-picker {
+      font-size: 0.7rem;
+      opacity: 0.7;
+    }
+    .header-picker .date-value {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-top: 2px;
+    }
+    .header-picker .divider {
+      border-left: 1px solid rgba(255,255,255,0.3);
+      margin: 0 0.8rem;
+    }
+    .calendar {
+      padding: 0.8rem 1rem 1rem 1rem;
+    }
+    .monthnav {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      color: #212529;
+      font-weight: 600;
+      font-size: 1.1rem;
+      justify-content: space-between;
+      user-select: none;
+    }
+    .monthnav button {
+      border: none;
+      background: none;
+      font-size: 1.3rem;
+      color: #0d6efd;
+      cursor: pointer;
+      padding: 0 0.3rem;
+      border-radius: 0.25rem;
+      transition: background-color 0.15s ease;
+    }
+    .monthnav button:hover {
+      background-color: #e7f1ff;
+    }
+    .monthnav select {
+      background: none; 
+      font-size: 1rem;
+      cursor: pointer;
+      font-weight: 600;
+      padding: 0.2rem;
+      padding-left: 0px;
+      border: none; 
+      outline: none; 
+    }
+    .weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      font-size: 0.75rem;
+      color: #6c757d;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+      user-select: none;
+    }
+    .days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 0.15rem;
+    }
+    .day {
+      width: 2.4rem;
+      height: 2.4rem;
+      line-height: 2.4rem;
+      border-radius: 0.375rem;
+      text-align: center;
+      font-weight: 500;
+      cursor: pointer;
+      color: #212529;
+      user-select: none;
+    }
+    .day.outside {
+      color: #ced4da;
+      cursor: default;
+    }
+    .day.disabled {
+      color: #dee2e6;
+      cursor: default;
+      pointer-events: none;
+    }
+    .day:hover:not(.disabled):not(.selected):not(.in-range) {
+      background-color: #e7f1ff;
+    }
+    .day.selected {
+      background-color: #0d6efd;
+      color: white;
+      font-weight: 700;
+    }
+    .day.in-range {
+      background-color: #d0e2ff;
+      color: #084298;
+    }
+    .footer {
+      display: flex;
+      justify-content: flex-end;
+      padding: 0.7rem 1rem;
+      border-top: 1px solid #dee2e6;
+      gap: 0.75rem;
+    }
+    .footer button {
+      font-weight: 600;
+      border-radius: 0.375rem;
+      min-width: 80px;
+      padding: 0.4rem 0.9rem;
+      border: 1.5px solid transparent;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .btn-cancel {
+      background-color: transparent;
+      color: #6c757d;
+      border-color: transparent;
+    }
+    .btn-cancel:hover {
+      background-color: #f1f3f5;
+      color: #495057;
+    }
+    .btn-apply {
+      background-color: #0d6efd;
+      color: white;
+      border-color: #0d6efd;
+    }
+    .btn-apply:hover {
+      background-color: #0b5ed7;
+      border-color: #0b5ed7;
+    }
+    
+  </style>
+</head>
+<body>
+  <div class="datepicker-container" aria-label="Date range picker">
+    <div class="header-picker">
+      <div class="from">
+        <div class="date-label-date-picker">From</div>
+        <div class="date-value" id="from-display">Jun 1, 2025</div>
+      </div>
+      <div class="divider"></div>
+      <div class="to">
+        <div class="date-label-date-picker">To</div>
+        <div class="date-value" id="to-display">Jun 24, 2025</div>
+      </div>
+    </div>
+    <div class="calendar" aria-live="polite">
+      <div class="monthnav">
+        <button type="button" id="prev-month" aria-label="Previous month" tabindex="0">&#x276E;</button>
+        <div style="flex-grow: 1; text-align: center;">
+          <span id="month-year" aria-atomic="true" aria-live="polite"></span>
+          <select id="year-dropdown" aria-label="Select year" style="display: inline-block; width: auto;">
+            <!-- Year options will be populated by JavaScript -->
+          </select>
+        </div>
+        <button type="button" id="next-month" aria-label="Next month" tabindex="0">&#x276F;</button>
+      </div>
+      <div class="weekdays" aria-hidden="true">
+        <div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div>
+      </div>
+      <div class="days" id="days-grid" role="grid" tabindex="0" aria-label="Days of the month">
+        <!-- Days populated by JS -->
+      </div>
+    </div>
+    <div class="footer">
+      <button class="btn-cancel" id="cancel-btn" type="button">Cancel</button>
+      <button class="btn-apply" id="apply-btn" type="button">Apply</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Utility functions for date formatting
+    function formatDisplayDate(date) {
+      const options = { month: 'short', day: 'numeric', year: 'numeric' };
+      return date.toLocaleDateString('en-US', options);
+    }
+    function formatMonthYear(date) {
+      const options = { month: 'long' };
+      return date.toLocaleDateString('en-US', options);
+    }
+    function isSameDay(d1, d2) {
+      return d1.getFullYear() === d2.getFullYear() &&
+             d1.getMonth() === d2.getMonth() &&
+             d1.getDate() === d2.getDate();
+    }
+    function isDateBefore(d1, d2) {
+      return d1.getTime() < d2.getTime();
+    }
+    function isDateAfter(d1, d2) {
+      return d1.getTime() > d2.getTime();
+    }
+    function copyDate(d) {
+      return new Date(d.getTime());
+    }
+
+    // Date Picker Logic
+    (function() {
+      // DOM Elements
+      const fromDisplay = document.getElementById('from-display');
+      const toDisplay = document.getElementById('to-display');
+      const monthYearEl = document.getElementById('month-year');
+      const daysGrid = document.getElementById('days-grid');
+      const prevMonthBtn = document.getElementById('prev-month');
+      const nextMonthBtn = document.getElementById('next-month');
+      const cancelBtn = document.getElementById('cancel-btn');
+      const applyBtn = document.getElementById('apply-btn');
+      const yearDropdown = document.getElementById('year-dropdown');
+
+      // Initial state
+      let selectedFrom = new Date(2025, 5, 1); // June 1, 2025 (month 5 zero-based)
+      let selectedTo = new Date(2025, 5, 24); // June 24, 2025
+      let calendarYear = selectedFrom.getFullYear();
+      let calendarMonth = selectedFrom.getMonth();
+
+      // To keep track of clicking state (selecting from or to)
+      let selectingStart = true;
+      let tempFrom = copyDate(selectedFrom);
+      let tempTo = copyDate(selectedTo);
+
+      // Populate year dropdown
+      function populateYearDropdown() {
+        const currentYear = new Date().getFullYear();
+        const startYear = currentYear - 10; // 10 years back
+        const endYear = currentYear + 10; // 10 years forward
+
+        for (let year = startYear; year <= endYear; year++) {
+          const option = document.createElement('option');
+          option.value = year;
+          option.textContent = year;
+          if (year === calendarYear) {
+            option.selected = true; // Select the current year
+          }
+          yearDropdown.appendChild(option);
+        }
+      }
+
+      // Generate calendar days for the given month and year
+      function generateCalendar(year, month) {
+        daysGrid.innerHTML = ''; // Clear existing days
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+        const daysInMonth = lastDay.getDate();
+        const startWeekday = firstDay.getDay(); // 0=Sun, 6=Sat
+
+        const prevMonth = month === 0 ? 11 : month - 1;
+        const prevYear = month === 0 ? year - 1 : year;
+        const prevMonthLastDay = new Date(prevYear, prevMonth + 1, 0).getDate();
+
+        const totalSlots = 42;
+
+        for (let i = 0; i < totalSlots; i++) {
+          const dayEl = document.createElement('button');
+          dayEl.setAttribute('type', 'button');
+          dayEl.classList.add('day');
+
+          let dateObj = null;
+
+          if (i < startWeekday) {
+            const dayNumber = prevMonthLastDay - startWeekday + 1 + i;
+            dateObj = new Date(prevYear, prevMonth, dayNumber);
+            dayEl.classList.add('outside');
+          } else if (i < startWeekday + daysInMonth) {
+            const dayNumber = i - startWeekday + 1;
+            dateObj = new Date(year, month, dayNumber);
+          } else {
+            const dayNumber = i - (startWeekday + daysInMonth) + 1;
+            const nextMonth = (month === 11) ? 0 : month + 1;
+            const nextYear = (month === 11) ? year + 1 : year;
+            dateObj = new Date(nextYear, nextMonth, dayNumber);
+            dayEl.classList.add('outside');
+          }
+
+          dayEl.textContent = dateObj.getDate();
+
+          const ariaLabel = dateObj.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+          dayEl.setAttribute('aria-label', ariaLabel);
+          dayEl.setAttribute('data-date', dateObj.toISOString());
+
+          if (isSameDay(dateObj, tempFrom)) {
+            dayEl.classList.add('selected');
+            dayEl.setAttribute('aria-current', 'date');
+          }
+          if (isSameDay(dateObj, tempTo)) {
+            dayEl.classList.add('selected');
+            dayEl.setAttribute('aria-current', 'date');
+          }
+          if (isDateAfter(dateObj, tempFrom) && isDateBefore(dateObj, tempTo)) {
+            dayEl.classList.add('in-range');
+          }
+          if (isDateAfter(tempFrom, tempTo)) {
+            if (isDateAfter(dateObj, tempTo) && isDateBefore(dateObj, tempFrom)) {
+              dayEl.classList.add('in-range');
+            }
+          }
+
+          dayEl.addEventListener('click', () => {
+            if (dayEl.classList.contains('outside')) return;
+
+            const clickedDate = new Date(dayEl.getAttribute('data-date'));
+
+            if (selectingStart) {
+              tempFrom = clickedDate;
+              tempTo = tempFrom;
+              selectingStart = false;
+              generateCalendar(calendarYear, calendarMonth);
+            } else {
+              tempTo = clickedDate;
+              if (isDateBefore(tempTo, tempFrom)) {
+                [tempFrom, tempTo] = [tempTo, tempFrom];
+              }
+              selectingStart = true;
+              generateCalendar(calendarYear, calendarMonth);
+            }
+            updateHeader();
+          });
+
+          daysGrid.appendChild(dayEl);
+        }
+      }
+
+      function updateHeader() {
+        const fromStr = formatDisplayDate(tempFrom);
+        const toStr = formatDisplayDate(tempTo);
+        fromDisplay.textContent = fromStr;
+        toDisplay.textContent = toStr;
+      }
+
+      // Controls for month navigation
+      prevMonthBtn.addEventListener('click', () => {
+        if (calendarMonth === 0) {
+          calendarMonth = 11;
+          calendarYear--;
+        } else {
+          calendarMonth--;
+        }
+        monthYearEl.textContent = formatMonthYear(new Date(calendarYear, calendarMonth));
+        generateCalendar(calendarYear, calendarMonth);
+      });
+
+      nextMonthBtn.addEventListener('click', () => {
+        if (calendarMonth === 11) {
+          calendarMonth = 0;
+          calendarYear++;
+        } else {
+          calendarMonth++;
+        }
+        monthYearEl.textContent = formatMonthYear(new Date(calendarYear, calendarMonth));
+        generateCalendar(calendarYear, calendarMonth);
+      });
+
+      yearDropdown.addEventListener('change', (event) => {
+        calendarYear = parseInt(event.target.value, 10);
+        generateCalendar(calendarYear, calendarMonth);
+        monthYearEl.textContent = formatMonthYear(new Date(calendarYear, calendarMonth));
+      });
+
+      cancelBtn.addEventListener('click', () => {
+        tempFrom = copyDate(selectedFrom);
+        tempTo = copyDate(selectedTo);
+        selectingStart = true;
+        updateHeader();
+        generateCalendar(calendarYear, calendarMonth);
+      });
+
+      applyBtn.addEventListener('click', () => {
+        selectedFrom = copyDate(tempFrom);
+        selectedTo = copyDate(tempTo);
+        fromDisplay.textContent = formatDisplayDate(selectedFrom);
+        toDisplay.textContent = formatDisplayDate(selectedTo);
+        selectingStart = true;
+      });
+
+      function init() {
+        calendarYear = selectedFrom.getFullYear();
+        calendarMonth = selectedFrom.getMonth();
+        monthYearEl.textContent = formatMonthYear(new Date(calendarYear, calendarMonth));
+        updateHeader();
+        generateCalendar(calendarYear, calendarMonth);
+        populateYearDropdown(); // Populate the year dropdown
+      }
+
+      init();
+    })();
+  </script>
+</body>
+</html>
