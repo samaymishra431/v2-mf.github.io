@@ -87,35 +87,6 @@
             }
         }
         
-        .export-buttons {
-            display: flex;
-            gap: 21px;
-            margin-bottom: 25px;
-            justify-content: center;
-        }
-        
-        .export-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 8px 20px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            background-color: #FFFFFF;
-            font-size: 14px;
-            cursor: pointer;
-            color: #333;
-            text-decoration: none;
-        }
-        /* Add style for export button icons (images) */
-        .export-button img {
-            width: 22px;
-            height: 22px;
-            object-fit: contain;
-            display: inline-block;
-        }
-        
         .info-section {
             margin-bottom: 20px;
         }
@@ -185,17 +156,7 @@
             <img src="./assets/images/logo.png" alt="FundMF Logo">
         </div>
          <h1 class="heading">Mandate Status</h1>
-        <!-- Export Buttons -->
-        <div class="export-buttons">
-            <a href="#" class="export-button">
-                <img src="./assets/images/excel.png" alt="Excel Icon">
-                Excel File
-            </a>
-            <a href="#" class="export-button">
-                <img src="./assets/images/pdf.svg" alt="PDF Icon">
-                PDF File
-            </a>
-        </div>
+        <!-- Removed Export Buttons -->
         
         <!-- Status and Mandate ID in same row -->
         <div class="status-mandate-row">
@@ -267,16 +228,6 @@
             document.getElementById('backButton').addEventListener('click', function(e) {
                 e.preventDefault();
                 window.location.href = 'mandate.html';
-            });
-        });
-
-        // Export button functionality
-        document.querySelectorAll('.export-button').forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                const fileType = this.textContent.trim();
-                alert(`Exporting ${fileType}...`);
-                // In a real app, this would trigger the file download
             });
         });
     </script>
