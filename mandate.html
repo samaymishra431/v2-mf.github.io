@@ -14,6 +14,7 @@ body {
     max-width: 800px;
     margin: 0 auto;
     font-family: Arial, sans-serif;
+    padding: 0 5px;
 }
 /* Sidebar styles (copied from recentOrder.html) */
 .sidebar {
@@ -178,7 +179,7 @@ body {
     background: #FFFFFF;
     border-radius: 6px;
     border: 1px solid #DFE1E7;
-    margin: 16px 15px 16px 15px;
+margin: 16px 10px 16px 10px;
     padding: 18px 18px 14px 18px;
     display: flex;
     flex-direction: column;
@@ -223,38 +224,65 @@ body {
 .header {
     background-color: #FFFFFF;
     color: #333;
-    padding: 15px 0 15px 0;
+    padding: 0; /* Remove top padding for tighter alignment */
     text-align: center;
     font-weight: bold;
     font-size: 28px;
     margin-bottom: 10px;
+    margin-top: 10px;
     position: relative;
-    /* Remove margin-left for proper centering */
-    margin-left: 5px;
+    margin-left: 0; /* Remove margin-left for true centering */
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 58px; /* Ensures enough height for icon and text */
+    min-height: 58px;
+    height: 58px; /* Fix height for vertical alignment */
+    box-sizing: border-box;
 }
-
-.header a {
+.header a.back-button {
     position: absolute;
-    left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #d4d4d4;
-    text-decoration: none;
-    font-size: 20px;
-    cursor: pointer;
+    left: 0;
+    top: 0;
+    bottom: 0;
     display: flex;
     align-items: center;
     height: 100%;
+    padding-left: 15px;
 }
 .header a img {
     width: 28px;
     height: 28px;
-    margin: 0; /* Remove margin-top for vertical centering */
+    margin: 0;
     display: block;
+}
+.header-title {
+    flex: 1;
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    /* Prevent overlap with icons */
+    margin-left: 0;
+    margin-right: 0;
+}
+.header-download-btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding-right: 15px;
+    color: #719000;
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    z-index: 2;
+}
+.header-download-btn:active {
+    color: #597200;
 }
 /* Add level badge style (like .date-label in recentOrder.html) */
 .mandate-level-badge {
@@ -300,6 +328,35 @@ body {
 }
 .mandate-create-btn:hover {
     background: #8bb44c;
+}
+.export-buttons {
+    display: none; /* Hide by default */
+}
+/* Download icon in header */
+.header-download-btn {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #719000;
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    z-index: 2;
+    padding: 0;
+}
+.header-download-btn:active {
+    color: #597200;
+}
+element.style {
+    gap: 21px;
+    margin: 0px 0px 40px 0px;
+    justify-content: center;
+    display: flex
+;
 }
 </style>
 </head>
@@ -387,12 +444,26 @@ body {
     <a class="back-button" id="backButton">
         <img src="./assets/images/sidebar-menu-active.svg" alt="Menu">
     </a>
-    <span style="flex:1;">Mandate</span>
+    <span class="header-title">Mandate</span>
+    <button class="header-download-btn" id="downloadBtn" title="Download">
+        <img src="./assets/images/download.png" alt="Download" style="width:24px;height:24px;object-fit:contain;">
+    </button>
+</div>
+<!-- Export Buttons (added) -->
+<div class="export-buttons" id="exportButtons" style="gap:21px;margin:18px 0 0 0;justify-content:center;">
+    <a href="#" class="export-button" style="display:flex;align-items:center;gap:8px;padding:8px 20px;border:1px solid #ddd;border-radius:10px;background:#fff;font-size:14px;color:#333;text-decoration:none;">
+        <img src="./assets/images/excel.png" alt="Excel Icon" style="width:22px;height:22px;object-fit:contain;">
+        Excel File
+    </a>
+    <a href="#" class="export-button" style="display:flex;align-items:center;gap:8px;padding:8px 20px;border:1px solid #ddd;border-radius:10px;background:#fff;font-size:14px;color:#333;text-decoration:none;">
+        <img src="./assets/images/pdf.svg" alt="PDF Icon" style="width:22px;height:22px;object-fit:contain;">
+        PDF File
+    </a>
 </div>
 <!-- Mandate List -->
 <div id="mandateList"></div>
 <!-- Place Create Mandate Button after all mandates, not fixed -->
-<button id="createMandateBtn" class="mandate-create-btn">+ Create Mandate</button>
+<button id="createMandateBtn" class="mandate-create-btn">Create Mandate</button>
 <script>
 // Hardcoded mandate data
 const mandates = [
@@ -611,6 +682,22 @@ document.addEventListener('DOMContentLoaded', function() {
             }, '*');
         }
         if (typeof showInFrameLoader === 'function') showInFrameLoader();
+    });
+
+    // Export button functionality
+    document.querySelectorAll('.export-button').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const fileType = this.textContent.trim();
+            alert(`Exporting ${fileType}...`);
+            // In a real app, this would trigger the file download
+        });
+    });
+
+    // Show export buttons when download icon is clicked
+    document.getElementById('downloadBtn').addEventListener('click', function() {
+        const exportDiv = document.getElementById('exportButtons');
+        exportDiv.style.display = exportDiv.style.display === 'flex' ? 'none' : 'flex';
     });
 
     // Function to show a loader inside the iframe
