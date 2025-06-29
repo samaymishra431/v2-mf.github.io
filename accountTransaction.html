@@ -14,21 +14,33 @@
         font-family: Arial, sans-serif;
     }
     
-    body {
-        background-color: #FFFFFF;
-        color: #333;
-        position: relative;
-        margin: 0;
-        background-image: url('./assets/images/transactionHistoryBackground.svg');
-        background-size: contain; /* Changed from cover to contain */
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        background-position: center;
-        min-height: 100vh;
-        height: 100vh; /* Ensure full viewport height */
-        width: 100vw;
-        overflow-x: hidden;
-    }
+   body {
+    background-color: #FFFFFF; /* Fallback color */
+    color: #333;
+    position: relative;
+    margin: 0;
+    background: linear-gradient(180deg, 
+        #FFFFFF 0%, 
+        #FFFFFF 10%, 
+        #FFFFFF 20%, 
+        #FDFFF7 30%, 
+        #F9FFE9 40%, 
+        #F6FFDD 50%, 
+        #F2FFD0 60%, 
+        #EFFFC2 70%, 
+        #ECFFB6 80%, 
+        #E8FFA9 90%, 
+        #E5FF9C 100%); 
+    background-size: cover; 
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    min-height: 100vh;
+    height: 100vh; 
+    width: 100vw;
+    overflow-x: hidden;
+}
+
 
     .main-container {
         max-width: 800px;
