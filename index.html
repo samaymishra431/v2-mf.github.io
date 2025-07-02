@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,87 +15,87 @@
             box-sizing: border-box;
             font-family: Arial, sans-serif;
         }
-        
+
         body {
-            background-color: #FFFFFF;
+            background-color: white;
             color: #333;
             max-width: 800px;
             margin: 0 auto;
         }
-        
+
         .container {
             padding: 20px;
-            background-color: #FFFFFF;
+            background-color: white;
             min-height: 100vh;
-            padding-top: 62px;
+            padding-top: 40px;
             display: flex;
             flex-direction: column;
         }
-        
+
         .logo {
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 30px;
         }
-        
+
         .logo img {
             height: 40px;
             width: auto;
         }
-        
+
         .heading {
             text-align: center;
             margin-bottom: 5px;
             font-size: 28px;
             font-weight: bold;
         }
-        
+
         .subheading {
             text-align: center;
             color: #666;
             font-size: 12px;
             margin-bottom: 30px;
         }
-        
+
         .form-container {
             flex: 1;
             display: flex;
             flex-direction: column;
         }
-        
+
         .login-form {
             margin-bottom: 20px;
         }
-        
+
         .form-group {
             margin-bottom: 20px;
         }
-        
+
         .form-label {
             display: block;
             font-size: 12px;
-            color: #6C7278;
+            color: #666;
             margin-bottom: 5px;
         }
-        
+
         .form-control {
             width: 100%;
             padding: 12px 10px;
             border: 1px solid #ddd;
-            border-radius: 10px;
+            border-radius: 4px;
             font-size: 14px;
         }
-        
+
         .form-control:focus {
             outline: none;
             border-color: #62880a;
         }
-        
+
         .password-wrapper {
             position: relative;
         }
-        
+
         .toggle-password {
             position: absolute;
             right: 15px;
@@ -103,10 +104,10 @@
             color: #666;
             cursor: pointer;
         }
-        
+
         .login-btn {
             background-color: #62880a;
-            color: #FFFFFF;
+            color: white;
             border: none;
             border-radius: 4px;
             padding: 15px;
@@ -116,42 +117,23 @@
             cursor: pointer;
             margin-top: 10px;
         }
-        
+
         .login-btn:disabled {
             background-color: #ccc;
             cursor: not-allowed;
         }
-        
+
         .forgot-password {
             text-align: right;
             margin: 10px 0 20px;
         }
-        
+
         .forgot-password a {
             color: #62880a;
             text-decoration: none;
             font-size: 12px;
         }
-        
-        /*
-        .divider {
-            display: flex;
-            align-items: center;
-            margin: 20px 0;
-        }
-        
-        .divider-line {
-            flex: 1;
-            height: 1px;
-            background-color: #e0e0e0;
-        }
-        
-        .divider-text {
-            padding: 0 10px;
-            color: #666;
-            font-size: 12px;
-        }
-        */
+
         .register-prompt {
             text-align: center;
             margin-top: auto;
@@ -159,18 +141,18 @@
             font-size: 14px;
             color: #666;
         }
-        
+
         .register-link {
             color: #62880a;
             font-weight: bold;
             text-decoration: none;
         }
-        
+
         .footer {
             margin-top: 20px;
             text-align: center;
         }
-        
+
         .footer-text {
             font-size: 11px;
             color: #999;
@@ -185,35 +167,36 @@
             border-radius: 4px;
             margin-bottom: 20px;
         }
-        
+
         .alert-success {
             background-color: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
         }
-        
+
         .alert-danger {
             background-color: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
-        
+
         .alert i {
             margin-right: 10px;
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <!-- Logo -->
         <div class="logo">
             <img src="./assets/images/logo.png" alt="Fund MF Logo">
         </div>
-        
+
         <!-- Heading -->
         <h1 class="heading">Welcome Back</h1>
         <p class="subheading">Login to Your Trading Account</p>
-        
+
         <!-- Alerts -->
         <div class="alert alert-success" id="successAlert" style="display:none;">
             <i class="fas fa-check-circle"></i>
@@ -231,40 +214,36 @@
                     <label class="form-label">User ID / Email / Mobile</label>
                     <input type="text" class="form-control" name="userId" id="userId" required value="Aakash">
                 </div>
-                
+
                 <div class="form-group">
                     <label class="form-label">Password</label>
                     <div class="password-wrapper">
-                        <input type="password" class="form-control" name="password" id="password" required value="Aakash@12">
+                        <input type="password" class="form-control" name="password" id="password" required
+                            value="Aakash@12">
                         <span class="toggle-password" id="togglePassword">
                             <i class="fas fa-eye"></i>
                         </span>
                     </div>
                 </div>
-                
+
                 <div class="forgot-password">
                     <a href="forgotPassword.html">Forgot Password?</a>
                 </div>
-                
+
                 <button type="submit" class="login-btn" id="loginBtn">Login</button>
             </form>
-            
-            <!--
-            <div class="divider">
-                <div class="divider-line"></div>
-                <div class="divider-text">OR</div>
-                <div class="divider-line"></div>
-            </div>
-            
-            <button type="button" class="login-btn" style="background-color: #f5f5f5; color: #333; border: 1px solid #ddd;">
-                <i class="fas fa-mobile-alt" style="margin-right: 8px;"></i> Login with OTP
+
+            <button type="button" class="login-btn" id="fingerprintBtn"
+                style="background-color: #f5f5f5; color: #333; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <i class="fas fa-fingerprint"></i>
+                <span id="fingerprintBtnText">Enable Fingerprint</span>
             </button>
-            -->
+
             <div class="register-prompt">
                 Don't have an account? <a href="onboarding.html" class="register-link">Register Now</a>
             </div>
         </div>
-        
+
         <div class="footer">
             <p class="footer-text">Mutual funds investments are subject to market risk</p>
             <p class="footer-text">© 2025 FundMF. All rights reserved.</p>
@@ -273,9 +252,9 @@
 
     <!-- SweetAlert2 JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.7.32/sweetalert2.all.min.js"></script>
-    
+
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const API_BASE_URL = 'http://122.176.151.191/MutualFund';
             const loginForm = document.getElementById('loginForm');
             const userId = document.getElementById('userId');
@@ -286,41 +265,43 @@
             const errorAlert = document.getElementById('errorAlert');
             const successAlertMsg = document.getElementById('successAlertMsg');
             const errorAlertMsg = document.getElementById('errorAlertMsg');
+            const fingerprintBtn = document.getElementById('fingerprintBtn');
+            const fingerprintBtnText = document.getElementById('fingerprintBtnText');
 
             // Toggle password visibility
-            togglePassword.addEventListener('click', function() {
+            togglePassword.addEventListener('click', function () {
                 const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
                 password.setAttribute('type', type);
-                
+
                 // Toggle eye icon
                 this.querySelector('i').classList.toggle('fa-eye');
                 this.querySelector('i').classList.toggle('fa-eye-slash');
             });
-            
+
             // Form validation
             function validateForm() {
                 let isValid = true;
-                
+
                 if (!userId.value.trim()) {
                     userId.style.borderColor = '#ff6b6b';
                     isValid = false;
                 } else {
                     userId.style.borderColor = '#ddd';
                 }
-                
+
                 if (!password.value.trim()) {
                     password.style.borderColor = '#ff6b6b';
                     isValid = false;
                 } else {
                     password.style.borderColor = '#ddd';
                 }
-                
+
                 return isValid;
             }
-            
+
             // Input validation styling
             [userId, password].forEach(input => {
-                input.addEventListener('input', function() {
+                input.addEventListener('input', function () {
                     if (!this.value.trim()) {
                         this.style.borderColor = '#ff6b6b';
                     } else {
@@ -328,7 +309,7 @@
                     }
                 });
             });
-            
+
             // Utility to show/hide alerts
             function showAlert(type, message) {
                 successAlert.style.display = 'none';
@@ -347,7 +328,7 @@
                 try {
                     const base64Url = token.split('.')[1];
                     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-                    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
                         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
                     }).join(''));
                     return JSON.parse(jsonPayload);
@@ -356,8 +337,38 @@
                 }
             }
 
+            // Update fingerprint button text based on biometrics setting
+            function updateFingerprintBtn() {
+                const biometricsEnabled = localStorage.getItem('biometricsEnabled') === 'true';
+                if (biometricsEnabled) {
+                    fingerprintBtnText.textContent = 'Login with Fingerprint';
+                } else {
+                    fingerprintBtnText.textContent = 'Enable Fingerprint';
+                }
+            }
+
+            // Initial update of fingerprint button
+            updateFingerprintBtn();
+
+            // Update fingerprint button on localStorage change
+            window.addEventListener('storage', function (e) {
+                if (e.key === 'biometricsEnabled') updateFingerprintBtn();
+            });
+
+            // Fingerprint button click handler
+            fingerprintBtn.addEventListener('click', function () {
+                const biometricsEnabled = localStorage.getItem('biometricsEnabled') === 'true';
+                if (!biometricsEnabled) {
+                    localStorage.setItem('biometricsEnabled', 'true');
+                    updateFingerprintBtn();
+                    Swal.fire('Fingerprint Enabled', 'Fingerprint login has been enabled.', 'success');
+                } else {
+                    Swal.fire('Fingerprint Login', 'In a real app, biometric authentication would be triggered here.', 'info');
+                }
+            });
+
             // Form submission
-            loginForm.addEventListener('submit', async function(e) {
+            loginForm.addEventListener('submit', async function (e) {
                 e.preventDefault();
 
                 // Hide alerts on new submit
@@ -410,4 +421,5 @@
         });
     </script>
 </body>
+
 </html>
