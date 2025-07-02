@@ -65,7 +65,7 @@
         }
 
         .login-form {
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
 
         .form-group {
@@ -180,8 +180,33 @@
             border: 1px solid #f5c6cb;
         }
 
+        .alert-info {
+            background-color: #e7f3fe;
+            color: #31708f;
+            border: 1px solid #bce8f1;
+        }
+
         .alert i {
             margin-right: 10px;
+        }
+
+        /* Divider Styles */
+        .divider {
+            display: flex;
+            align-items: center;
+            
+        }
+
+        .divider-line {
+            flex: 1;
+            height: 1px;
+            background-color: #ddd;
+        }
+
+        .divider-text {
+            padding: 0 10px;
+            font-size: 14px;
+            color: #666;
         }
     </style>
 </head>
@@ -205,6 +230,10 @@
         <div class="alert alert-danger" id="errorAlert" style="display:none;">
             <i class="fas fa-exclamation-circle"></i>
             <span id="errorAlertMsg">Login failed!</span>
+        </div>
+        <div class="alert alert-info" id="infoAlert" style="display:none;">
+            <i class="fas fa-info-circle"></i>
+            <span id="infoAlertMsg">Please login to enable fingerprint</span>
         </div>
 
         <!-- Form Container -->
@@ -233,11 +262,18 @@
                 <button type="submit" class="login-btn" id="loginBtn">Login</button>
             </form>
 
+            <div class="divider">
+                <div class="divider-line"></div>
+                <div class="divider-text">OR</div>
+                <div class="divider-line"></div>
+            </div>
+
             <button type="button" class="login-btn" id="fingerprintBtn"
                 style="background-color: #f5f5f5; color: #333; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; gap: 8px;">
                 <i class="fas fa-fingerprint"></i>
                 <span id="fingerprintBtnText">Enable Fingerprint</span>
             </button>
+            <span id="fingerprintStatus" style="display:none; text-align:center; margin-top:8px;"></span>
 
             <div class="register-prompt">
                 Don't have an account? <a href="onboarding.html" class="register-link">Register Now</a>
@@ -255,7 +291,8 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const API_BASE_URL = 'http://122.176.151.191/MutualFund';
+            // const API_BASE_URL = 'http://122.176.151.191/MutualFund';
+            const API_BASE_URL = 'http://localhost:8080';
             const loginForm = document.getElementById('loginForm');
             const userId = document.getElementById('userId');
             const password = document.getElementById('password');
@@ -267,6 +304,9 @@
             const errorAlertMsg = document.getElementById('errorAlertMsg');
             const fingerprintBtn = document.getElementById('fingerprintBtn');
             const fingerprintBtnText = document.getElementById('fingerprintBtnText');
+            const fingerprintStatus = document.getElementById('fingerprintStatus');
+
+            let enableFingerprintMode = false;
 
             // Toggle password visibility
             togglePassword.addEventListener('click', function () {
@@ -314,12 +354,20 @@
             function showAlert(type, message) {
                 successAlert.style.display = 'none';
                 errorAlert.style.display = 'none';
+                const infoAlert = document.getElementById('infoAlert');
+                const infoAlertMsg = document.getElementById('infoAlertMsg');
+                if (infoAlert) infoAlert.style.display = 'none';
                 if (type === 'success') {
                     successAlertMsg.textContent = message;
                     successAlert.style.display = 'block';
                 } else if (type === 'error') {
                     errorAlertMsg.textContent = message;
                     errorAlert.style.display = 'block';
+                } else if (type === 'info') {
+                    if (infoAlert && infoAlertMsg) {
+                        infoAlertMsg.textContent = message;
+                        infoAlert.style.display = 'flex';
+                    }
                 }
             }
 
@@ -339,12 +387,13 @@
 
             // Update fingerprint button text based on biometrics setting
             function updateFingerprintBtn() {
-                const biometricsEnabled = localStorage.getItem('biometricsEnabled') === 'true';
-                if (biometricsEnabled) {
+                const biometricsEnabled = localStorage.getItem('biometricsEnabled');
+                if (biometricsEnabled === 'true') {
                     fingerprintBtnText.textContent = 'Login with Fingerprint';
                 } else {
                     fingerprintBtnText.textContent = 'Enable Fingerprint';
                 }
+                fingerprintStatus.textContent = biometricsEnabled === null ? 'false' : biometricsEnabled;
             }
 
             // Initial update of fingerprint button
@@ -357,14 +406,16 @@
 
             // Fingerprint button click handler
             fingerprintBtn.addEventListener('click', function () {
-                const biometricsEnabled = localStorage.getItem('biometricsEnabled') === 'true';
-                if (!biometricsEnabled) {
-                    localStorage.setItem('biometricsEnabled', 'true');
-                    updateFingerprintBtn();
-                    Swal.fire('Fingerprint Enabled', 'Fingerprint login has been enabled.', 'success');
-                } else {
-                    Swal.fire('Fingerprint Login', 'In a real app, biometric authentication would be triggered here.', 'info');
+                const biometricsEnabled = localStorage.getItem('biometricsEnabled');
+                if (biometricsEnabled === 'true') {
+                    // Trigger fingerprint login flow here (replace with actual logic if available)
+                    showAlert('info', 'Please authenticate with your fingerprint.');
+                    // Optionally, you can add your fingerprint authentication logic here
+                    return;
                 }
+                enableFingerprintMode = true;
+                fingerprintBtn.style.display = 'none';
+                showAlert('info', 'Please login to enable fingerprint authentication.');
             });
 
             // Form submission
@@ -401,15 +452,28 @@
                                     localStorage.setItem('clientName', payload.Name);
                                 }
                             }
+                            if (enableFingerprintMode) {
+                                localStorage.setItem('biometricsEnabled', 'true');
+                                // Set a flag to show alert on dashboard
+                                localStorage.setItem('showFingerprintEnabledAlert', 'true');
+                            }
                             showAlert('success', data.messages?.[0]?.message || 'Login Successful!');
                             setTimeout(() => {
                                 window.location.href = 'dashboard.html';
                             }, 1200);
                         } else {
                             showAlert('error', data.messages?.[0]?.message || 'Invalid credentials');
+                            if (enableFingerprintMode) {
+                                fingerprintBtn.style.display = 'block';
+                                enableFingerprintMode = false;
+                            }
                         }
                     } catch (err) {
                         showAlert('error', 'Unable to connect to server. Please try again later.');
+                        if (enableFingerprintMode) {
+                            fingerprintBtn.style.display = 'block';
+                            enableFingerprintMode = false;
+                        }
                     } finally {
                         loginBtn.disabled = false;
                         loginBtn.textContent = 'Login';
