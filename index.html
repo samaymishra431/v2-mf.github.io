@@ -450,6 +450,7 @@
                                 const payload = parseJwt(data.details[0].token);
                                 if (payload && payload.Name) {
                                     localStorage.setItem('clientName', payload.Name);
+                                    localStorage.setItem('clientCode', payload.ucc || '');
                                 }
                             }
                             if (enableFingerprintMode) {
