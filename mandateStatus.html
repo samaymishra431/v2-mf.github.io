@@ -26,7 +26,7 @@
         .header {
             background-color: #FFFFFF;
             color: #FFFFFF;
-            padding: 12px 15px 0px 15px;
+            padding: 40px 15px 0px 15px;
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -84,6 +84,7 @@
         @media (max-width: 767px) {
             .content-container {
                 padding: 18px;
+                padding-top: 0px;
             }
         }
         
@@ -203,27 +204,31 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
+        // API base URL and token
+        const API_BASE_URL = 'http://122.176.151.191/MutualFund';
+        const token = localStorage.getItem('authToken');
+
         // --- Populate mandate data from localStorage ---
         document.addEventListener('DOMContentLoaded', function() {
-            // Mandate data population
             const mandate = JSON.parse(localStorage.getItem('selectedMandate') || '{}');
-            if (mandate && Object.keys(mandate).length > 0) {
-                // Status
-                document.getElementById('statusPill').textContent = 'ACTIVE';
-                // Mandate ID (fallback if not present)
-                document.getElementById('mandateIdValue').textContent = mandate.id || 'MANDATE123456';
-                // Client Code (fallback)
-                document.getElementById('clientCodeValue').textContent = mandate.clientCode || 'Client Code';
-                // Client Name (fallback)
-                document.getElementById('clientNameValue').textContent = mandate.clientName || 'Client Name';
-                // Bank Name
-                document.getElementById('bankNameValue').textContent = mandate.bank || 'Bank Name';
-                // Bank Branch (fallback)
-                document.getElementById('bankBranchValue').textContent = mandate.bankBranch || 'A-101, Connaught Place, New Delhi, Delhi 110001, India';
-                // Amount
-                document.getElementById('amountValue').textContent = mandate.amount || 'Amount';
+            // Status mapping
+            function getStatusText(code) {
+                if (code === 'P') return 'ACTIVE';
+                if (code === 'R') return 'REJECTED';
+                if (code === 'A') return 'APPROVED';
+                if (code === 'C') return 'CANCELLED';
+                return code || 'ACTIVE';
             }
-
+            if (mandate && Object.keys(mandate).length > 0) {
+                document.getElementById('statusPill').textContent = getStatusText(mandate.mandateStatus);
+                document.getElementById('mandateIdValue').textContent = mandate.mandateId || 'MANDATE123456';
+                document.getElementById('clientCodeValue').textContent = mandate.clientCode || 'Client Code';
+                // Prefer clientName from mandate, else from localStorage
+                document.getElementById('clientNameValue').textContent = mandate.clientName || localStorage.getItem('clientName') || 'Client Name';
+                document.getElementById('bankNameValue').textContent = mandate.bankName || 'Bank Name';
+                document.getElementById('bankBranchValue').textContent = mandate.bankBranch || 'A-101, Connaught Place, New Delhi, Delhi 110001, India';
+                document.getElementById('amountValue').textContent = mandate.mandateAmount ? `₹${mandate.mandateAmount}` : 'Amount';
+            }
             // Back button navigates to mandate.html
             document.getElementById('backButton').addEventListener('click', function(e) {
                 e.preventDefault();
