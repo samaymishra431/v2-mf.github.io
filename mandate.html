@@ -229,7 +229,7 @@ margin: 16px 10px 16px 10px;
     font-weight: bold;
     font-size: 28px;
     margin-bottom: 10px;
-    margin-top: 10px;
+    margin-top: 30px;
     position: relative;
     margin-left: 0; /* Remove margin-left for true centering */
     display: flex;
@@ -465,30 +465,33 @@ element.style {
 <!-- Place Create Mandate Button after all mandates, not fixed -->
 <button id="createMandateBtn" class="mandate-create-btn">Create Mandate</button>
 <script>
-// Hardcoded mandate data
-const mandates = [
-    {
-        name: "Mandate 1",
-        bank: "HDFC Bank",
-        creationDate: "2023-12-01",
-        amount: "₹10,000"
-    },
-    {
-        name: "Mandate 2",
-        bank: "ICICI Bank",
-        creationDate: "2024-01-15",
-        amount: "₹5,000"
-    },
-    {
-        name: "Mandate 3",
-        bank: "SBI",
-        creationDate: "2024-03-10",
-        amount: "₹20,000"
-    }
-];
+// API base URL and token
+const API_BASE_URL = 'http://122.176.151.191/MutualFund';
+const token = localStorage.getItem('authToken');
 
-// Format date as 1st Dec 2023
+// Helper: format date as 1st Dec 2023
 function formatDate(dateStr) {
+    // Try to parse dd/mm/yyyy
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateStr)) {
+        const [day, month, year] = dateStr.split('/');
+        const d = new Date(`${year}-${month}-${day}`);
+        if (!isNaN(d)) {
+            const dayNum = d.getDate();
+            const monthStr = d.toLocaleString('en-GB', { month: 'short' });
+            const yearNum = d.getFullYear();
+            function ordinal(n) {
+                if (n > 3 && n < 21) return 'th';
+                switch (n % 10) {
+                    case 1: return 'st';
+                    case 2: return 'nd';
+                    case 3: return 'rd';
+                    default: return 'th';
+                }
+            }
+            return `${dayNum}${ordinal(dayNum)} ${monthStr} ${yearNum}`;
+        }
+    }
+    // fallback to original
     const d = new Date(dateStr);
     if (isNaN(d)) return dateStr;
     const day = d.getDate();
@@ -506,42 +509,73 @@ function formatDate(dateStr) {
     return `${day}${ordinal(day)} ${month} ${year}`;
 }
 
+// Helper: format amount in short notation
+function formatShortAmount(amount) {
+    let num = parseFloat(String(amount).replace(/[^\d.-]/g, ''));
+    if (isNaN(num)) return amount;
+    if (num >= 10000000) return (num / 10000000).toFixed(num % 10000000 === 0 ? 0 : 2) + 'Cr';
+    if (num >= 100000) return (num / 100000).toFixed(num % 100000 === 0 ? 0 : 2) + 'L';
+    if (num >= 1000) return (num / 1000).toFixed(num % 1000 === 0 ? 0 : 2) + 'k';
+    return num.toString();
+}
+
 const mandateList = document.getElementById('mandateList');
-mandates.forEach((mandate, idx) => {
-    const card = document.createElement('div');
-    card.className = 'mandate-card';
-    // Format amount in short notation
-    function formatShortAmount(amount) {
-        // Remove non-digit and non-dot chars except for minus sign
-        let num = parseFloat(amount.replace(/[^\d.-]/g, ''));
-        if (isNaN(num)) return amount;
-        if (num >= 10000000) return (num / 10000000).toFixed(num % 10000000 === 0 ? 0 : 2) + 'Cr';
-        if (num >= 100000) return (num / 100000).toFixed(num % 100000 === 0 ? 0 : 2) + 'L';
-        if (num >= 1000) return (num / 1000).toFixed(num % 1000 === 0 ? 0 : 2) + 'k';
-        return num.toString();
+mandateList.innerHTML = '<div style="text-align:center;padding:30px 0;">Loading mandates...</div>';
+
+// Fetch mandates from API
+fetch(`${API_BASE_URL}/getMandateDetailsByClientCode`, {
+    method: 'GET',
+    headers: {
+        'accept': '*/*',
+        'Authorization': `Bearer ${token}`
     }
-    card.innerHTML = `
-        <div class="mandate-level-badge">Active</div>
-        <div class="mandate-card-title">${mandate.name}</div>
-        <div class="mandate-card-category">${mandate.bank}</div>
-        <div class="mandate-card-details-row">
-            <div class="mandate-card-detail-col">
-                <div class="mandate-card-detail-label">Creation date</div>
-                <div class="mandate-card-detail-value">${formatDate(mandate.creationDate)}</div>
+})
+.then(res => res.json())
+.then(data => {
+    mandateList.innerHTML = '';
+    const details = Array.isArray(data.details) ? data.details : [];
+    if (details.length === 0) {
+        mandateList.innerHTML = '<div style="text-align:center;padding:30px 0;">No mandates found.</div>';
+        return;
+    }
+    details.forEach((mandate, idx) => {
+        const card = document.createElement('div');
+        card.className = 'mandate-card';
+        // Mandate status badge
+        let statusText = 'Active';
+        if (mandate.mandateStatus === 'P') statusText = 'Active';
+        else if (mandate.mandateStatus === 'R') statusText = 'Rejected';
+        else if (mandate.mandateStatus === 'A') statusText = 'Approved';
+        else if (mandate.mandateStatus === 'C') statusText = 'Cancelled';
+        // Use client name from localStorage
+        const clientName = localStorage.getItem('clientName') || '';
+        card.innerHTML = `
+            <div class="mandate-level-badge">${statusText}</div>
+            <div class="mandate-card-title">Mandate ${idx + 1}</div>
+            <div class="mandate-card-category">${mandate.bankName || ''}</div>
+            <div class="mandate-card-details-row">
+                <div class="mandate-card-detail-col">
+                    <div class="mandate-card-detail-label">Creation date</div>
+                    <div class="mandate-card-detail-value">${formatDate(mandate.mandateFromDate || '')}</div>
+                </div>
+                <div class="mandate-card-detail-col">
+                    <div class="mandate-card-detail-label">Mandate amount</div>
+                    <div class="mandate-card-detail-value">₹${formatShortAmount(mandate.mandateAmount || '')}</div>
+                </div>
             </div>
-            <div class="mandate-card-detail-col">
-                <div class="mandate-card-detail-label">Mandate amount</div>
-                <div class="mandate-card-detail-value">₹${formatShortAmount(mandate.amount)}</div>
-            </div>
-        </div>
-    `;
-    // Add click handler to open mandateStatus.html with data
-    card.style.cursor = 'pointer';
-    card.addEventListener('click', function() {
-        localStorage.setItem('selectedMandate', JSON.stringify(mandate));
-        window.location.href = 'mandateStatus.html';
+        `;
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', function() {
+            // Add clientName for next screen
+            const mandateWithClientName = { ...mandate, clientName };
+            localStorage.setItem('selectedMandate', JSON.stringify(mandateWithClientName));
+            window.location.href = 'mandateStatus.html';
+        });
+        mandateList.appendChild(card);
     });
-    mandateList.appendChild(card);
+})
+.catch(() => {
+    mandateList.innerHTML = '<div style="text-align:center;padding:30px 0;color:#c00;">Failed to load mandates.</div>';
 });
 
 // --- Sidebar and Modal JS (copied/adapted from recentOrder.html) ---
@@ -740,3 +774,4 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 </body>
 </html>
+
