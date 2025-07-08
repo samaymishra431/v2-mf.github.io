@@ -130,6 +130,7 @@
 @media (max-width: 576px) {
     .container {
         padding: 18px;
+        padding-top: 40px;
     }
     .dealer-info div {
         margin-bottom: 15px;
@@ -448,7 +449,7 @@
             }
         });
 
-        document.getElementById('callbackForm').addEventListener('submit', function(e) {
+        document.getElementById('callbackForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const useRegistered = document.getElementById('registeredNumberOption').checked;
             let telephone = '';
@@ -466,14 +467,32 @@
                     return;
                 }
             }
-            showSuccessCallback('Callback request submitted for ' + telephone + '. We will contact you soon!');
-            this.reset();
-            // Reset to default state
-            document.getElementById('telephoneInputDiv').style.display = 'none';
-            document.getElementById('registeredNumberOption').checked = true;
-            // Re-set the label in case of reset
-            document.getElementById('registeredNumberOption').nextElementSibling.innerHTML =
-                `Registered Number (${registeredNumber || 'N/A'})`;
+
+            // Call the callback API
+            try {
+                const response = await fetch(`${API_BASE_URL}/callBackRequestByClientCode?phoneNo=${encodeURIComponent(telephone)}`, {
+                    method: 'GET',
+                    headers: {
+                        'accept': '*/*',
+                        'Authorization': `Bearer ${AUTH_TOKEN}`
+                    }
+                });
+                if (response.ok) {
+                    showSuccessCallback('Callback request submitted for ' + telephone + '. We will contact you soon!');
+                    this.reset();
+                    // Reset to default state
+                    document.getElementById('telephoneInputDiv').style.display = 'none';
+                    document.getElementById('registeredNumberOption').checked = true;
+                    // Re-set the label in case of reset
+                    document.getElementById('registeredNumberOption').nextElementSibling.innerHTML =
+                        `Registered Number (${registeredNumber || 'N/A'})`;
+                } else {
+                    const errorText = await response.text();
+                    showErrorCallback('Failed to submit callback request: ' + errorText);
+                }
+            } catch (err) {
+                showErrorCallback('Error submitting callback request: ' + err.message);
+            }
         });
     </script>
 </body>
