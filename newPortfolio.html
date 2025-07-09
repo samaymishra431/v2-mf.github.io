@@ -576,7 +576,7 @@
         align-items: center;
         padding-right: 30px;
         padding-left: 30px;
-        padding-top: 24px;
+        padding-top: 40px;
         padding-bottom: 24px;
         border-bottom: 1px solid #eee;
         background-color: #F2F2F2;
@@ -1020,11 +1020,11 @@
     <div class="performance-row" id="performance-row"></div>
     <div class="file-options">
         <div style="display: flex; gap: 12px;">
-            <div class="file-option">
+            <div class="file-option" id = "excelExportBtn">
                 <span class="excel-icon"></span>
                 <span>Excel File</span>
             </div>
-            <div class="file-option">
+            <div class="file-option" id = "pdfExportBtn">
                 <span class="pdf-icon"></span>
                 <span>PDF File</span>
             </div>
@@ -1339,10 +1339,11 @@ async function fetchPortfolio() {
                 gain: parseAmount(d.pnl) > 0 ? parseAmount(d.pnl) : 0,
                 loss: parseAmount(d.pnl) < 0 ? Math.abs(parseAmount(d.pnl)) : 0
             };
-            // Parse funds
+            // Parse funds, now include holdingType
             funds = (d.portFolioList || []).map(f => ({
                 name: f.amcName,
                 type: f.isin,
+                holdingType: f.holdingType || '', // <-- add holdingType
                 pnl: parseFloat(f.percentage) || 0,
                 invested: parseAmount(f.investedAmount),
                 current: parseAmount(f.currentAmount)
@@ -1437,12 +1438,12 @@ function renderPerformanceRow() {
 function renderFundList() {
     const el = document.getElementById('fund-list');
     el.innerHTML = funds.map((fund, idx) => {
-        // Show only Demat for even idx, only Physical for odd idx
+        // Use holdingType from backend, fallback to empty string if not present
         let actions = '';
-        if (idx % 2 === 0) {
-            actions = `<button class="fund-header-btn selected">Demat</button>`;
+        if (fund.holdingType) {
+            actions = `<button class="fund-header-btn selected">${fund.holdingType}</button>`;
         } else {
-            actions = `<button class="fund-header-btn selected">Physical</button>`;
+            actions = `<button class="fund-header-btn selected"></button>`;
         }
         // Calculate absolute P&L (current - invested)
         const pnlAmt = fund.current - fund.invested;
