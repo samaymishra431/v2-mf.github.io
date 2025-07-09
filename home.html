@@ -347,7 +347,7 @@
         align-items: center;
         padding-right: 30px;
         padding-left: 30px;
-        padding-top: 24px;
+        padding-top: 40px;
         padding-bottom: 24px;
         border-bottom: 1px solid #eee;
         background-color: #F2F2F2;
@@ -759,7 +759,7 @@
 </div>
 
 <!-- Main Header -->
-<div class="header">
+<div class="header fixed">
     <div class="header-top">
         <div class="menu-icon">
             <!-- Replace font-awesome bars with your own icon -->
@@ -858,7 +858,7 @@
 
 <script>
 // --- CONFIG SECTION ---
-const API_BASE_URL = 'http://122.176.151.191/MutualFund';
+ const API_BASE_URL = 'http://122.176.151.191/MutualFund';
 const AUTH_TOKEN = localStorage.getItem('authToken');
 
 // --- DATA SECTION ---
@@ -1006,10 +1006,10 @@ function fetchNFOs() {
         nfoList.innerHTML = '';
         // Show only first 2 NFOs
         nfos.slice(0, 2).forEach((nfo, idx) => {
-            const minInvestment = '₹1,000';
             const objective = nfo.investment_objective ? nfo.investment_objective.replace(/"/g, '&quot;') : '';
             const card = document.createElement('div');
             card.className = 'nfo-card';
+            // Use a placeholder for min investment, will update after API call
             card.innerHTML = `
                 <div class="nfo-card-title">${nfo.scheme_name || nfo.fund_name || ''}</div>
                 <div class="nfo-card-category">${nfo.category || ''}${nfo.sub_category ? ' | ' + nfo.sub_category : ''}</div>
@@ -1021,7 +1021,7 @@ function fetchNFOs() {
                     </div>
                     <div class="nfo-card-detail-col">
                         <div class="nfo-card-detail-label">Min. investment</div>
-                        <div class="nfo-card-detail-value">${minInvestment}</div>
+                        <div class="nfo-card-detail-value" id="minInvestment${idx}">Loading...</div>
                     </div>
                 </div>
                 <div class="nfo-card-objective-row">
@@ -1032,6 +1032,24 @@ function fetchNFOs() {
             `;
             card.dataset.nfo = JSON.stringify(nfo);
             nfoList.appendChild(card);
+
+            // --- Fetch min investment amount for this scheme_name ---
+            const schemeName = encodeURIComponent(nfo.scheme_name || nfo.fund_name || '');
+            fetch(`http://122.176.151.191/MutualFund/api/fnos/getMinAmountBySchemeName?SchemeName=${schemeName}`, {
+                method: 'GET',
+                headers: { 'accept': '*/*' }
+            })
+            .then(res => res.json())
+            .then(minData => {
+                const minAmt = (minData && minData.details && minData.details[0]) ? minData.details[0] : null;
+                const minAmtStr = minAmt ? `₹${Number(minAmt).toLocaleString()}` : '-';
+                const minElem = document.getElementById(`minInvestment${idx}`);
+                if (minElem) minElem.textContent = minAmtStr;
+            })
+            .catch(() => {
+                const minElem = document.getElementById(`minInvestment${idx}`);
+                if (minElem) minElem.textContent = '-';
+            });
         });
         nfoList.querySelectorAll('.apply-button').forEach(btn => btn.style.cursor = 'pointer');
         // Show the "Show All" link if more than 2 NFOs
