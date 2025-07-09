@@ -23,7 +23,7 @@
          .header {
          background-color: #FFFFFF;
          color: #FFFFFF;
-         padding: 12px 15px 0px 15px;
+         padding: 15px 15px 0px 15px;
          position: sticky;
          top: 0;
          z-index: 1000;
@@ -58,7 +58,7 @@
          display: inline-block;
          vertical-align: middle;
          margin-right: 10px;
-         margin-top: 10px;
+         /* margin-top: 10px; */
          }
          .page-title {
          font-size: 16px;
@@ -244,42 +244,75 @@
       <script>
          const API_BASE_URL = 'http://122.176.151.191/MutualFund';
          const token = localStorage.getItem('authToken');
-         
-         // ...existing code...
-         function renderNFOs(containerId, nfos, isClosed) {
-         const container = document.getElementById(containerId);
-         container.innerHTML = '';
-         nfos.forEach((nfo, idx) => {
-         const card = document.createElement('div');
-         card.className = 'fund-card' + (isClosed ? ' closed-badge' : '');
-         const objective = nfo.investment_objective ? nfo.investment_objective.replace(/"/g, '&quot;') : '';
-         const showMoreBtn = objective.length > 80 ? `<button class="fund-showmore" type="button">Show more</button>` : '';
-         card.innerHTML = `
-             <div class="fund-title">${nfo.scheme_name || nfo.fund_name || nfo.title}</div>
-             <div class="fund-category">
-                 ${nfo.category ? nfo.category : ''}${nfo.sub_category ? ' | ' + nfo.sub_category : ''}
-             </div>
-             <div class="fund-details">
-                 <div class="fund-detail-item">
-                     <div class="detail-label">Offer close</div>
-                     <div class="detail-value">${nfo.close_date ? formatDate(nfo.close_date) : ''}</div>
-                 </div>
-                 <div class="fund-detail-item close-date">
-                     <div class="detail-label">Min. investment</div>
-                     <div class="detail-value">₹1,000</div>
-                 </div>
-             </div>
-             <div class="fund-objective-row">
-                 <span class="fund-objective" title="${objective}">${objective}</span>
-                 ${showMoreBtn}
-             </div>
-             <button class="apply-button">Apply</button>
-         `;
-         card.dataset.nfo = JSON.stringify(nfo);
-         container.appendChild(card);
-         });
+
+         // Cache for min amounts to avoid duplicate requests
+         const minAmountCache = {};
+
+         // Fetch min amount by scheme name
+         function fetchMinAmount(schemeName) {
+             if (!schemeName) return Promise.resolve(null);
+             if (minAmountCache[schemeName]) {
+                 return Promise.resolve(minAmountCache[schemeName]);
+             }
+             const url = `${API_BASE_URL}/api/fnos/getMinAmountBySchemeName?SchemeName=${encodeURIComponent(schemeName)}`;
+             return fetch(url, {
+                 method: 'GET',
+                 headers: { 'accept': '*/*' }
+             })
+             .then(res => res.json())
+             .then(data => {
+                 const minAmount = Array.isArray(data.details) && data.details.length > 0 ? data.details[0] : null;
+                 minAmountCache[schemeName] = minAmount;
+                 return minAmount;
+             })
+             .catch(() => null);
          }
-         // ...existing code...
+
+         // Render NFOs with async min amount fetching
+         async function renderNFOs(containerId, nfos, isClosed) {
+             const container = document.getElementById(containerId);
+             container.innerHTML = '';
+             for (const nfo of nfos) {
+                 const card = document.createElement('div');
+                 card.className = 'fund-card' + (isClosed ? ' closed-badge' : '');
+                 const objective = nfo.investment_objective ? nfo.investment_objective.replace(/"/g, '&quot;') : '';
+                 const showMoreBtn = objective.length > 80 ? `<button class="fund-showmore" type="button">Show more</button>` : '';
+                 // Placeholder for min amount
+                 const minAmountId = `min-amt-${Math.random().toString(36).substr(2, 9)}`;
+                 card.innerHTML = `
+                     <div class="fund-title">${nfo.scheme_name || nfo.fund_name || nfo.title}</div>
+                     <div class="fund-category">
+                         ${nfo.category ? nfo.category : ''}${nfo.sub_category ? ' | ' + nfo.sub_category : ''}
+                     </div>
+                     <div class="fund-details">
+                         <div class="fund-detail-item">
+                             <div class="detail-label">Offer close</div>
+                             <div class="detail-value">${nfo.close_date ? formatDate(nfo.close_date) : ''}</div>
+                         </div>
+                         <div class="fund-detail-item close-date">
+                             <div class="detail-label">Min. investment</div>
+                             <div class="detail-value" id="${minAmountId}">Loading...</div>
+                         </div>
+                     </div>
+                     <div class="fund-objective-row">
+                         <span class="fund-objective" title="${objective}">${objective}</span>
+                         ${showMoreBtn}
+                     </div>
+                     <button class="apply-button">Apply</button>
+                 `;
+                 card.dataset.nfo = JSON.stringify(nfo);
+                 container.appendChild(card);
+
+                 // Fetch and update min amount
+                 const schemeName = nfo.scheme_name || nfo.fund_name || nfo.title;
+                 fetchMinAmount(schemeName).then(minAmount => {
+                     const minAmtElem = card.querySelector(`#${minAmountId}`);
+                     if (minAmtElem) {
+                         minAmtElem.textContent = minAmount != null ? `₹${minAmount.toLocaleString('en-IN')}` : 'N/A';
+                     }
+                 });
+             }
+         }
          
          function formatDate(dateStr) {
              if (!dateStr) return '';
